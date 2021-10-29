@@ -105,9 +105,11 @@ def main():
     betweenWaveCount = betweenWaveTime
     font = pygame.font.Font(None, 36)
 
+#메뉴 구현
     inMenu = True
-    hiScores = Database.getScores()
-    highScoreTexts = [font.render("NAME", 1, RED),
+    # 데베 함수 메뉴 구현
+    hiScores = Database.getScores() #데베 함수 불러오기 
+    highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
     highScorePos = [highScoreTexts[0].get_rect(
@@ -121,6 +123,10 @@ def main():
                                for x in range(3)])
         highScorePos.extend([highScoreTexts[x].get_rect(
             topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
+    
+    #Main menu 게임 메인 메뉴
+    # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
+    # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)
 
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
@@ -145,17 +151,20 @@ def main():
     quitPos = quitText.get_rect(topleft=musicPos.bottomleft)
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=startPos.topleft)
+
+    #메뉴 번호 우리는 {1:selectModePos , 2: hiScorePos, 3:fxPos, 4:musixPos, 5:quitPos}
     menuDict = {1: startPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
     selection = 1
     showHiScores = False
     soundFX = Database.getSound()
     music = Database.getSound(music=True)
-    if music and pygame.mixer:
+    if music and pygame.mixer: #대충 음악
         pygame.mixer.music.play(loops=-1)
 
+#메뉴 시작 루프
     while inMenu:
-        clock.tick(clockTime)
-
+        clock.tick(clockTime) #시간으로 제어하는 너낌
+#blit()
         screen.blit(
             background, (0, 0), area=pygame.Rect(
                 0, backgroundLoc, 500, 500))
