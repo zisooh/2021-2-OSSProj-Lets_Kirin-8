@@ -1,7 +1,7 @@
 import pygame
 import random
 from collections import deque
-# 지수- 수정
+# 지수
 from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
@@ -69,7 +69,7 @@ def main():
     clock = pygame.time.Clock()
     ship = Ship()
     initialAlienTypes = (Siney, Spikey)
-    # 지수 - 수정
+    # 지수
     powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
 
     # Sprite groups
@@ -79,7 +79,7 @@ def main():
     Alien.pool = pygame.sprite.Group(
         [alien() for alien in initialAlienTypes for _ in range(5)])
     Alien.active = pygame.sprite.Group()
-    Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) # 지수 - 미사일 수정
+    Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
     Missile.active = pygame.sprite.Group()
     Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
     Explosion.active = pygame.sprite.Group()
@@ -97,15 +97,19 @@ def main():
     curTime = 0
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
-    # 지수 - 수정 / 더블미사일 아이템이 지속되는 5초동안 미사일이 2배로 발사됨
-    doublemissile = True
+    # 지수
+    doublemissile = False
     bombsHeld = 3
     score = 0
     missilesFired = 0
     powerupTime = 10 * clockTime
     powerupTimeLeft = powerupTime
-    betweenWaveTime = 3 * clockTime
+    # 지수
+    betweenWaveTime = 5 * clockTime
     betweenWaveCount = betweenWaveTime
+    # 지수
+    betweenDoubleTime = 8 * clockTime
+    betweenDoubleCount = betweenDoubleTime
     font = pygame.font.Font(None, 36)
 
 #메뉴 구현
@@ -321,8 +325,9 @@ def main():
                     bombsHeld += 1
                 elif powerup.pType == 'shield':
                     ship.shieldUp = True
-                # elif powerup.pType == 'doublemissile' :
-                #    doublemissile = True
+                # 지수
+                elif powerup.pType == 'doublemissile' :
+                    doublemissile = True
                 powerup.kill()
             elif powerup.rect.top > powerup.area.bottom:
                 powerup.kill()
@@ -350,12 +355,12 @@ def main():
         textposition = [wavePos, leftPos, scorePos, bombPos]
 
         #5초동안 doublemissile상태를 유지
-        # if doublemissile:
-        #     if betweenDoubleCount > 0:
-        #         betweenDoubleCount -= 1
-        #     elif betweenDoubleCount == 0:
-        #         doublemissile = False
-        #         betweenDoubleCount = betweenDoubleTime
+        if doublemissile:
+            if betweenDoubleCount > 0:
+                betweenDoubleCount -= 1
+            elif betweenDoubleCount == 0:
+                doublemissile = False
+                betweenDoubleCount = betweenDoubleTime
         # if Itemdouble:
         #     if betweenDoubleCount > 0:
         #         betweenDoubleCount -= 1
