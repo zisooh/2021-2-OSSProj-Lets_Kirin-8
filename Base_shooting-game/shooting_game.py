@@ -123,7 +123,22 @@ def main():
                                for x in range(3)])
         highScorePos.extend([highScoreTexts[x].get_rect(
             topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
-    
+    # select mode 구현
+    selModes=Database.getScores() 
+    selectModeTexts = [font.render("NAME", 1, RED), #폰트 렌터
+                      font.render("SCORE", 1, RED),
+                      font.render("ACCURACY", 1, RED)]
+    selectModePos = [highScoreTexts[0].get_rect(
+                      topleft=screen.get_rect().inflate(-100, -100).topleft),
+                    highScoreTexts[1].get_rect(
+                      midtop=screen.get_rect().inflate(-100, -100).midtop),
+                    highScoreTexts[2].get_rect(
+                      topright=screen.get_rect().inflate(-100, -100).topright)]
+     for hs in selModes:
+        selectModeTexts.extend([font.render(str(hs[x]), 1, BLUE)
+                               for x in range(3)])
+        selectModePos.extend([selectModeTexts[x].get_rect(
+            topleft=selectModePos[x].bottomleft) for x in range(-3, 0)])
     #Main menu 게임 메인 메뉴
     # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
     # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)
@@ -131,7 +146,7 @@ def main():
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
-    startText = font.render('START GAME', 1, BLUE)
+    startText = font.render('SELECT MODES', 1, BLUE)
     startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     hiScoreText = font.render('HIGH SCORES', 1, BLUE)
     hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
@@ -155,6 +170,7 @@ def main():
     #메뉴 번호 우리는 {1:selectModePos , 2: hiScorePos, 3:fxPos, 4:musixPos, 5:quitPos}
     menuDict = {1: startPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
     selection = 1
+    showSelectModes=False
     showHiScores = False
     soundFX = Database.getSound()
     music = Database.getSound(music=True)
@@ -180,8 +196,9 @@ def main():
                 if showHiScores:
                     showHiScores = False
                 elif selection == 1:
-                    inMenu = False
-                    ship.initializeKeys()
+                    #inMenu = False
+                    showSelectModes==True
+                    #ship.initializeKeys()
                 elif selection == 2:
                     showHiScores = True
                 elif selection == 3:
@@ -213,6 +230,8 @@ def main():
 
         if showHiScores:
             textOverlays = zip(highScoreTexts, highScorePos)
+        elif showSelectModes:
+            textOverlays = zip(selectModeTexts, selectModePos)
         else:
             textOverlays = zip([startText, hiScoreText, fxText,
                                 musicText, quitText, selectText,
