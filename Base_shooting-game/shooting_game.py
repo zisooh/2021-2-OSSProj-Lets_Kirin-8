@@ -227,6 +227,8 @@ def main():
             screen.blit(txt, pos)
         pygame.display.flip()
 
+
+# 본게임 시작 루프(우주선이 살아있는동안)
     while ship.alive:
         clock.tick(clockTime)
 
