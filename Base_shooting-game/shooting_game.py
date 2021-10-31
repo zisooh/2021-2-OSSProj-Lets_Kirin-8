@@ -151,29 +151,30 @@ def main():
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=startPos.topleft)
 
+    #Select Mode 안 글씨
     singleText = font.render('SINGLE MODE', 1, BLUE)
     singlePos = singleText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     timeText = font.render('TIME MODE', 1, BLUE)
     timePos = timeText.get_rect(topleft=singlePos.bottomleft)
     pvpText = font.render('PVP MODE ', 1, BLUE)
     pvpPos = pvpText.get_rect(topleft=timePos.bottomleft)
+
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=singlePos.topleft)
 
-    #메뉴 번호 우리는 {1:selectModePos , 2: hiScorePos, 3:fxPos, 4:musixPos, 5:quitPos}
     menuDict = {1: startPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
     selection = 1
     showSelectModes=False
     showHiScores = False
     soundFX = Database.getSound()
     music = Database.getSound(music=True)
-    if music and pygame.mixer: #대충 음악
+    if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
 
 
 #메뉴 시작 루프
     while inMenu:
-        clock.tick(clockTime) #시간으로 제어하는 너낌
+        clock.tick(clockTime) 
 #blit()
         screen.blit(
             background, (0, 0), area=pygame.Rect(
@@ -244,23 +245,11 @@ def main():
             screen.blit(txt, pos)
         pygame.display.flip()
 
-    #show_mode()
-    # singleText = font.render('SINGLE MODE', 1, BLUE)
-    # singlePos = singleText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
-    # timeText = font.render('TIME MODE', 1, BLUE)
-    # timePos = timeText.get_rect(topleft=singlePos.bottomleft)
-    # pvpText = font.render('PVP MODE ', 1, BLUE)
-    # pvpPos = pvpText.get_rect(topleft=timePos.bottomleft)
-    # selectText = font.render('*', 1, BLUE)
-    # selectPos = selectText.get_rect(topright=singlePos.topleft)
-    #inSelectMenu=True
     showSingleMode=False
     showTimeMode=False
     showPvpMode=False
     selectModeDict={1:singlePos,2:timePos,3:pvpPos}
     selection = 1
-    # soundFX = Database.getSound()
-    # music = Database.getSound(music=True)
     while inSelectMenu:
                 clock.tick(clockTime) #시간으로 제어하는 너낌
         #blit()
