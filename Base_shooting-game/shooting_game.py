@@ -83,6 +83,8 @@ def main():
     Missile.active = pygame.sprite.Group()
     Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
     Explosion.active = pygame.sprite.Group()
+    # 지수
+    # doublemissile = pygame.sprite.Group()
     bombs = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
 
@@ -99,6 +101,7 @@ def main():
     wave = 1
     # 지수
     doublemissile = False
+    doublemissileHeld = 3
     bombsHeld = 3
     score = 0
     missilesFired = 0
@@ -259,18 +262,29 @@ def main():
                 ship.vert -= direction[event.key][1] * speed
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_SPACE):
-                # 지수-수정 더블미사일 구현
-                if doublemissile :
-                    Missile.position(ship.rect.topleft)
-                    Missile.position(ship.rect.topright)
-                    missilesFired += 2
-                else : 
-                    Missile.position(ship.rect.midtop)
-                    missilesFired += 1
-                # Missile.position(ship.rect.midtop)
-                # missilesFired += 1
+                # 지수
+                # if doublemissile :
+                #     Missile.position(ship.rect.topleft)
+                #     Missile.position(ship.rect.topright)
+                #     missilesFired += 2
+                # else : 
+                #     Missile.position(ship.rect.midtop)
+                #     missilesFired += 1
+                Missile.position(ship.rect.midtop)
+                missilesFired += 1
                 if soundFX:
                     missile_sound.play()
+            # 지수
+            elif (event.type == pygame.KEYDOWN
+                  and event.key == pygame.K_m):
+                if doublemissileHeld > 0 :
+                    doublemissile = True
+                    # double_on = True
+                    # double_limit += 1
+                    # doublemissileHeld -= 1
+                    Missile.position(ship.rect.topleft)
+                    Missile.position(ship.rect.topright)
+                    missilesFired += 2  
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_b):
                 if bombsHeld > 0:
@@ -327,6 +341,7 @@ def main():
                     ship.shieldUp = True
                 # 지수
                 elif powerup.pType == 'doublemissile' :
+                    # doublemissileHeld += 1
                     doublemissile = True
                 powerup.kill()
             elif powerup.rect.top > powerup.area.bottom:
@@ -345,29 +360,24 @@ def main():
                                1, BLUE)
         scoreText = font.render("Score: " + str(score), 1, BLUE)
         bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
+        missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
 
         wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
         leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
         scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
         bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
+        missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
 
-        text = [waveText, leftText, scoreText, bombText]
-        textposition = [wavePos, leftPos, scorePos, bombPos]
+        text = [waveText, leftText, scoreText, bombText, missileText]
+        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos]
 
-        #5초동안 doublemissile상태를 유지
+        # 지수
         if doublemissile:
             if betweenDoubleCount > 0:
                 betweenDoubleCount -= 1
             elif betweenDoubleCount == 0:
                 doublemissile = False
                 betweenDoubleCount = betweenDoubleTime
-        # if Itemdouble:
-        #     if betweenDoubleCount > 0:
-        #         betweenDoubleCount -= 1
-        #     elif betweenDoubleCount == 0:
-        #         doublemissile = False
-        #         Itemdouble = False
-        #         betweenDoubleCount = betweenDoubleTime
 
     # Detertmine when to move to next wave
         if aliensLeftThisWave <= 0:
