@@ -104,9 +104,8 @@ def main():
     betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
     font = pygame.font.Font(None, 36)
-
-#메뉴 구현
     inMenu = True
+
     # 데베 함수 메뉴 구현
     hiScores = Database.getScores() #데베 함수 불러오기 
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -123,29 +122,14 @@ def main():
                                for x in range(3)])
         highScorePos.extend([highScoreTexts[x].get_rect(
             topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
-    # select mode 구현
-    selModes=Database.getScores() 
-    selectModeTexts = [font.render("NAME", 1, RED), #폰트 렌터
-                      font.render("SCORE", 1, RED),
-                      font.render("ACCURACY", 1, RED)]
-    selectModePos = [highScoreTexts[0].get_rect(
-                      topleft=screen.get_rect().inflate(-100, -100).topleft),
-                    highScoreTexts[1].get_rect(
-                      midtop=screen.get_rect().inflate(-100, -100).midtop),
-                    highScoreTexts[2].get_rect(
-                      topright=screen.get_rect().inflate(-100, -100).topright)]
-     for hs in selModes:
-        selectModeTexts.extend([font.render(str(hs[x]), 1, BLUE)
-                               for x in range(3)])
-        selectModePos.extend([selectModeTexts[x].get_rect(
-            topleft=selectModePos[x].bottomleft) for x in range(-3, 0)])
-    #Main menu 게임 메인 메뉴
-    # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
-    # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)
 
+   
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
+    #Main menu 게임 메인 메뉴
+    # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
+    # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
     startText = font.render('SELECT MODES', 1, BLUE)
     startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     hiScoreText = font.render('HIGH SCORES', 1, BLUE)
@@ -167,6 +151,15 @@ def main():
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=startPos.topleft)
 
+    singleText = font.render('SINGLE MODE', 1, BLUE)
+    singlePos = singleText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
+    timeText = font.render('TIME MODE', 1, BLUE)
+    timePos = timeText.get_rect(topleft=singlePos.bottomleft)
+    pvpText = font.render('PVP MODE ', 1, BLUE)
+    pvpPos = pvpText.get_rect(topleft=timePos.bottomleft)
+    selectText = font.render('*', 1, BLUE)
+    selectPos = selectText.get_rect(topright=singlePos.topleft)
+
     #메뉴 번호 우리는 {1:selectModePos , 2: hiScorePos, 3:fxPos, 4:musixPos, 5:quitPos}
     menuDict = {1: startPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
     selection = 1
@@ -176,6 +169,7 @@ def main():
     music = Database.getSound(music=True)
     if music and pygame.mixer: #대충 음악
         pygame.mixer.music.play(loops=-1)
+
 
 #메뉴 시작 루프
     while inMenu:
@@ -195,10 +189,12 @@ def main():
                   and event.key == pygame.K_RETURN):
                 if showHiScores:
                     showHiScores = False
+                elif showSelectModes:
+                    showSelectModes = False
                 elif selection == 1:
-                    #inMenu = False
-                    showSelectModes==True
-                    #ship.initializeKeys()
+                    showSelectModes=True 
+                    inMenu = False
+                    inSelectMenu=True
                 elif selection == 2:
                     showHiScores = True
                 elif selection == 3:
@@ -218,12 +214,14 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_w
                   and selection > 1
-                  and not showHiScores):
+                  and not showHiScores
+                  and not showSelectModes):
                 selection -= 1
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_s
                   and selection < len(menuDict)
-                  and not showHiScores):
+                  and not showHiScores
+                  and not showSelectModes):
                 selection += 1
 
         selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
@@ -231,7 +229,7 @@ def main():
         if showHiScores:
             textOverlays = zip(highScoreTexts, highScorePos)
         elif showSelectModes:
-            textOverlays = zip(selectModeTexts, selectModePos)
+            textOverlays = zip([singleText,timeText,pvpText],[singlePos,timePos,pvpPos])
         else:
             textOverlays = zip([startText, hiScoreText, fxText,
                                 musicText, quitText, selectText,
@@ -245,6 +243,77 @@ def main():
         for txt, pos in textOverlays:
             screen.blit(txt, pos)
         pygame.display.flip()
+
+    #show_mode()
+    # singleText = font.render('SINGLE MODE', 1, BLUE)
+    # singlePos = singleText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
+    # timeText = font.render('TIME MODE', 1, BLUE)
+    # timePos = timeText.get_rect(topleft=singlePos.bottomleft)
+    # pvpText = font.render('PVP MODE ', 1, BLUE)
+    # pvpPos = pvpText.get_rect(topleft=timePos.bottomleft)
+    # selectText = font.render('*', 1, BLUE)
+    # selectPos = selectText.get_rect(topright=singlePos.topleft)
+    #inSelectMenu=True
+    showSingleMode=False
+    showTimeMode=False
+    showPvpMode=False
+    selectModeDict={1:singlePos,2:timePos,3:pvpPos}
+    selection = 1
+    # soundFX = Database.getSound()
+    # music = Database.getSound(music=True)
+    while inSelectMenu:
+                clock.tick(clockTime) #시간으로 제어하는 너낌
+        #blit()
+                screen.blit(
+                    background, (0, 0), area=pygame.Rect(
+                        0, backgroundLoc, 500, 500))
+                backgroundLoc -= speed
+                if backgroundLoc - speed <= speed:
+                    backgroundLoc = 1500
+
+                for event in pygame.event.get():
+                    if (event.type == pygame.QUIT):
+                        return
+                    elif (event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_RETURN):
+                        if showSingleMode:
+                            showSingleMode=False
+                        elif showTimeMode:
+                            showTimeMode=False
+                        elif showPvpMode:
+                            showPvpMode=False
+                        elif selection == 1:
+                            inSelectMenu=False
+                            ship.initializeKeys()
+                        elif selection == 2:
+                            inSelectMenu=False
+                            ship.initializeKeys()
+                        elif selection == 3:
+                            inSelectMenu=False
+                            ship.initializeKeys()
+                    elif (event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_w
+                        and selection > 1
+                        and not showSingleMode
+                        and not showTimeMode
+                        and not showPvpMode):
+                        selection -= 1
+                    elif (event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_s
+                        and selection < len(selectModeDict)
+                        and not showSingleMode
+                        and not showTimeMode
+                        and not showPvpMode):
+                        selection += 1
+                selectPos = selectText.get_rect(topright=selectModeDict[selection].topleft)
+
+                textOverlays = zip([singleText,timeText,pvpText,selectText],[singlePos,timePos,pvpPos,selectPos])
+                screen.blit(title, titleRect)
+                for txt, pos in textOverlays:
+                    screen.blit(txt, pos)
+                
+                pygame.display.flip()
+         
 
     while ship.alive:
         clock.tick(clockTime)
