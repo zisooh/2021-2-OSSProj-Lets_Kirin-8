@@ -146,8 +146,10 @@ def main():
     musicOffText = font.render('OFF', 1, RED)
     musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
     musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+    helpText=font.render('HELP',1,BLUE)
+    helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
     quitText = font.render('QUIT', 1, BLUE)
-    quitPos = quitText.get_rect(topleft=musicPos.bottomleft)
+    quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=startPos.topleft)
 
@@ -158,11 +160,12 @@ def main():
     timePos = timeText.get_rect(topleft=singlePos.bottomleft)
     pvpText = font.render('PVP MODE ', 1, BLUE)
     pvpPos = pvpText.get_rect(topleft=timePos.bottomleft)
-
+    backText=font.render('BACK',1,BLUE)
+    backPos=backText.get_rect(topleft=pvpPos.bottomleft)
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=singlePos.topleft)
 
-    menuDict = {1: startPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
+    menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
     selection = 1
     showSelectModes=False
     showHiScores = False
@@ -210,7 +213,9 @@ def main():
                     else:
                         pygame.mixer.music.stop()
                     Database.setSound(int(music), music=True)
-                elif selection == 5:
+                elif selection==5:
+                    return 
+                elif selection == 6:
                     return
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_w
@@ -232,11 +237,11 @@ def main():
         elif showSelectModes:
             textOverlays = zip([singleText,timeText,pvpText],[singlePos,timePos,pvpPos])
         else:
-            textOverlays = zip([startText, hiScoreText, fxText,
+            textOverlays = zip([startText, hiScoreText, helpText, fxText,
                                 musicText, quitText, selectText,
                                 fxOnText if soundFX else fxOffText,
                                 musicOnText if music else musicOffText],
-                               [startPos, hiScorePos, fxPos,
+                               [startPos, hiScorePos, helpPos, fxPos,
                                 musicPos, quitPos, selectPos,
                                 fxOnPos if soundFX else fxOffPos,
                                 musicOnPos if music else musicOffPos])
@@ -248,7 +253,7 @@ def main():
     showSingleMode=False
     showTimeMode=False
     showPvpMode=False
-    selectModeDict={1:singlePos,2:timePos,3:pvpPos}
+    selectModeDict={1:singlePos,2:timePos,3:pvpPos,4:backPos}
     selection = 1
     while inSelectMenu:
                 clock.tick(clockTime) #시간으로 제어하는 너낌
@@ -280,6 +285,8 @@ def main():
                         elif selection == 3:
                             inSelectMenu=False
                             ship.initializeKeys()
+                        elif selection==4:
+                            return
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_w
                         and selection > 1
@@ -296,7 +303,7 @@ def main():
                         selection += 1
                 selectPos = selectText.get_rect(topright=selectModeDict[selection].topleft)
 
-                textOverlays = zip([singleText,timeText,pvpText,selectText],[singlePos,timePos,pvpPos,selectPos])
+                textOverlays = zip([singleText,timeText,pvpText,selectText,backText],[singlePos,timePos,pvpPos,selectPos,backPos])
                 screen.blit(title, titleRect)
                 for txt, pos in textOverlays:
                     screen.blit(txt, pos)
