@@ -15,6 +15,7 @@ if not pygame.font:
 
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+WHITE = (255, 255, 255)
 
 direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
              pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
@@ -70,6 +71,11 @@ def main():
     ship = Ship()
     initialAlienTypes = (Siney, Spikey)
     powerupTypes = (BombPowerup, ShieldPowerup)
+
+    # pause
+    pause,pauseRect = load_image('pause.png')
+    pauseRect.midtop = screen.get_rect().inflate(0, -200).midtop
+    pauseMenu = False
 
     # Sprite groups
     alldrawings = pygame.sprite.Group()
@@ -135,6 +141,8 @@ def main():
     startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     hiScoreText = font.render('HIGH SCORES', 1, BLUE)
     hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
+    restartText = font.render('RESTART', 1, BLUE)  # restart 메뉴
+    restartPos = restartText.get_rect(bottomleft=hiScorePos.topleft)
     fxText = font.render('SOUND FX ', 1, BLUE)
     fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
     fxOnText = font.render('ON', 1, RED)
@@ -227,6 +235,8 @@ def main():
             screen.blit(txt, pos)
         pygame.display.flip()
 
+
+# 본게임 시작 루프(우주선이 살아있는동안)
     while ship.alive:
         clock.tick(clockTime)
 
@@ -242,6 +252,7 @@ def main():
                 or event.type == pygame.KEYDOWN
                     and event.key == pygame.K_ESCAPE):
                 return
+            # 우주선 무빙
             elif (event.type == pygame.KEYDOWN
                   and event.key in direction.keys()):
                 ship.horiz += direction[event.key][0] * speed
@@ -250,12 +261,14 @@ def main():
                   and event.key in direction.keys()):
                 ship.horiz -= direction[event.key][0] * speed
                 ship.vert -= direction[event.key][1] * speed
+            # 미사일
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_SPACE):
                 Missile.position(ship.rect.midtop)
                 missilesFired += 1
                 if soundFX:
                     missile_sound.play()
+            # 폭탄
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_b):
                 if bombsHeld > 0:
@@ -264,6 +277,75 @@ def main():
                     newBomb.add(bombs, alldrawings)
                     if soundFX:
                         bomb_sound.play()
+            # 일시정지
+            elif (event.type == pygame.KEYDOWN
+                  and event.key == pygame.K_p):
+                pauseMenu = True
+                menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
+                
+                while pauseMenu:
+                    clock.tick(clockTime)
+
+                    for event in pygame.event.get():
+                        if (event.type == pygame.QUIT):
+                            return
+                        elif (event.type == pygame.KEYDOWN  # unpause
+                            and event.key == pygame.K_p):
+                            pauseMenu = False
+                        # pause 메뉴
+                        elif (event.type == pygame.KEYDOWN
+                            and event.key == pygame.K_RETURN):
+                            if showHiScores:
+                                showHiScores = False
+                            elif selection == 1:    # restart 가 안되고 unpause랑 same
+                                pauseMenu = False
+                                ship.initializeKeys()  # unpause하면 가던 방향으로 가ㅇ제로 감
+                            elif selection == 2:
+                                showHiScores = True
+                            elif selection == 3:
+                                soundFX = not soundFX
+                                if soundFX:
+                                    missile_sound.play()
+                                Database.setSound(int(soundFX))
+                            elif selection == 4 and pygame.mixer:
+                                music = not music
+                                if music:
+                                    pygame.mixer.music.play(loops=-1)
+                                else:
+                                    pygame.mixer.music.stop()
+                                Database.setSound(int(music), music=True)
+                            elif selection == 5:
+                                return
+                        elif (event.type == pygame.KEYDOWN
+                            and event.key == pygame.K_w
+                            and selection > 1
+                            and not showHiScores):
+                            selection -= 1
+                        elif (event.type == pygame.KEYDOWN
+                            and event.key == pygame.K_s
+                            and selection < len(menuDict)
+                            and not showHiScores):
+                            selection += 1
+                        
+
+                    selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+
+                    if showHiScores:
+                        textOverlays = zip(highScoreTexts, highScorePos)
+                    else:
+                        textOverlays = zip([restartText, hiScoreText, fxText,
+                                            musicText, quitText, selectText,
+                                            fxOnText if soundFX else fxOffText,
+                                            musicOnText if music else musicOffText],
+                                            [restartPos, hiScorePos, fxPos,
+                                            musicPos, quitPos, selectPos,
+                                            fxOnPos if soundFX else fxOffPos,
+                                            musicOnPos if music else musicOffPos])
+                        screen.blit(pause, pauseRect)
+                    for txt, pos in textOverlays:
+                        screen.blit(txt, pos)
+                    pygame.display.flip()
+            
 
     # Collision Detection
         # Aliens
