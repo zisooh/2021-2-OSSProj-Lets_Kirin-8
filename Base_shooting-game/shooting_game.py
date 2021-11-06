@@ -107,8 +107,7 @@ def main():
     missilesFired = 0
     powerupTime = 10 * clockTime
     powerupTimeLeft = powerupTime
-    # 지수
-    betweenWaveTime = 5 * clockTime
+    betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
     # 지수
     betweenDoubleTime = 8 * clockTime
