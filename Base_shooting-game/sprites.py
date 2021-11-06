@@ -141,6 +141,7 @@ class Ship(MasterSprite):
         self.shieldUp = False
         self.vert = 0
         self.horiz = 0
+        self.life = 3   # 초기 생명 3개
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()

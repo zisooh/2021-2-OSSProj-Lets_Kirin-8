@@ -94,6 +94,11 @@ def main():
     bombs = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
 
+    #life
+    leftLife1, leftLife1Rect = load_image('life.png')
+    leftLife2, leftLife2Rect = load_image('life.png')
+    leftLife3, leftLife3Rect = load_image('life.png')
+    
     # Sounds
     missile_sound = load_sound('missile.ogg')
     bomb_sound = load_sound('bomb.ogg')
@@ -502,6 +507,12 @@ def main():
                     score += 1
                     missilesFired += 1
                     ship.shieldUp = False
+                elif ship.life > 1:   # life
+                    alien.table()
+                    Explosion.position(alien.rect.center)
+                    aliensLeftThisWave -= 1
+                    score += 1
+                    ship.life -= 1
                 else:
                     ship.alive = False
                     ship.remove(allsprites)
@@ -538,15 +549,22 @@ def main():
         scoreText = font.render("Score: " + str(score), 1, BLUE)
         bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
         missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
+        lifeText = font.render("Life: ", 1, BLUE)
 
         wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
         leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
         scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
         bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
         missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
+        lifeTextPos = lifeText.get_rect(topleft=wavePos.bottomleft)
 
-        text = [waveText, leftText, scoreText, bombText, missileText]
-        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos]
+        text = [waveText, leftText, scoreText, bombText, missileText, lifeText]
+        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos, lifeTextPos]
+
+        # left life image
+        leftLife1Rect.topleft = lifeTextPos.topright
+        leftLife2Rect.topleft = leftLife1Rect.topright
+        leftLife3Rect.topleft = leftLife2Rect.topright
 
         # 지수
         if doublemissile:
@@ -611,6 +629,15 @@ def main():
         alldrawings.update()
         for txt, pos in textOverlays:
             screen.blit(txt, pos)
+        
+    # Update left life
+        if ship.life >= 3:
+            screen.blit(leftLife3, leftLife3Rect)
+        if ship.life >= 2:
+            screen.blit(leftLife2, leftLife2Rect)
+        if ship.life >= 1:
+            screen.blit(leftLife1, leftLife1Rect)
+
         pygame.display.flip()
 
     accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
