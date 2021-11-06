@@ -45,8 +45,6 @@ def main():
             score += 1
         elif alien.pType == 'orange':
             score += 2
-        # elif alien.pType == 'white':
-        #     score += 2
         elif alien.pType == 'red':
             score += 4
         elif alien.pType == 'yellow':
