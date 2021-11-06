@@ -1,18 +1,11 @@
-import os
-import sqlite3
 import pymysql
 
-main_dir = os.path.split(os.path.abspath(__file__))[0]
-data_dir = os.path.join(main_dir, 'data')
-
-
 class Database(object):
-    #path = os.path.join(data_dir, 'hiScores.db')
     numScores = 15
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
         self.scoreDB=pymysql.connect(host=host,user=user,password=password,db=db,charset=charset)
         self.cursor=self.scoreDB.cursor(pymysql.cursors.DictCursor)
-    @staticmethod
+
     def getSound(self,music=False):
         curs = self.scoreDB.cursor(pymysql.cursors.DictCursor)
         if music:
@@ -26,7 +19,6 @@ class Database(object):
         curs.close()
         return bool(setting[0][0]) if len(setting) > 0 else False
 
-    @staticmethod
     def setSound(self,setting, music=False):
         curs = self.scoreDB.cursor()
         if music:
@@ -38,7 +30,7 @@ class Database(object):
         self.scoreDB.commit()
         curs.close()
 
-    @classmethod
+
     def getScores(self):
         curs = self.scoreDB.cursor()
 
@@ -50,8 +42,7 @@ class Database(object):
         curs.close()
         return hiScores
 
-    @staticmethod
-    def setScore(self,hiScores,entry):
+    def setScore(self,hiScores,name, score, accuracy):
         curs = self.scoreDB.cursor()
 
         if len(hiScores) == Database.numScores:
@@ -59,6 +50,7 @@ class Database(object):
             lowScore = hiScores[-1][1]
             curs.execute("DELETE FROM scores WHERE (name = ? AND score = ?)",
                       (lowScoreName, lowScore))
-        curs.execute("INSERT INTO scores VALUES (?,?,?)", entry)
+        sql="INSERT INTO scores VALUES (%s,%s,%s)"
+        curs.execute(sql,(name, score, accuracy))
         self.scoreDB.commit()
         curs.close()
