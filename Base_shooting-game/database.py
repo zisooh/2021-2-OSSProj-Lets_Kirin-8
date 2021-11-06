@@ -9,14 +9,9 @@ data_dir = os.path.join(main_dir, 'data')
 class Database(object):
     #path = os.path.join(data_dir, 'hiScores.db')
     numScores = 15
-    def __init__(self):
-        self.score_db=pymysql.connect(
-            user='admin',
-            password='letskirin',
-            host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',
-            db='hiScores',
-            charset='utf8'
-        )
+    def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
+        self.score_db=pymysql.connect(host=host,user=user,password=password,db=db,charset=charset)
+        self.cursor=self.score_db.cursor(pymysql.cursors.DictCursor)
     @staticmethod
     def getSound(self,music=False):
         
