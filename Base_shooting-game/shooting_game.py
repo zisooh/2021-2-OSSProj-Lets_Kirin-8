@@ -123,7 +123,7 @@ def main():
     inMenu = True
 
     # 데베 함수 메뉴 구현
-    hiScores = Database().getScores()
+    hiScores = Database.getScores()
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
