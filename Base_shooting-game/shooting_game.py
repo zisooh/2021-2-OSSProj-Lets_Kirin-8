@@ -117,7 +117,6 @@ def main():
     curTime = 0
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
-    # 지수
     doublemissile = False
     doublemissileHeld = 3
     bombsHeld = 3
@@ -127,7 +126,6 @@ def main():
     powerupTimeLeft = powerupTime
     betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
-    # 지수
     betweenDoubleTime = 8 * clockTime
     betweenDoubleCount = betweenDoubleTime
     font = pygame.font.Font(None, 36)
@@ -154,7 +152,7 @@ def main():
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
-    #Main menu 게임 메인 메뉴
+    # Main menu 게임 메인 메뉴
     # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
     # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
     startText = font.render('SELECT MODES', 1, BLUE)
@@ -372,7 +370,6 @@ def main():
             # Missile
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_SPACE):
-                # 지수
                 # if doublemissile :
                 #     Missile.position(ship.rect.topleft)
                 #     Missile.position(ship.rect.topright)
@@ -384,7 +381,6 @@ def main():
                 missilesFired += 1
                 if soundFX:
                     missile_sound.play()
-            # 지수
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_m):
                 if doublemissileHeld > 0 :
@@ -480,27 +476,21 @@ def main():
             for bomb in bombs:
                 if pygame.sprite.collide_circle(
                         bomb, alien) and alien in Alien.active:
-                    # alien.table()
                     if alien.pType != 'white' :
                         alien.table()
                         Explosion.position(alien.rect.center)
                     aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
                     missilesFired += 1
-                    # aliensLeftThisWave -= 1
-                    # score += 1
                     if soundFX:
                         alien_explode_sound.play()
             for missile in Missile.active:
                 if pygame.sprite.collide_rect(
                         missile, alien) and alien in Alien.active:
-                    # alien.table()
                     missile.table()
                     if alien.pType != 'white' :
                         alien.table()
                         Explosion.position(alien.rect.center)
                     aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
-                    # aliensLeftThisWave -= 1
-                    # score += 1
                     if soundFX:
                         alien_explode_sound.play()
             if pygame.sprite.collide_rect(alien, ship):
@@ -508,8 +498,6 @@ def main():
                     alien.table()
                     Explosion.position(alien.rect.center)
                     aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
-                    # aliensLeftThisWave -= 1
-                    # score += 1
                     missilesFired += 1
                     ship.shieldUp = False
                 else:
@@ -526,7 +514,6 @@ def main():
                     bombsHeld += 1
                 elif powerup.pType == 'shield':
                     ship.shieldUp = True
-                # 지수
                 elif powerup.pType == 'doublemissile' :
                     # doublemissileHeld += 1
                     doublemissile = True
@@ -558,7 +545,6 @@ def main():
         text = [waveText, leftText, scoreText, bombText, missileText]
         textposition = [wavePos, leftPos, scorePos, bombPos, missilePos]
 
-        # 지수
         if doublemissile:
             if betweenDoubleCount > 0:
                 betweenDoubleCount -= 1
