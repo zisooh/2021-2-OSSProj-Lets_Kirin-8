@@ -479,7 +479,7 @@ def main():
                     if alien.pType != 'white' :
                         alien.table()
                         Explosion.position(alien.rect.center)
-                    aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                        aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
                     missilesFired += 1
                     if soundFX:
                         alien_explode_sound.play()
@@ -490,7 +490,7 @@ def main():
                     if alien.pType != 'white' :
                         alien.table()
                         Explosion.position(alien.rect.center)
-                    aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                        aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
                     if soundFX:
                         alien_explode_sound.play()
             if pygame.sprite.collide_rect(alien, ship):
