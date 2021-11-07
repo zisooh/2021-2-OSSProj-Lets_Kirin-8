@@ -137,7 +137,7 @@ def main():
     inMenu = True
 
     # 데베 함수 메뉴 구현
-    hiScores = Database.getScores() #데베 함수 불러오기 
+    hiScores=Database().getScores()
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
@@ -201,8 +201,8 @@ def main():
     selection = 1
     showSelectModes=False
     showHiScores = False
-    soundFX = Database.getSound()
-    music = Database.getSound(music=True)
+    soundFX = Database().getSound()
+    music = Database().getSound(music=True)
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
 
@@ -681,7 +681,7 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_RETURN
                   and len(name) > 0):
-                Database.setScore(hiScores, (name, score, accuracy))
+                Database().setScore(hiScores,name, score, accuracy)
                 return True
 
         if isHiScore:
