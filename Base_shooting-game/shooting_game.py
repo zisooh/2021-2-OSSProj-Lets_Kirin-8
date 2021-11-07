@@ -94,6 +94,11 @@ def main():
     bombs = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
 
+    # life
+    life1, life1Rect = load_image('life.png')
+    life2, life2Rect = load_image('life.png')
+    life3, life3Rect = load_image('life.png')
+
     # Sounds
     missile_sound = load_sound('missile.ogg')
     bomb_sound = load_sound('bomb.ogg')
@@ -397,10 +402,15 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_p):
                 pauseMenu = True
-                menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 4: musicPos, 5: quitPos}
+                menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                            4: musicPos, 5: helpPos, 6: quitPos}
                 
                 while pauseMenu:
                     clock.tick(clockTime)
+
+                    screen.blit(
+                        background, (0, 0), area=pygame.Rect(
+                            0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
 
                     for event in pygame.event.get():
                         if (event.type == pygame.QUIT):
@@ -413,9 +423,8 @@ def main():
                             and event.key == pygame.K_RETURN):
                             if showHiScores:
                                 showHiScores = False
-                            elif selection == 1:    # FIX!! : No restart / Just like unpause
+                            elif selection == 1:    
                                 pauseMenu = False
-                                ship.initializeKeys()  # FIX!! : After unpause, moving error
                             elif selection == 2:
                                 showHiScores = True
                             elif selection == 3:
@@ -431,6 +440,8 @@ def main():
                                     pygame.mixer.music.stop()
                                 Database.setSound(int(music), music=True)
                             elif selection == 5:
+                                return
+                            elif selection == 6:
                                 return
                         elif (event.type == pygame.KEYDOWN
                             and event.key == pygame.K_w
@@ -449,17 +460,19 @@ def main():
                     if showHiScores:
                         textOverlays = zip(highScoreTexts, highScorePos)
                     else:
-                        textOverlays = zip([restartText, hiScoreText, fxText,
+                        textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                             musicText, quitText, selectText,
                                             fxOnText if soundFX else fxOffText,
                                             musicOnText if music else musicOffText],
-                                            [restartPos, hiScorePos, fxPos,
+                                            [restartPos, hiScorePos, helpPos, fxPos,
                                             musicPos, quitPos, selectPos,
                                             fxOnPos if soundFX else fxOffPos,
                                             musicOnPos if music else musicOffPos])
                         screen.blit(pause, pauseRect)
                     for txt, pos in textOverlays:
                         screen.blit(txt, pos)
+
+                    alldrawings.update()
                     pygame.display.flip()
             
 
@@ -494,6 +507,12 @@ def main():
                     score += 1
                     missilesFired += 1
                     ship.shieldUp = False
+                elif ship.life > 1:   # life
+                    alien.table()
+                    Explosion.position(alien.rect.center)
+                    aliensLeftThisWave -= 1
+                    score += 1
+                    ship.life -= 1
                 else:
                     ship.alive = False
                     ship.remove(allsprites)
@@ -525,20 +544,21 @@ def main():
 
     # Update text overlays
         waveText = font.render("Wave: " + str(wave), 1, BLUE)
-        leftText = font.render("Aliens Left: " + str(aliensLeftThisWave),
-                               1, BLUE)
+        leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLUE)
         scoreText = font.render("Score: " + str(score), 1, BLUE)
         bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
         missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
+        lifeText = font.render("Life: ", 1, BLUE)
 
         wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
         leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
         scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
         bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
         missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
+        lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
 
-        text = [waveText, leftText, scoreText, bombText, missileText]
-        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos]
+        text = [waveText, leftText, scoreText, bombText, missileText, lifeText]
+        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos, lifePos]
 
         # 지수
         if doublemissile:
@@ -603,7 +623,21 @@ def main():
         alldrawings.update()
         for txt, pos in textOverlays:
             screen.blit(txt, pos)
+
+    # Update life
+        life1Rect.topleft = lifePos.topright
+        life2Rect.topleft = life1Rect.topright
+        life3Rect.topleft = life2Rect.topright
+
+        if ship.life >= 3:
+            screen.blit(life3, life3Rect)
+        if ship.life >= 2:
+            screen.blit(life2, life2Rect)
+        if ship.life >= 1:
+            screen.blit(life1, life1Rect)
+
         pygame.display.flip()
+
 
     accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
     isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
