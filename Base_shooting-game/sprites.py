@@ -121,7 +121,11 @@ class ShieldPowerup(Powerup):
     def __init__(self):
         super().__init__('shield')
         self.pType = 'shield'
-
+# 지수-수정
+class DoublemissilePowerup(Powerup):
+    def __init__(self):
+        super().__init__('doublemissile')
+        self.pType = 'doublemissile'
 
 class Ship(MasterSprite):
     def __init__(self):
@@ -137,6 +141,7 @@ class Ship(MasterSprite):
         self.shieldUp = False
         self.vert = 0
         self.horiz = 0
+        self.life = 3   # 초기 생명 3개
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()
@@ -176,8 +181,8 @@ class Ship(MasterSprite):
 
     def bomb(self):
         return Bomb(self)
-
-
+     
+      
 class Alien(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
