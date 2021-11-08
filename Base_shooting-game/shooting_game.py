@@ -306,7 +306,8 @@ def main():
                             inSelectMenu=False
                             ship.initializeKeys()
                         elif selection==4:
-                            return
+                            inMenu=True
+                            inSelectMenu=False
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_w
                         and selection > 1
