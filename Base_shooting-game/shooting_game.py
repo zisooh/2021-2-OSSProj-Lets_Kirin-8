@@ -207,7 +207,7 @@ def main():
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
     
-    Menu().login()
+    Menu().init_page()
 
 #########################
 #    Start Menu Loop    #

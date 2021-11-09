@@ -29,10 +29,16 @@ class Menu:
         self.font = pygame.font.Font(None, 36)
         self.title, self.titleRect = load_image('title.png')
         self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
-        self.loginText = self.font.render('log in', 1, BLUE)
+        
+        self.loginText = self.font.render('LOG IN', 1, BLUE)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.signText=self.font.render('sign up',1,BLUE)
+        self.signText=self.font.render('SIGN UP',1,BLUE)
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
+
+        self.idText=self.font.render('ID:',1,BLUE)
+        self.idPos=self.idText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
+        self.pwdText=self.font.render('PWD:',1,BLUE)
+        self.pwdPos=self.pwdText.get_rect(topleft=self.idPos.bottomleft)
 
         self.speed = 1.5
         self.clockTime = 60  # maximum FPS
@@ -46,7 +52,7 @@ class Menu:
         self.selectPos =self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)
         self.textOverlays=0
 
-    def login(self):
+    def init_page(self):
         while self.ininitalMenu:
             self.clock.tick(self.clockTime) 
             self.screen.blit(
@@ -81,12 +87,19 @@ class Menu:
 
             self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)
 
-            if self.showlogin:
-                self.textOverlays = zip(self.loginText, self.loginPos)
-            else:
-                self.textOverlays = zip([self.loginText, self.signText,self.selectText],
+            self.textOverlays = zip([self.loginText, self.signText,self.selectText],
                                 [self.loginPos, self.signPos,self.selectPos])
-                self.screen.blit(self.title, self.titleRect)
+            self.screen.blit(self.title, self.titleRect)
+
+            # if self.showlogin:
+            #     self.textOverlays = zip(self.idText, self.pwdPos)
+            # else:
+            #     self.textOverlays = zip([self.loginText, self.signText,self.selectText],
+            #                     [self.loginPos, self.signPos,self.selectPos])
+            #     self.screen.blit(self.title, self.titleRect)
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
+    
+    
+    
