@@ -1,4 +1,5 @@
 import pymysql
+import bcrypt
 
 class Database(object):
     numScores = 15

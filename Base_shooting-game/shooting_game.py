@@ -7,6 +7,7 @@ from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
+from menu import Menu
 
 if not pygame.mixer:
     print('Warning, sound disabled')
@@ -205,7 +206,8 @@ def main():
     music = Database().getSound(music=True)
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
-
+    
+    Menu().login()
 
 #########################
 #    Start Menu Loop    #
