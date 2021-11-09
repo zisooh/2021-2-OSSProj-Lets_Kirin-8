@@ -1,4 +1,5 @@
 import pymysql
+import bcrypt
 
 class Database(object):
     numScores = 15
@@ -48,8 +49,8 @@ class Database(object):
         if len(hiScores) == Database.numScores:
             lowScoreName = hiScores[-1][0]
             lowScore = hiScores[-1][1]
-            curs.execute("DELETE FROM scores WHERE (name = ? AND score = ?)",
-                      (lowScoreName, lowScore))
+            sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
+            curs.execute(sql,(lowScoreName,lowScore))
         sql="INSERT INTO scores VALUES (%s,%s,%s)"
         curs.execute(sql,(name, score, accuracy))
         self.scoreDB.commit()
