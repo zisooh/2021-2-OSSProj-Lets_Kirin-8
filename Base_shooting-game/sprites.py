@@ -51,7 +51,7 @@ class Missile(MasterSprite):
             missile.add(cls.allsprites, cls.active)
             missile.remove(cls.pool)
             missile.rect.midbottom = loc
-
+    
     def table(self):
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
@@ -89,7 +89,7 @@ class Bomb(pygame.sprite.Sprite):
 class Powerup(MasterSprite):
     def __init__(self, kindof):
         super().__init__()
-        self.image, self.rect = load_image(kindof + '_powerup.png', -1)
+        self.image, self.rect = load_image(kindof + 'shield_powerup.png', -1)
         self.original = self.image
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -121,7 +121,7 @@ class ShieldPowerup(Powerup):
     def __init__(self):
         super().__init__('shield')
         self.pType = 'shield'
-# 지수-수정
+
 class DoublemissilePowerup(Powerup):
     def __init__(self):
         super().__init__('doublemissile')
@@ -243,6 +243,7 @@ class Siney(Alien):
         self.amp = random.randint(self.rect.width, 3 * self.rect.width)
         self.freq = (1 / 20)
         self.moveFunc = lambda: (self.amp * math.sin(self.loc * self.freq), 0)
+        self.pType = 'green'
 
 
 class Roundy(Alien):
@@ -259,6 +260,7 @@ class Roundy(Alien):
             math.cos(
                 self.loc *
                 self.freq))
+        self.pType = 'red'
 
 
 class Spikey(Alien):
@@ -271,18 +273,21 @@ class Spikey(Alien):
                                  else self.slope * self.period // 2
                                  - self.slope * ((self.loc % self.period)
                                  - self.period // 2), 0)
+        self.pType = 'orange'
 
 
 class Fasty(Alien):
     def __init__(self):
         super().__init__('white')
         self.moveFunc = lambda: (0, 3 * self.loc)
+        self.pType = 'white'
 
 
 class Crawly(Alien):
     def __init__(self):
         super().__init__('yellow')
         self.moveFunc = lambda: (self.loc, 0)
+        self.pType = 'yellow'
 
     def update(self):
         horiz, vert = self.moveFunc()

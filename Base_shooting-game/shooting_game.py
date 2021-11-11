@@ -1,7 +1,7 @@
 import pygame
 import random
 from collections import deque
-# 지수
+
 from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
@@ -31,13 +31,25 @@ class Keyboard(object):
             pygame.K_y: 'Y', pygame.K_z: 'Z'}
 
 
-def main():
+def main(): 
     # Initialize everything
     pygame.mixer.pre_init(11025, -16, 2, 512)
     pygame.init()
     screen = pygame.display.set_mode((500, 500))
     pygame.display.set_caption('Shooting Game')
     pygame.mouse.set_visible(0)
+
+    def kill_alien(alien, aliensLeftThisWave, score) :
+        aliensLeftThisWave -= 1
+        if alien.pType == 'green':
+            score += 1
+        elif alien.pType == 'orange':
+            score += 2
+        elif alien.pType == 'red':
+            score += 4
+        elif alien.pType == 'yellow':
+            score += 8
+        return aliensLeftThisWave, score
 
 # Create the background which will scroll and loop over a set of different
 # size stars
@@ -69,8 +81,8 @@ def main():
     clockTime = 60  # maximum FPS
     clock = pygame.time.Clock()
     ship = Ship()
+    
     initialAlienTypes = (Siney, Spikey)
-    # 지수
     powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
 
     # pause
@@ -89,7 +101,7 @@ def main():
     Missile.active = pygame.sprite.Group()
     Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
     Explosion.active = pygame.sprite.Group()
-    # 지수
+    
     # doublemissile = pygame.sprite.Group()
     bombs = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
@@ -110,7 +122,6 @@ def main():
     curTime = 0
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
-    # 지수
     doublemissile = False
     doublemissileHeld = 3
     bombsHeld = 3
@@ -118,17 +129,15 @@ def main():
     missilesFired = 0
     powerupTime = 10 * clockTime
     powerupTimeLeft = powerupTime
-    # 지수
-    betweenWaveTime = 5 * clockTime
+    betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
-    # 지수
     betweenDoubleTime = 8 * clockTime
     betweenDoubleCount = betweenDoubleTime
     font = pygame.font.Font(None, 36)
     inMenu = True
 
     # 데베 함수 메뉴 구현
-    hiScores = Database.getScores() #데베 함수 불러오기 
+    hiScores=Database().getScores()
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
@@ -148,7 +157,7 @@ def main():
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
-    #Main menu 게임 메인 메뉴
+    # Main menu 게임 메인 메뉴
     # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
     # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
     startText = font.render('SELECT MODES', 1, BLUE)
@@ -192,8 +201,8 @@ def main():
     selection = 1
     showSelectModes=False
     showHiScores = False
-    soundFX = Database.getSound()
-    music = Database.getSound(music=True)
+    soundFX = Database().getSound()
+    music = Database().getSound(music=True)
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
 
@@ -206,7 +215,7 @@ def main():
 #blit()
         screen.blit(
             background, (0, 0), area=pygame.Rect(
-                0, backgroundLoc, 500, 500))
+                0, backgroundLoc, 1000, 500))
         backgroundLoc -= speed
         if backgroundLoc - speed <= speed:
             backgroundLoc = 1500
@@ -238,7 +247,7 @@ def main():
                     else:
                         pygame.mixer.music.stop()
                     Database.setSound(int(music), music=True)
-                elif selection==5:
+                elif selection == 5:
                     return 
                 elif selection == 6:
                     return
@@ -339,310 +348,345 @@ def main():
 #########################
 #    Start Game Loop    #
 #########################
-    while ship.alive:
-        clock.tick(clockTime)
+    restart = True
+    while restart == True:
 
-        if aliensLeftThisWave >= 20:
-            powerupTimeLeft -= 1
-        if powerupTimeLeft <= 0:
-            powerupTimeLeft = powerupTime
-            random.choice(powerupTypes)().add(powerups, allsprites)
+        # Reset Sprite groups
+        alldrawings = pygame.sprite.Group()
+        allsprites = pygame.sprite.RenderPlain((ship,))
+        MasterSprite.allsprites = allsprites
+        Alien.pool = pygame.sprite.Group(
+            [alien() for alien in initialAlienTypes for _ in range(5)])
+        Alien.active = pygame.sprite.Group()
+        Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
+        Missile.active = pygame.sprite.Group()
+        Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
+        Explosion.active = pygame.sprite.Group()
 
-    # Event Handling
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT
-                or event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_ESCAPE):
-                return
-            # Ship Moving
-            elif (event.type == pygame.KEYDOWN
-                  and event.key in direction.keys()):
-                ship.horiz += direction[event.key][0] * speed
-                ship.vert += direction[event.key][1] * speed
-            elif (event.type == pygame.KEYUP
-                  and event.key in direction.keys()):
-                ship.horiz -= direction[event.key][0] * speed
-                ship.vert -= direction[event.key][1] * speed
-            # Missile
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_SPACE):
-                # 지수
-                # if doublemissile :
-                #     Missile.position(ship.rect.topleft)
-                #     Missile.position(ship.rect.topright)
-                #     missilesFired += 2
-                # else : 
-                #     Missile.position(ship.rect.midtop)
-                #     missilesFired += 1
-                Missile.position(ship.rect.midtop)
-                missilesFired += 1
-                if soundFX:
-                    missile_sound.play()
-            # 지수
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_m):
-                if doublemissileHeld > 0 :
-                    doublemissile = True
-                    # double_on = True
-                    # double_limit += 1
-                    # doublemissileHeld -= 1
-                    Missile.position(ship.rect.topleft)
-                    Missile.position(ship.rect.topright)
-                    missilesFired += 2  
-            # Bomb
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_b):
-                if bombsHeld > 0:
-                    bombsHeld -= 1
-                    newBomb = ship.bomb()
-                    newBomb.add(bombs, alldrawings)
+        # Reset game contents
+        curTime = 0
+        aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
+        wave = 1
+        doublemissile = False
+        doublemissileHeld = 3
+        bombsHeld = 3
+        score = 0
+        missilesFired = 0
+        powerupTime = 10 * clockTime
+        powerupTimeLeft = powerupTime
+        betweenWaveTime = 3 * clockTime
+        betweenWaveCount = betweenWaveTime
+        betweenDoubleTime = 8 * clockTime
+        betweenDoubleCount = betweenDoubleTime
+        ship.alive = True
+
+        # 본게임시작
+        while ship.alive:
+            clock.tick(clockTime)
+
+            if aliensLeftThisWave >= 20:
+                powerupTimeLeft -= 1
+            if powerupTimeLeft <= 0:
+                powerupTimeLeft = powerupTime
+                random.choice(powerupTypes)().add(powerups, allsprites)
+
+        # Event Handling
+            for event in pygame.event.get():
+                if (event.type == pygame.QUIT
+                    or event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_ESCAPE):
+                    return
+                # Ship Moving
+                elif (event.type == pygame.KEYDOWN
+                    and event.key in direction.keys()):
+                    ship.horiz += direction[event.key][0] * speed
+                    ship.vert += direction[event.key][1] * speed
+                elif (event.type == pygame.KEYUP
+                    and event.key in direction.keys()):
+                    ship.horiz -= direction[event.key][0] * speed
+                    ship.vert -= direction[event.key][1] * speed
+                # Missile
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_SPACE):
+                    # if doublemissile :
+                    #     Missile.position(ship.rect.topleft)
+                    #     Missile.position(ship.rect.topright)
+                    #     missilesFired += 2
+                    # else : 
+                    #     Missile.position(ship.rect.midtop)
+                    #     missilesFired += 1
+                    Missile.position(ship.rect.midtop)
+                    missilesFired += 1
                     if soundFX:
-                        bomb_sound.play()
-            # Pause
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_p):
-                pauseMenu = True
-                menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
-                            4: musicPos, 5: helpPos, 6: quitPos}
-                
-                while pauseMenu:
-                    clock.tick(clockTime)
+                        missile_sound.play()
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_m):
+                    if doublemissileHeld > 0 :
+                        doublemissile = True
+                        # double_on = True
+                        # double_limit += 1
+                        # doublemissileHeld -= 1
+                        Missile.position(ship.rect.topleft)
+                        Missile.position(ship.rect.topright)
+                        missilesFired += 2  
+                # Bomb
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_b):
+                    if bombsHeld > 0:
+                        bombsHeld -= 1
+                        newBomb = ship.bomb()
+                        newBomb.add(bombs, alldrawings)
+                        if soundFX:
+                            bomb_sound.play()
+                # Pause
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_p):
+                    pauseMenu = True
+                    menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                                4: musicPos, 5: helpPos, 6: quitPos}
+                    
+                    while pauseMenu:
+                        clock.tick(clockTime)
 
-                    screen.blit(
-                        background, (0, 0), area=pygame.Rect(
-                            0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
+                        screen.blit(
+                            background, (0, 0), area=pygame.Rect(
+                                0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
 
-                    for event in pygame.event.get():
-                        if (event.type == pygame.QUIT):
-                            return
-                        elif (event.type == pygame.KEYDOWN  # unpause
-                            and event.key == pygame.K_p):
-                            pauseMenu = False
-                        # Pause Menu
-                        elif (event.type == pygame.KEYDOWN
-                            and event.key == pygame.K_RETURN):
-                            if showHiScores:
-                                showHiScores = False
-                            elif selection == 1:    
+                        for event in pygame.event.get():
+                            if (event.type == pygame.QUIT):
+                                return
+                            elif (event.type == pygame.KEYDOWN  # unpause
+                                and event.key == pygame.K_p):
                                 pauseMenu = False
-                            elif selection == 2:
-                                showHiScores = True
-                            elif selection == 3:
-                                soundFX = not soundFX
-                                if soundFX:
-                                    missile_sound.play()
-                                Database.setSound(int(soundFX))
-                            elif selection == 4 and pygame.mixer:
-                                music = not music
-                                if music:
-                                    pygame.mixer.music.play(loops=-1)
-                                else:
-                                    pygame.mixer.music.stop()
-                                Database.setSound(int(music), music=True)
-                            elif selection == 5:
-                                return
-                            elif selection == 6:
-                                return
-                        elif (event.type == pygame.KEYDOWN
-                            and event.key == pygame.K_w
-                            and selection > 1
-                            and not showHiScores):
-                            selection -= 1
-                        elif (event.type == pygame.KEYDOWN
-                            and event.key == pygame.K_s
-                            and selection < len(menuDict)
-                            and not showHiScores):
-                            selection += 1
-                        
+                            # Pause Menu
+                            elif (event.type == pygame.KEYDOWN
+                                and event.key == pygame.K_RETURN):
+                                if showHiScores:
+                                    showHiScores = False
+                                elif selection == 1:    
+                                    pauseMenu = False
+                                    ship.alive = False
+                                elif selection == 2:
+                                    showHiScores = True
+                                elif selection == 3:
+                                    soundFX = not soundFX
+                                    if soundFX:
+                                        missile_sound.play()
+                                    Database.setSound(int(soundFX))
+                                elif selection == 4 and pygame.mixer:
+                                    music = not music
+                                    if music:
+                                        pygame.mixer.music.play(loops=-1)
+                                    else:
+                                        pygame.mixer.music.stop()
+                                    Database.setSound(int(music), music=True)
+                                elif selection == 5:
+                                    return
+                                elif selection == 6:
+                                    return
+                            elif (event.type == pygame.KEYDOWN
+                                and event.key == pygame.K_w
+                                and selection > 1
+                                and not showHiScores):
+                                selection -= 1
+                            elif (event.type == pygame.KEYDOWN
+                                and event.key == pygame.K_s
+                                and selection < len(menuDict)
+                                and not showHiScores):
+                                selection += 1
+                            
 
-                    selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+                        selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
 
-                    if showHiScores:
-                        textOverlays = zip(highScoreTexts, highScorePos)
+                        if showHiScores:
+                            textOverlays = zip(highScoreTexts, highScorePos)
+                        else:
+                            textOverlays = zip([restartText, hiScoreText, helpText, fxText,
+                                                musicText, quitText, selectText,
+                                                fxOnText if soundFX else fxOffText,
+                                                musicOnText if music else musicOffText],
+                                                [restartPos, hiScorePos, helpPos, fxPos,
+                                                musicPos, quitPos, selectPos,
+                                                fxOnPos if soundFX else fxOffPos,
+                                                musicOnPos if music else musicOffPos])
+                            screen.blit(pause, pauseRect)
+                        for txt, pos in textOverlays:
+                            screen.blit(txt, pos)
+
+                        alldrawings.update()
+                        pygame.display.flip()
+                
+
+        # Collision Detection
+            # Aliens
+            for alien in Alien.active:
+                for bomb in bombs:
+                    if pygame.sprite.collide_circle(
+                            bomb, alien) and alien in Alien.active:
+                        if alien.pType != 'white' :
+                            alien.table()
+                            Explosion.position(alien.rect.center)
+                            aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                        missilesFired += 1
+                        if soundFX:
+                            alien_explode_sound.play()
+                for missile in Missile.active:
+                    if pygame.sprite.collide_rect(
+                            missile, alien) and alien in Alien.active:
+                        missile.table()
+                        if alien.pType != 'white' :
+                            alien.table()
+                            Explosion.position(alien.rect.center)
+                            aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                        if soundFX:
+                            alien_explode_sound.play()
+                if pygame.sprite.collide_rect(alien, ship):
+                    if ship.shieldUp:
+                        alien.table()
+                        Explosion.position(alien.rect.center)
+                        aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                        missilesFired += 1
+                        ship.shieldUp = False
+                    elif ship.life > 1:   # life
+                        alien.table()
+                        Explosion.position(alien.rect.center)
+                        aliensLeftThisWave -= 1
+                        score += 1
+                        ship.life -= 1
                     else:
-                        textOverlays = zip([restartText, hiScoreText, helpText, fxText,
-                                            musicText, quitText, selectText,
-                                            fxOnText if soundFX else fxOffText,
-                                            musicOnText if music else musicOffText],
-                                            [restartPos, hiScorePos, helpPos, fxPos,
-                                            musicPos, quitPos, selectPos,
-                                            fxOnPos if soundFX else fxOffPos,
-                                            musicOnPos if music else musicOffPos])
-                        screen.blit(pause, pauseRect)
-                    for txt, pos in textOverlays:
-                        screen.blit(txt, pos)
+                        restart = False
+                        ship.alive = False
+                        ship.remove(allsprites)
+                        Explosion.position(ship.rect.center)
+                        if soundFX:
+                            ship_explode_sound.play()
 
-                    alldrawings.update()
-                    pygame.display.flip()
-            
+            # PowerUps
+            for powerup in powerups:
+                if pygame.sprite.collide_circle(powerup, ship):
+                    if powerup.pType == 'bomb':
+                        bombsHeld += 1
+                    elif powerup.pType == 'shield':
+                        ship.shieldUp = True
+                    elif powerup.pType == 'doublemissile' :
+                        # doublemissileHeld += 1
+                        doublemissile = True
+                    powerup.kill()
+                elif powerup.rect.top > powerup.area.bottom:
+                    powerup.kill()
 
-    # Collision Detection
-        # Aliens
-        for alien in Alien.active:
-            for bomb in bombs:
-                if pygame.sprite.collide_circle(
-                        bomb, alien) and alien in Alien.active:
-                    alien.table()
-                    Explosion.position(alien.rect.center)
-                    missilesFired += 1
-                    aliensLeftThisWave -= 1
-                    score += 1
-                    if soundFX:
-                        alien_explode_sound.play()
-            for missile in Missile.active:
-                if pygame.sprite.collide_rect(
-                        missile, alien) and alien in Alien.active:
-                    alien.table()
-                    missile.table()
-                    Explosion.position(alien.rect.center)
-                    aliensLeftThisWave -= 1
-                    score += 1
-                    if soundFX:
-                        alien_explode_sound.play()
-            if pygame.sprite.collide_rect(alien, ship):
-                if ship.shieldUp:
-                    alien.table()
-                    Explosion.position(alien.rect.center)
-                    aliensLeftThisWave -= 1
-                    score += 1
-                    missilesFired += 1
-                    ship.shieldUp = False
-                elif ship.life > 1:   # life
-                    alien.table()
-                    Explosion.position(alien.rect.center)
-                    aliensLeftThisWave -= 1
-                    score += 1
-                    ship.life -= 1
-                else:
-                    ship.alive = False
-                    ship.remove(allsprites)
-                    Explosion.position(ship.rect.center)
-                    if soundFX:
-                        ship_explode_sound.play()
+        # Update Aliens
+            if curTime <= 0 and aliensLeftThisWave > 0:
+                Alien.position()
+                curTime = alienPeriod
+            elif curTime > 0:
+                curTime -= 1
 
-        # PowerUps
-        for powerup in powerups:
-            if pygame.sprite.collide_circle(powerup, ship):
-                if powerup.pType == 'bomb':
-                    bombsHeld += 1
-                elif powerup.pType == 'shield':
-                    ship.shieldUp = True
-                # 지수
-                elif powerup.pType == 'doublemissile' :
-                    # doublemissileHeld += 1
-                    doublemissile = True
-                powerup.kill()
-            elif powerup.rect.top > powerup.area.bottom:
-                powerup.kill()
+        # Update text overlays
+            waveText = font.render("Wave: " + str(wave), 1, BLUE)
+            leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLUE)
+            scoreText = font.render("Score: " + str(score), 1, BLUE)
+            bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
+            missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
+            lifeText = font.render("Life: ", 1, BLUE)
 
-    # Update Aliens
-        if curTime <= 0 and aliensLeftThisWave > 0:
-            Alien.position()
-            curTime = alienPeriod
-        elif curTime > 0:
-            curTime -= 1
+            wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
+            leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
+            scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
+            bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
+            missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
+            lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
 
-    # Update text overlays
-        waveText = font.render("Wave: " + str(wave), 1, BLUE)
-        leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLUE)
-        scoreText = font.render("Score: " + str(score), 1, BLUE)
-        bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
-        missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
-        lifeText = font.render("Life: ", 1, BLUE)
+            text = [waveText, leftText, scoreText, bombText, missileText, lifeText]
+            textposition = [wavePos, leftPos, scorePos, bombPos, missilePos, lifePos]
 
-        wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
-        leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
-        scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
-        bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-        missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
-        lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
+            if doublemissile:
+                if betweenDoubleCount > 0:
+                    betweenDoubleCount -= 1
+                elif betweenDoubleCount == 0:
+                    doublemissile = False
+                    betweenDoubleCount = betweenDoubleTime
 
-        text = [waveText, leftText, scoreText, bombText, missileText, lifeText]
-        textposition = [wavePos, leftPos, scorePos, bombPos, missilePos, lifePos]
+        # Detertmine when to move to next wave
+            if aliensLeftThisWave <= 0:
+                if betweenWaveCount > 0:
+                    betweenWaveCount -= 1
+                    nextWaveText = font.render(
+                        'Wave ' + str(wave + 1) + ' in', 1, BLUE)
+                    nextWaveNum = font.render(
+                        str((betweenWaveCount // clockTime) + 1), 1, BLUE)
+                    text.extend([nextWaveText, nextWaveNum])
+                    nextWavePos = nextWaveText.get_rect(
+                        center=screen.get_rect().center)
+                    nextWaveNumPos = nextWaveNum.get_rect(
+                        midtop=nextWavePos.midbottom)
+                    textposition.extend([nextWavePos, nextWaveNumPos])
+                    if wave % 4 == 0:
+                        speedUpText = font.render('SPEED UP!', 1, RED)
+                        speedUpPos = speedUpText.get_rect(
+                            midtop=nextWaveNumPos.midbottom)
+                        text.append(speedUpText)
+                        textposition.append(speedUpPos)
+                elif betweenWaveCount == 0:
+                    if wave % 4 == 0:
+                        speed += 0.5
+                        MasterSprite.speed = speed
+                        ship.initializeKeys()
+                        aliensThisWave = 10
+                        aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
+                    else:
+                        aliensThisWave *= 2
+                        aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
+                    if wave == 1:
+                        Alien.pool.add([Fasty() for _ in range(5)])
+                    if wave == 2:
+                        Alien.pool.add([Roundy() for _ in range(5)])
+                    if wave == 3:
+                        Alien.pool.add([Crawly() for _ in range(5)])
+                    wave += 1
+                    betweenWaveCount = betweenWaveTime
+                    # if doublemissile:
+                    #     Itemdouble = True
 
-        # 지수
-        if doublemissile:
-            if betweenDoubleCount > 0:
-                betweenDoubleCount -= 1
-            elif betweenDoubleCount == 0:
-                doublemissile = False
-                betweenDoubleCount = betweenDoubleTime
+            textOverlays = zip(text, textposition)
 
-    # Detertmine when to move to next wave
-        if aliensLeftThisWave <= 0:
-            if betweenWaveCount > 0:
-                betweenWaveCount -= 1
-                nextWaveText = font.render(
-                    'Wave ' + str(wave + 1) + ' in', 1, BLUE)
-                nextWaveNum = font.render(
-                    str((betweenWaveCount // clockTime) + 1), 1, BLUE)
-                text.extend([nextWaveText, nextWaveNum])
-                nextWavePos = nextWaveText.get_rect(
-                    center=screen.get_rect().center)
-                nextWaveNumPos = nextWaveNum.get_rect(
-                    midtop=nextWavePos.midbottom)
-                textposition.extend([nextWavePos, nextWaveNumPos])
-                if wave % 4 == 0:
-                    speedUpText = font.render('SPEED UP!', 1, RED)
-                    speedUpPos = speedUpText.get_rect(
-                        midtop=nextWaveNumPos.midbottom)
-                    text.append(speedUpText)
-                    textposition.append(speedUpPos)
-            elif betweenWaveCount == 0:
-                if wave % 4 == 0:
-                    speed += 0.5
-                    MasterSprite.speed = speed
-                    ship.initializeKeys()
-                    aliensThisWave = 10
-                    aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
-                else:
-                    aliensThisWave *= 2
-                    aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
-                if wave == 1:
-                    Alien.pool.add([Fasty() for _ in range(5)])
-                if wave == 2:
-                    Alien.pool.add([Roundy() for _ in range(5)])
-                if wave == 3:
-                    Alien.pool.add([Crawly() for _ in range(5)])
-                wave += 1
-                betweenWaveCount = betweenWaveTime
-                # if doublemissile:
-                #     Itemdouble = True
+        # Update and draw all sprites and text
+            screen.blit(
+                background, (0, 0), area=pygame.Rect(
+                    0, backgroundLoc, 500, 500))
+            backgroundLoc -= speed
+            if backgroundLoc - speed <= speed:
+                backgroundLoc = 1500
+            allsprites.update()
+            allsprites.draw(screen)
+            alldrawings.update()
+            for txt, pos in textOverlays:
+                screen.blit(txt, pos)
 
-        textOverlays = zip(text, textposition)
+        # Update life
+            life1Rect.topleft = lifePos.topright
+            life2Rect.topleft = life1Rect.topright
+            life3Rect.topleft = life2Rect.topright
 
-    # Update and draw all sprites and text
-        screen.blit(
-            background, (0, 0), area=pygame.Rect(
-                0, backgroundLoc, 500, 500))
-        backgroundLoc -= speed
-        if backgroundLoc - speed <= speed:
-            backgroundLoc = 1500
-        allsprites.update()
-        allsprites.draw(screen)
-        alldrawings.update()
-        for txt, pos in textOverlays:
-            screen.blit(txt, pos)
+            if ship.life >= 3:
+                screen.blit(life3, life3Rect)
+            if ship.life >= 2:
+                screen.blit(life2, life2Rect)
+            if ship.life >= 1:
+                screen.blit(life1, life1Rect)
 
-    # Update life
-        life1Rect.topleft = lifePos.topright
-        life2Rect.topleft = life1Rect.topright
-        life3Rect.topleft = life2Rect.topright
-
-        if ship.life >= 3:
-            screen.blit(life3, life3Rect)
-        if ship.life >= 2:
-            screen.blit(life2, life2Rect)
-        if ship.life >= 1:
-            screen.blit(life1, life1Rect)
-
-        pygame.display.flip()
+            pygame.display.flip()
 
 
-    accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
-    isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-    name = ''
-    nameBuffer = []
+        accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
+        isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+        name = ''
+        nameBuffer = []
+
+
+#########################
+#    After Game Loop    #
+#########################
 
     while True:
         clock.tick(clockTime)
@@ -671,7 +715,7 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_RETURN
                   and len(name) > 0):
-                Database.setScore(hiScores, (name, score, accuracy))
+                Database().setScore(hiScores,name, score, accuracy)
                 return True
 
         if isHiScore:
