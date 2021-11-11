@@ -215,7 +215,7 @@ def main():
 #blit()
         screen.blit(
             background, (0, 0), area=pygame.Rect(
-                0, backgroundLoc, 500, 500))
+                0, backgroundLoc, 1000, 500))
         backgroundLoc -= speed
         if backgroundLoc - speed <= speed:
             backgroundLoc = 1500
