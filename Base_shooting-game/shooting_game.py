@@ -130,7 +130,7 @@ def main():
     powerupTimeLeft = powerupTime
     betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
-    betweenDoubleTime = 8 * clockTime
+    betweenDoubleTime = 5 * clockTime
     betweenDoubleCount = betweenDoubleTime
     font = pygame.font.Font(None, 36)
     inMenu = True
