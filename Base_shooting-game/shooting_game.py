@@ -123,7 +123,7 @@ def main():
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
     doublemissile = False
-    doublemissileHeld = 3
+    # doublemissileHeld = 3
     bombsHeld = 3
     score = 0
     missilesFired = 0
@@ -408,27 +408,27 @@ def main():
                 # Missile
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_SPACE):
-                    # if doublemissile :
-                    #     Missile.position(ship.rect.topleft)
-                    #     Missile.position(ship.rect.topright)
-                    #     missilesFired += 2
-                    # else : 
-                    #     Missile.position(ship.rect.midtop)
-                    #     missilesFired += 1
-                    Missile.position(ship.rect.midtop)
-                    missilesFired += 1
-                    if soundFX:
-                        missile_sound.play()
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_m):
-                    if doublemissileHeld > 0 :
-                        doublemissile = True
-                        # double_on = True
-                        # double_limit += 1
-                        # doublemissileHeld -= 1
+                    if doublemissile :
                         Missile.position(ship.rect.topleft)
                         Missile.position(ship.rect.topright)
-                        missilesFired += 2  
+                        missilesFired += 2
+                    else : 
+                        Missile.position(ship.rect.midtop)
+                        missilesFired += 1
+                    # Missile.position(ship.rect.midtop)
+                    # missilesFired += 1
+                    if soundFX:
+                        missile_sound.play()
+                # elif (event.type == pygame.KEYDOWN
+                #     and event.key == pygame.K_m):
+                #     if doublemissileHeld > 0 :
+                #         doublemissile = True
+                #         # double_on = True
+                #         # double_limit += 1
+                #         # doublemissileHeld -= 1
+                #         Missile.position(ship.rect.topleft)
+                #         Missile.position(ship.rect.topright)
+                #         missilesFired += 2  
                 # Bomb
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_b):
