@@ -122,6 +122,7 @@ def main():
     curTime = 0
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
+    # 내려오는 미사일 먹으면 8초동안 spacebar로 사용 가능
     doublemissile = False
     bombsHeld = 3
     score = 0
@@ -130,7 +131,7 @@ def main():
     powerupTimeLeft = powerupTime
     betweenWaveTime = 3 * clockTime
     betweenWaveCount = betweenWaveTime
-    betweenDoubleTime = 5 * clockTime
+    betweenDoubleTime = 8 * clockTime
     betweenDoubleCount = betweenDoubleTime
     font = pygame.font.Font(None, 36)
     inMenu = True
