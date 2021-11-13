@@ -10,7 +10,7 @@ from load import load_image, load_sound, load_music
 from menu import Menu
 
 if not pygame.mixer:
-    print('Warning, sound disabled')
+    print('Warning, sound disablead')
 if not pygame.font:
     print('Warning, fonts disabled')
 
@@ -206,9 +206,25 @@ def main():
     music = Database().getSound(music=True)
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
-    a=Menu().init_page()
-    if a==1:
-        Menu().login_page()
+
+#########################
+#    Init Menu Loop    #
+#########################
+# 1. log in 2. sign up 3. Quit 
+    userSelection=Menu().init_page()
+    inInitMenu=True
+
+    while inInitMenu:
+        if userSelection==1: #로그인
+            userSelection=Menu().login_page()
+            inInitMenu=False
+        elif userSelection==2: #회원가입
+            userSelection=Menu().sign_page()
+            inInitMenu=False
+        elif userSelection==3: #끝내기
+            return
+        
+    print(userSelection)
     
 
 #########################
@@ -256,13 +272,13 @@ def main():
                 elif selection == 6:
                     return
             elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_w
+                  and event.key == pygame.K_UP
                   and selection > 1
                   and not showHiScores
                   and not showSelectModes):
                 selection -= 1
             elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_s
+                  and event.key == pygame.K_DOWN
                   and selection < len(menuDict)
                   and not showHiScores
                   and not showSelectModes):
@@ -738,7 +754,7 @@ def main():
                               [hiScorePos, scorePos,
                                enterNamePos, namePos])
         else:
-            gameOverText = font.render('GAME OVER', 1, BLUE)
+            gameOverText = font.renders('GAME OVER', 1, BLUE)
             gameOverPos = gameOverText.get_rect(
                 center=screen.get_rect().center)
             scoreText = font.render('SCORE: {}'.format(score), 1, BLUE)
