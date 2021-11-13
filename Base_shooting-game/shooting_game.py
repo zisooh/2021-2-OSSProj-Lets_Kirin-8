@@ -123,7 +123,6 @@ def main():
     aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
     wave = 1
     doublemissile = False
-    # doublemissileHeld = 3
     bombsHeld = 3
     score = 0
     missilesFired = 0
@@ -185,7 +184,7 @@ def main():
     selectText = font.render('*', 1, BLUE)
     selectPos = selectText.get_rect(topright=startPos.topleft)
 
-    #Select Mode 안 글씨
+    # Select Mode 안 글씨
     singleText = font.render('SINGLE MODE', 1, BLUE)
     singlePos = singleText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     timeText = font.render('TIME MODE', 1, BLUE)
@@ -368,7 +367,6 @@ def main():
         aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
         wave = 1
         doublemissile = False
-        doublemissileHeld = 3
         bombsHeld = 3
         score = 0
         missilesFired = 0
@@ -415,20 +413,8 @@ def main():
                     else : 
                         Missile.position(ship.rect.midtop)
                         missilesFired += 1
-                    # Missile.position(ship.rect.midtop)
-                    # missilesFired += 1
                     if soundFX:
                         missile_sound.play()
-                # elif (event.type == pygame.KEYDOWN
-                #     and event.key == pygame.K_m):
-                #     if doublemissileHeld > 0 :
-                #         doublemissile = True
-                #         # double_on = True
-                #         # double_limit += 1
-                #         # doublemissileHeld -= 1
-                #         Missile.position(ship.rect.topleft)
-                #         Missile.position(ship.rect.topright)
-                #         missilesFired += 2  
                 # Bomb
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_b):
@@ -569,7 +555,6 @@ def main():
                     elif powerup.pType == 'shield':
                         ship.shieldUp = True
                     elif powerup.pType == 'doublemissile' :
-                        # doublemissileHeld += 1
                         doublemissile = True
                     powerup.kill()
                 elif powerup.rect.top > powerup.area.bottom:
@@ -587,18 +572,16 @@ def main():
             leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLUE)
             scoreText = font.render("Score: " + str(score), 1, BLUE)
             bombText = font.render("Bombs: " + str(bombsHeld), 1, BLUE)
-            missileText = font.render("DMissile: " + str(doublemissileHeld), 1, BLUE)
             lifeText = font.render("Life: ", 1, BLUE)
 
             wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
             leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
             scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
             bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-            missilePos = missileText.get_rect(bottomright=screen.get_rect().bottomright)
             lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
 
-            text = [waveText, leftText, scoreText, bombText, missileText, lifeText]
-            textposition = [wavePos, leftPos, scorePos, bombPos, missilePos, lifePos]
+            text = [waveText, leftText, scoreText, bombText, lifeText]
+            textposition = [wavePos, leftPos, scorePos, bombPos, lifePos]
 
             if doublemissile:
                 if betweenDoubleCount > 0:
@@ -645,8 +628,6 @@ def main():
                         Alien.pool.add([Crawly() for _ in range(5)])
                     wave += 1
                     betweenWaveCount = betweenWaveTime
-                    # if doublemissile:
-                    #     Itemdouble = True
 
             textOverlays = zip(text, textposition)
 
