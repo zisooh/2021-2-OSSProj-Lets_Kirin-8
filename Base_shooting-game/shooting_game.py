@@ -225,14 +225,11 @@ def main():
                 if pageResult==BACK: #back
                     flag=False  
                 else: #여기서 회원가입 확인 기능 들어가야함
-                    print(a)
+                    print(pageResult)
                     flag=False
                     inInitMenu=False 
             elif userSelection==3: #끝내기
                 return
-        
-    print(userSelection)
-    
 
 #########################
 #    Start Menu Loop    #
@@ -350,14 +347,14 @@ def main():
                             inMenu=True
                             inSelectMenu=False
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_w
+                        and event.key == pygame.K_UP
                         and selection > 1
                         and not showSingleMode
                         and not showTimeMode
                         and not showPvpMode):
                         selection -= 1
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_s
+                        and event.key == pygame.K_DOWN
                         and selection < len(selectModeDict)
                         and not showSingleMode
                         and not showTimeMode

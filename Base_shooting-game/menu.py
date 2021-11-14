@@ -63,32 +63,19 @@ class Menu:
         self.enterPwdPos=0
         self.pwdText = 0
         self.pwdPos =0
-        #For sign_page setting
-        self.idText2=self.font.render('ID:',1,BLUE)
-        self.idPos2=self.idText2.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.pwdText2=self.font.render('PWD:',1,BLUE)
-        self.pwdPos2=self.pwdText2.get_rect(topleft=self.idPos2.bottomleft)
-        self.backText2=self.font.render('BACK',1,BLUE)
-        self.backPos2=self.backText2.get_rect(topleft=self.pwdPos2.bottomleft)
-        self.quitText3=self.font.render('QUIT',1,BLUE)
-        self.quitPos3=self.quitText3.get_rect(topleft=self.backPos2.bottomleft)
         #For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLUE)
         self.selextPos=0
         self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
         self.menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
         self.loginDict={}
-        self.signDict={1:self.idPos2,2:self.pwdPos2,3:self.backPos2,4:self.quitPos3}
         self.selection = 1
-
         self.ininitalMenu=True
         self.showlogin=False
         self.showsign=False
-        
         self.textOverlays=0
         #user simple db
         self.log_test=[]
-
         self.userSelection=0
 
     def init_page(self):
