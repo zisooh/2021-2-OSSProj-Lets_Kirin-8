@@ -7,30 +7,20 @@ from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
-from menu import Menu
+from menu import *
 
 if not pygame.mixer:
-    print('Warning, sound disabled')
+    print('Warning, sound disablead')
 if not pygame.font:
     print('Warning, fonts disabled')
 
+BACK=0
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
 direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
              pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
-
-
-class Keyboard(object):
-    keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
-            pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
-            pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
-            pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
-            pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
-            pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
-            pygame.K_y: 'Y', pygame.K_z: 'Z'}
-
 
 def main(): 
     # Initialize everything
@@ -206,10 +196,40 @@ def main():
     music = Database().getSound(music=True)
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
-    a=Menu().init_page()
-    if a==1:
-        Menu().login_page()
+
+#########################
+#    Init Menu Loop    #
+#########################
+
+# inInitMenu loop = Init_page & login_page & signup_page
+# Init_page = 1. log in 2. sign up 3. Quit 
+# login_page = enter ID, enter PWD, BACK
+# signup_page = enter ID, enter PWD, BACK
+
+    inInitMenu=True
     
+    while inInitMenu:
+        userSelection=Menu().init_page()
+        flag=True
+        while flag:   
+            if userSelection==1: #로그인
+                pageResult=Menu().login_page()
+                if pageResult==BACK: #back
+                    flag=False  
+                else: #여기서 로그인 확인 기능 들어가야함
+                    print(pageResult)
+                    flag=False
+                    inInitMenu=False          
+            elif userSelection==2: #회원가입
+                pageResult=Menu().login_page()
+                if pageResult==BACK: #back
+                    flag=False  
+                else: #여기서 회원가입 확인 기능 들어가야함
+                    print(pageResult)
+                    flag=False
+                    inInitMenu=False 
+            elif userSelection==3: #끝내기
+                return
 
 #########################
 #    Start Menu Loop    #
@@ -256,13 +276,13 @@ def main():
                 elif selection == 6:
                     return
             elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_w
+                  and event.key == pygame.K_UP
                   and selection > 1
                   and not showHiScores
                   and not showSelectModes):
                 selection -= 1
             elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_s
+                  and event.key == pygame.K_DOWN
                   and selection < len(menuDict)
                   and not showHiScores
                   and not showSelectModes):
@@ -327,14 +347,14 @@ def main():
                             inMenu=True
                             inSelectMenu=False
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_w
+                        and event.key == pygame.K_UP
                         and selection > 1
                         and not showSingleMode
                         and not showTimeMode
                         and not showPvpMode):
                         selection -= 1
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_s
+                        and event.key == pygame.K_DOWN
                         and selection < len(selectModeDict)
                         and not showSingleMode
                         and not showTimeMode
@@ -738,7 +758,7 @@ def main():
                               [hiScorePos, scorePos,
                                enterNamePos, namePos])
         else:
-            gameOverText = font.render('GAME OVER', 1, BLUE)
+            gameOverText = font.renders('GAME OVER', 1, BLUE)
             gameOverPos = gameOverText.get_rect(
                 center=screen.get_rect().center)
             scoreText = font.render('SCORE: {}'.format(score), 1, BLUE)

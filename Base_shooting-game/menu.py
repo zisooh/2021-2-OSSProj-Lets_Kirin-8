@@ -7,6 +7,15 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
+class Keyboard(object):
+    keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
+            pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
+            pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
+            pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
+            pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
+            pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
+            pygame.K_y: 'Y', pygame.K_z: 'Z'}
+
 class Menu:
     def __init__(self):
         #Game initial setting -> To be modified
@@ -42,28 +51,31 @@ class Menu:
         self.quitText=self.font.render('QUIT',1,BLUE)
         self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
         #For login_page setting
-        self.idText=self.font.render('ID:',1,BLUE)
-        self.idPos=self.idText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.pwdText=self.font.render('PWD:',1,BLUE)
-        self.pwdPos=self.pwdText.get_rect(topleft=self.idPos.bottomleft)
-        self.signText2=self.font.render('SIGN UP',1,BLUE)
-        self.signPos2=self.signText2.get_rect(topleft=self.pwdPos.bottomleft)
-        self.quitText2=self.font.render('QUIT',1,BLUE)
-        self.quitPos2=self.quitText2.get_rect(topleft=self.signPos2.bottomleft)
+        self.id=''
+        self.idBuffer = []
+        self.pwd=''
+        self.pwdBuffer= []
+        self.enterIdText=0
+        self.enterIdPos=0
+        self.idText =0
+        self.idPos = 0
+        self.enterPwdText=0
+        self.enterPwdPos=0
+        self.pwdText = 0
+        self.pwdPos =0
         #For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLUE)
         self.selextPos=0
         self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
-
-        self.ininitalMenu=True
         self.menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
-        self.loginDict={1:self.idPos,2:self.pwdPos,3:self.signPos2,4:self.quitPos2}
+        self.loginDict={}
         self.selection = 1
+        self.ininitalMenu=True
         self.showlogin=False
+        self.showsign=False
         self.textOverlays=0
         #user simple db
         self.log_test=[]
-
         self.userSelection=0
 
     def init_page(self):
@@ -89,16 +101,16 @@ class Menu:
                         # Menu().login_page()
                         return 1
                     elif self.selection == 2:
-                        return
+                        return 2
                     elif self.selection==3:
-                        return
+                        return 3
                 elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_w
+                    and event.key == pygame.K_UP
                     and self.selection > 1
                     and not self.showlogin):
                     self.selection -= 1
                 elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_s
+                    and event.key == pygame.K_DOWN
                     and self.selection < len(self.menuDict)
                     and not self.showlogin):
                     self.selection += 1
@@ -113,9 +125,6 @@ class Menu:
             pygame.display.flip()
     
     def login_page(self):
-        #print("함수 호출 성공")
-        #self.log_test=["jiyyon","zz"]
-        #print(self.log_test)
         self.showlogin=True
         self.ininitalMenu=False
         while self.showlogin:
@@ -131,37 +140,71 @@ class Menu:
                     return
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
-                    # if self.ininitialMenu:
-                    #     self.ininitalMenu=False
-                    if self.selection == 1:
-                        print("ID 쓰기 성공")
-                        return
-                    elif self.selection == 2:
-                        print("PWD 쓰기 성공")
-                        return 
-                    elif self.selection == 3:
-                        print("SIGN UP 성공")
-                        return 
-                    elif self.selection == 4:
-                        print("QUIT 성공")
-                        return 
+                    if (self.selection == 1
+                    or self.selection==2
+                    or self.selection==3
+                    or self.selection==4) :
+                        print("다음 Return 성공")
+                        return self.id,self.pwd
+                    elif self.selection == 5:
+                        return 0
+                    
                 elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_w
+                    and self.selection==2
+                    and event.key in Keyboard.keys.keys()
+                    and len(self.idBuffer) < 8):
+                    self.idBuffer.append(Keyboard.keys[event.key])
+                    self.id = ''.join(self.idBuffer)
+                elif (event.type == pygame.KEYDOWN
+                    and self.selection==2
+                    and event.key == pygame.K_BACKSPACE
+                    and len(self.idBuffer) > 0):
+                    self.idBuffer.pop()
+                    self.id = ''.join(self.idBuffer)
+                elif (event.type == pygame.KEYDOWN
+                    and self.selection==4
+                    and event.key in Keyboard.keys.keys()
+                    and len(self.pwdBuffer) < 8):
+                    self.pwdBuffer.append(Keyboard.keys[event.key])
+                    self.pwd = ''.join(self.pwdBuffer)
+                elif (event.type == pygame.KEYDOWN
+                    and self.selection==4
+                    and event.key == pygame.K_BACKSPACE
+                    and len(self.pwdBuffer) > 0):
+                    self.pwdBuffer.pop()
+                    self.pwd = ''.join(self.pwdBuffer)    
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_UP
                     and self.selection > 1):
                     self.selection -= 1
                 elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_s
+                    and event.key == pygame.K_DOWN
                     and self.selection < len(self.loginDict)):
                     self.selection += 1
 
+            self.enterIdText=self.font.render('ID:',1,RED)
+            self.enterIdPos=self.enterIdText.get_rect(topright=self.titleRect.inflate(0, 100).midbottom)
+            self.idText = self.font.render(self.id, 1, WHITE)
+            self.idPos = self.idText.get_rect(topleft=self.enterIdPos.bottomleft)
+            self.enterPwdText=self.font.render('PWD:',1,RED)
+            self.enterPwdPos=self.enterPwdText.get_rect(topleft=self.idPos.bottomleft)
+            self.pwdText = self.font.render(self.pwd, 1, WHITE)
+            self.pwdPos = self.pwdText.get_rect(topleft=self.enterPwdPos.bottomleft)
+            self.backText = self.font.render('BACK', 1, BLUE)
+            self.backPos = self.backText.get_rect(topleft=self.pwdPos.bottomleft)
+            self.selectText = self.font.render('*', 1, BLUE)
+            self.loginDict={1:self.enterIdPos,2:self.idPos,3:self.enterPwdPos,4:self.pwdPos,5:self.backPos}
             self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
-            self.textOverlays = zip([self.idText, self.pwdText,self.signText2,self.quitText2,self.selectText],
-                                [self.idPos, self.pwdPos,self.signPos2,self.quitPos2,self.selectPos])
+            self.textOverlays = zip([self.enterIdText, self.idText,self.enterPwdText,self.pwdText,self.selectText,self.backText],
+                                [self.enterIdPos, self.idPos,self.enterPwdPos,self.pwdPos,self.selectPos,self.backPos])
             self.screen.blit(self.title, self.titleRect)
 
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
+
+    def sign_page(self):
+        Menu().login_page()
 
 
     
