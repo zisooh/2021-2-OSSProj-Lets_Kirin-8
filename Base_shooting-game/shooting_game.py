@@ -14,23 +14,13 @@ if not pygame.mixer:
 if not pygame.font:
     print('Warning, fonts disabled')
 
+BACK=0
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
 direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
              pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
-
-
-# class Keyboard(object):
-#     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
-#             pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
-#             pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
-#             pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
-#             pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
-#             pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
-#             pygame.K_y: 'Y', pygame.K_z: 'Z'}
-
 
 def main(): 
     # Initialize everything
@@ -211,18 +201,30 @@ def main():
 #    Init Menu Loop    #
 #########################
 # 1. log in 2. sign up 3. Quit 
-    userSelection=Menu().init_page()
     inInitMenu=True
-
+    
     while inInitMenu:
-        if userSelection==1: #로그인
-            userSelection=Menu().login_page()
-            inInitMenu=False
-        elif userSelection==2: #회원가입
-            userSelection=Menu().sign_page()
-            inInitMenu=False
-        elif userSelection==3: #끝내기
-            return
+        userSelection=Menu().init_page()
+        flag=True
+        while flag:   
+            if userSelection==1: #로그인
+                pageResult=Menu().login_page()
+                if pageResult==BACK: #back
+                    flag=False  
+                else: #여기서 로그인 확인 기능 들어가야함
+                    print(pageResult)
+                    flag=False
+                    inInitMenu=False          
+            elif userSelection==2: #회원가입
+                pageResult=Menu().login_page()
+                if pageResult==BACK: #back
+                    flag=False  
+                else: #여기서 회원가입 확인 기능 들어가야함
+                    print(a)
+                    flag=False
+                    inInitMenu=False 
+            elif userSelection==3: #끝내기
+                return
         
     print(userSelection)
     
