@@ -200,7 +200,12 @@ def main():
 #########################
 #    Init Menu Loop    #
 #########################
-# 1. log in 2. sign up 3. Quit 
+
+# inInitMenu loop = Init_page & login_page & signup_page
+# Init_page = 1. log in 2. sign up 3. Quit 
+# login_page = enter ID, enter PWD, BACK
+# signup_page = enter ID, enter PWD, BACK
+
     inInitMenu=True
     
     while inInitMenu:

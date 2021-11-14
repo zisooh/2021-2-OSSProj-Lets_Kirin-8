@@ -219,52 +219,6 @@ class Menu:
     def sign_page(self):
         Menu().login_page()
 
-        # self.showsign=True
-        # while self.showsign:
-        #     self.clock.tick(self.clockTime) 
-        #     self.screen.blit(
-        #         self.background, (0, 0), area=pygame.Rect(
-        #             0, self.backgroundLoc, 500, 500))
-        #     self.backgroundLoc -= self.speed
-        #     if self.backgroundLoc - self.speed <= self.speed:
-        #         self.backgroundLoc = 1500
-        #     for event in pygame.event.get():
-        #         if (event.type == pygame.QUIT):
-        #             return
-        #         elif (event.type == pygame.KEYDOWN
-        #             and event.key == pygame.K_RETURN):
-        #             # if self.ininitialMenu:
-        #             #     self.ininitalMenu=False
-        #             if self.selection == 1:
-        #                 print("ID 쓰기 성공")
-        #                 return
-        #             elif self.selection == 2:
-        #                 print("PWD 쓰기 성공")
-        #                 return 
-        #             elif self.selection == 3:
-        #                 print("LOGIN 성공")
-        #                 return 1
-        #             elif self.selection == 4:
-        #                 print("QUIT 성공")
-        #                 return 
-        #         elif (event.type == pygame.KEYDOWN
-        #             and event.key == pygame.K_w
-        #             and self.selection > 1):
-        #             self.selection -= 1
-        #         elif (event.type == pygame.KEYDOWN
-        #             and event.key == pygame.K_s
-        #             and self.selection < len(self.signDict)):
-        #             self.selection += 1
-
-        #     self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
-        #     self.textOverlays = zip([self.idText2, self.pwdText2,self.backText,self.quitText2,self.selectText],
-        #                         [self.idPos2, self.pwdPos2,self.backPos,self.quitPos3,self.selectPos])
-        #     self.screen.blit(self.title, self.titleRect)
-
-        #     for txt, pos in self.textOverlays:
-        #         self.screen.blit(txt, pos)
-        #     pygame.display.flip()
-
 
     
     
