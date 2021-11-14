@@ -127,6 +127,12 @@ class DoublemissilePowerup(Powerup):
         super().__init__('doublemissile')
         self.pType = 'doublemissile'
 
+# 수정
+class FriendPowerup(Powerup):
+    def __init__(self):
+        super().__init__('friend')
+        self.pType = 'friend'
+
 class Ship(MasterSprite):
     def __init__(self):
         super().__init__()
