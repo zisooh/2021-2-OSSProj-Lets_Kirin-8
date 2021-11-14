@@ -130,8 +130,8 @@ class DoublemissilePowerup(Powerup):
 # 수정
 class FriendPowerup(Powerup):
     def __init__(self):
-        super().__init__('friend')
-        self.pType = 'friend'
+        super().__init__('friendship')
+        self.pType = 'friendship'
 
 class Ship(MasterSprite):
     def __init__(self):
@@ -188,7 +188,9 @@ class Ship(MasterSprite):
     def bomb(self):
         return Bomb(self)
      
-      
+# class Friendship(MasterSprite):
+
+
 class Alien(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()

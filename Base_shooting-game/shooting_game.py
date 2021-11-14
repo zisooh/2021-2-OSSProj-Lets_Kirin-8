@@ -3,7 +3,7 @@ import random
 from collections import deque
 
 from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
-                     ShieldPowerup, DoublemissilePowerup, Explosion, Siney, Spikey, Fasty,
+                     ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
@@ -83,7 +83,8 @@ def main():
     ship = Ship()
     
     initialAlienTypes = (Siney, Spikey)
-    powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
+    # 수정
+    powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, FriendPowerup)
 
     # pause
     pause,pauseRect = load_image('pause.png')
@@ -124,6 +125,8 @@ def main():
     wave = 1
     # 내려오는 미사일 먹으면 8초동안 spacebar로 사용 가능
     doublemissile = False
+    # 수정
+    friendship = False
     bombsHeld = 3
     score = 0
     missilesFired = 0
@@ -557,6 +560,8 @@ def main():
                         ship.shieldUp = True
                     elif powerup.pType == 'doublemissile' :
                         doublemissile = True
+                    elif powerup.pType == 'friendship' :
+                        friendship = True    
                     powerup.kill()
                 elif powerup.rect.top > powerup.area.bottom:
                     powerup.kill()
