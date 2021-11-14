@@ -7,7 +7,7 @@ from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
-from menu import Menu
+from menu import *
 
 if not pygame.mixer:
     print('Warning, sound disablead')
@@ -22,14 +22,14 @@ direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
              pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
 
 
-class Keyboard(object):
-    keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
-            pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
-            pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
-            pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
-            pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
-            pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
-            pygame.K_y: 'Y', pygame.K_z: 'Z'}
+# class Keyboard(object):
+#     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
+#             pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
+#             pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
+#             pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
+#             pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
+#             pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
+#             pygame.K_y: 'Y', pygame.K_z: 'Z'}
 
 
 def main(): 

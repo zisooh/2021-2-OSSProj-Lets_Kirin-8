@@ -198,13 +198,14 @@ class Menu:
                     self.selection += 1
 
             self.enterIdText=self.font.render('ID:',1,BLUE)
-            self.enterIdPos=self.enterIdText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-            self.idText = self.font.render(self.id, 1, BLUE)
-            self.idPos = self.idText.get_rect(midtop=self.enterIdPos.midbottom)
+            self.enterIdPos=self.enterIdText.get_rect(topright=self.titleRect.inflate(0, 100).midbottom)
+            self.idText = self.font.render(self.id, 1, WHITE)
+            # self.idPos = self.idText.get_rect(midtop=self.enterIdPos.midbottom)
+            self.idPos = self.idText.get_rect(topleft=self.enterIdPos.bottomleft)
             self.enterPwdText=self.font.render('PWD:',1,BLUE)
             self.enterPwdPos=self.enterPwdText.get_rect(topleft=self.idPos.bottomleft)
-            self.pwdText = self.font.render(self.pwd, 1, BLUE)
-            self.pwdPos = self.pwdText.get_rect(midtop=self.enterPwdPos.midbottom)
+            self.pwdText = self.font.render(self.pwd, 1, WHITE)
+            self.pwdPos = self.pwdText.get_rect(topleft=self.enterPwdPos.bottomleft)
             self.selectText = self.font.render('*', 1, BLUE)
             self.loginDict={1:self.enterIdPos,2:self.idPos,3:self.enterPwdPos,4:self.pwdPos}
             self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
