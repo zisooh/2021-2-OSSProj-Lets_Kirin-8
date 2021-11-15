@@ -598,16 +598,16 @@ def main():
             leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLACK)
             scoreText = font.render("Score: " + str(score), 1, BLACK)
             bombText = font.render("Bombs: " + str(bombsHeld), 1, BLACK)
-            lifeText = font.render("Life: ", 1, BLACK)
+            #lifeText = font.render("Life: ", 1, BLACK)
 
             wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
             leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
             scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
             bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-            lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
+            #lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
 
-            text = [waveText, leftText, scoreText, bombText, lifeText]
-            textposition = [wavePos, leftPos, scorePos, bombPos, lifePos]
+            text = [waveText, leftText, scoreText, bombText] #, lifeText]
+            textposition = [wavePos, leftPos, scorePos, bombPos] #, lifePos]
 
             if doublemissile:
                 if betweenDoubleCount > 0:
@@ -677,9 +677,9 @@ def main():
                 screen.blit(txt, pos)
 
         # Update life
-            life1Rect.topleft = lifePos.topright
-            life2Rect.topleft = lifePos.topright
-            life3Rect.topleft = lifePos.topright
+            life1Rect.topleft = wavePos.bottomleft #lifePos.topright
+            life2Rect.topleft = wavePos.bottomleft #lifePos.topright
+            life3Rect.topleft = wavePos.bottomleft #lifePos.topright
 
             if ship.life == 3:
                 screen.blit(life3, life3Rect)
