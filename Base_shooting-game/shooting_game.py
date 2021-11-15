@@ -26,7 +26,9 @@ def main():
     # Initialize everything
     pygame.mixer.pre_init(11025, -16, 2, 512)
     pygame.init()
-    screen = pygame.display.set_mode((500, 500))
+    screen_width = 500   # 스크린가로
+    screen_height = 500  # 스크린세로
+    screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption('Shooting Game')
     pygame.mouse.set_visible(0)
 
@@ -64,6 +66,16 @@ def main():
 # Display the background
     screen.blit(background, (0, 0))
     pygame.display.flip()
+
+# Ingame field image
+    field1, field1Rect = load_image("field.png")
+    field2, field2Rect = load_image("field.png")
+    field1 = pygame.transform.scale(field1, (500, 600))
+    field1Rect = field1.get_rect()
+    field2 = pygame.transform.scale(field2, (500, 600))
+    field2Rect = field2.get_rect()
+    field1Rect.midtop = screen.get_rect().midtop
+    field2Rect.midbottom = field1Rect.midtop
 
 # Prepare game objects
     speed = 1.5
@@ -666,9 +678,17 @@ def main():
             screen.blit(
                 background, (0, 0), area=pygame.Rect(
                     0, backgroundLoc, 500, 500))
-            backgroundLoc -= speed
-            if backgroundLoc - speed <= speed:
-                backgroundLoc = 1500
+            
+            field1Rect.y += 2 # speed? float(x) / int(o)
+            field2Rect.y += 2
+            if field1Rect.y >= screen_height:
+                field1Rect.midbottom = field2Rect.midtop
+            if field2Rect.y >= screen_height:
+                field2Rect.midbottom = field1Rect.midtop
+
+            screen.blit(field1, field1Rect)
+            screen.blit(field2, field2Rect)
+                
             allsprites.update()
             allsprites.draw(screen)
             alldrawings.update()
