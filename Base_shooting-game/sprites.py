@@ -89,7 +89,7 @@ class Bomb(pygame.sprite.Sprite):
 class Powerup(MasterSprite):
     def __init__(self, kindof):
         super().__init__()
-        self.image, self.rect = load_image(kindof + 'shield_powerup.png', -1)
+        self.image, self.rect = load_image(kindof + '_powerup.png', -1)
         self.original = self.image
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -126,6 +126,12 @@ class DoublemissilePowerup(Powerup):
     def __init__(self):
         super().__init__('doublemissile')
         self.pType = 'doublemissile'
+
+# 수정
+class FriendPowerup(Powerup):
+    def __init__(self):
+        super().__init__('friendship')
+        self.pType = 'friendship'
 
 class Ship(MasterSprite):
     def __init__(self):
@@ -182,7 +188,9 @@ class Ship(MasterSprite):
     def bomb(self):
         return Bomb(self)
      
-      
+# class Friendship(MasterSprite):
+
+
 class Alien(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
