@@ -77,7 +77,7 @@ class Bomb(pygame.sprite.Sprite):
         self.radius += self.radiusIncrement
         pygame.draw.circle(
             pygame.display.get_surface(),
-            pygame.Color(0, 0, 255, 128),
+            pygame.Color(153, 76, 0, 128),
             self.rect.center, self.radius, 3)
         if (self.rect.center[1] - self.radius <= self.area.top
             and self.rect.center[1] + self.radius >= self.area.bottom

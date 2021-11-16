@@ -595,9 +595,9 @@ def main():
 
         # Update text overlays
             waveText = font.render("Wave: " + str(wave), 1, BLACK)
-            leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, BLACK)
+            leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
             scoreText = font.render("Score: " + str(score), 1, BLACK)
-            bombText = font.render("Bombs: " + str(bombsHeld), 1, BLACK)
+            bombText = font.render("Fart Bombs: " + str(bombsHeld), 1, BLACK)
             #lifeText = font.render("Life: ", 1, BLACK)
 
             wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
