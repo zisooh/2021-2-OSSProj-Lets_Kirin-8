@@ -8,6 +8,7 @@ from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
 from database import Database
 from load import load_image, load_sound, load_music
 from menu import *
+from mode_single import *
 
 if not pygame.mixer:
     print('Warning, sound disablead')
@@ -19,8 +20,8 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
-direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
-             pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
+direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
+             pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 def main(): 
     # Initialize everything
@@ -163,8 +164,6 @@ def main():
     startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     hiScoreText = font.render('HIGH SCORES', 1, BLACK)
     hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
-    restartText = font.render('RESTART', 1, BLACK)  # restart 메뉴
-    restartPos = restartText.get_rect(bottomleft=hiScorePos.topleft)
     fxText = font.render('SOUND FX ', 1, BLACK)
     fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
     fxOnText = font.render('ON', 1, RED)
@@ -313,10 +312,10 @@ def main():
             screen.blit(txt, pos)
         pygame.display.flip()
 
-    showSingleMode=False
-    showTimeMode=False
-    showPvpMode=False
-    selectModeDict={1:singlePos,2:timePos,3:pvpPos,4:backPos}
+    showSingleMode = False
+    showTimeMode = False
+    showPvpMode = False
+    selectModeDict = {1:singlePos,2:timePos,3:pvpPos,4:backPos}
     selection = 1
     while inSelectMenu:
                 clock.tick(clockTime) #시간으로 제어하는 너낌
@@ -330,23 +329,26 @@ def main():
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_RETURN):
                         if showSingleMode:
-                            showSingleMode=False
+                            showSingleMode = False
                         elif showTimeMode:
-                            showTimeMode=False
+                            showTimeMode = False
                         elif showPvpMode:
-                            showPvpMode=False
+                            showPvpMode = False
                         elif selection == 1:
-                            inSelectMenu=False
+                            inSelectMenu = False
+                            selectMode = 'SingleMode'
                             ship.initializeKeys()
                         elif selection == 2:
-                            inSelectMenu=False
+                            inSelectMenu = False
+                            selectMode = 'TimeMode'
                             ship.initializeKeys()
                         elif selection == 3:
-                            inSelectMenu=False
+                            inSelectMenu = False
+                            selectMode = 'PvpMode'
                             ship.initializeKeys()
-                        elif selection==4:
-                            inMenu=True
-                            inSelectMenu=False
+                        elif selection == 4:
+                            inMenu = True
+                            inSelectMenu = False
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_UP
                         and selection > 1
@@ -368,11 +370,23 @@ def main():
                     screen.blit(txt, pos)
                 
                 pygame.display.flip()
-         
-         
+
+
 #########################
 #    Start Game Loop    #
 #########################
+
+    if selectMode == 'SingleMode':
+        Single.play()
+    elif selectMode == 'TimeMode':
+        print('Time play')
+        #Time.play()
+    elif selectMode == 'PvpMode':
+        print('Pvp play')
+        #Pvp.play()    
+
+
+# Single Mode. 클래스화 예정
     restart = True
     while restart == True:
 
@@ -403,6 +417,30 @@ def main():
         betweenDoubleTime = 8 * clockTime
         betweenDoubleCount = betweenDoubleTime
         ship.alive = True
+
+        # pause 메뉴 글씨  
+        restartText = font.render('RESTART', 1, WHITE)
+        restartPos = restartText.get_rect(bottomleft=hiScorePos.topleft)  
+        hiScoreText = font.render('HIGH SCORES', 1, WHITE)
+        hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
+        fxText = font.render('SOUND FX ', 1, WHITE)
+        fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
+        fxOnText = font.render('ON', 1, RED)
+        fxOffText = font.render('OFF', 1, RED)
+        fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
+        fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
+        musicText = font.render('MUSIC', 1, WHITE)
+        musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
+        musicOnText = font.render('ON', 1, RED)
+        musicOffText = font.render('OFF', 1, RED)
+        musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
+        musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+        helpText=font.render('HELP',1,WHITE)
+        helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
+        quitText = font.render('QUIT', 1, WHITE)
+        quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
+        selectText = font.render('*', 1, WHITE)
+        selectPos = selectText.get_rect(topright=startPos.topleft)
 
         # 본게임시작
         while ship.alive:
@@ -496,12 +534,12 @@ def main():
                                 elif selection == 6:
                                     return
                             elif (event.type == pygame.KEYDOWN
-                                and event.key == pygame.K_w
+                                and event.key == pygame.K_UP
                                 and selection > 1
                                 and not showHiScores):
                                 selection -= 1
                             elif (event.type == pygame.KEYDOWN
-                                and event.key == pygame.K_s
+                                and event.key == pygame.K_DOWN
                                 and selection < len(menuDict)
                                 and not showHiScores):
                                 selection += 1
