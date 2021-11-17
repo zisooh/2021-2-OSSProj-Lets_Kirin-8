@@ -44,7 +44,7 @@ class Menu:
         self.title, self.titleRect = load_image('title.png')
         self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
         #For init_page setting
-        self.loginText = self.font.render('LOG IN', 1, BLUE)
+        self.loginText = self.font.render('LOG IN   ', 1, BLUE)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
         self.signText=self.font.render('SIGN UP',1,BLUE)
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
@@ -182,7 +182,7 @@ class Menu:
                     and self.selection < len(self.loginDict)):
                     self.selection += 1
 
-            self.enterIdText=self.font.render('ID:',1,RED)
+            self.enterIdText=self.font.render('ID:  ',1,RED)
             self.enterIdPos=self.enterIdText.get_rect(topright=self.titleRect.inflate(0, 100).midbottom)
             self.idText = self.font.render(self.id, 1, WHITE)
             self.idPos = self.idText.get_rect(topleft=self.enterIdPos.bottomleft)

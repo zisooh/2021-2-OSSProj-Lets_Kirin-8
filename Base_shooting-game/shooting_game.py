@@ -758,7 +758,7 @@ def main():
                               [hiScorePos, scorePos,
                                enterNamePos, namePos])
         else:
-            gameOverText = font.renders('GAME OVER', 1, BLUE)
+            gameOverText = font.render('GAME OVER', 1, BLUE)
             gameOverPos = gameOverText.get_rect(
                 center=screen.get_rect().center)
             scoreText = font.render('SCORE: {}'.format(score), 1, BLUE)
