@@ -85,7 +85,7 @@ def main():
 
     # pause
     pause,pauseRect = load_image('pause.png')
-    pauseRect.midtop = screen.get_rect().inflate(0, -200).midtop
+    pauseRect.midtop = screen.get_rect().midtop
     pauseMenu = False
 
     # Sprite groups
@@ -419,27 +419,27 @@ def main():
         ship.alive = True
 
         # pause 메뉴 글씨  
-        restartText = font.render('RESTART', 1, WHITE)
+        restartText = font.render('RESTART GAME', 1, BLACK)
         restartPos = restartText.get_rect(bottomleft=hiScorePos.topleft)  
-        hiScoreText = font.render('HIGH SCORES', 1, WHITE)
+        hiScoreText = font.render('HIGH SCORES', 1, BLACK)
         hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
-        fxText = font.render('SOUND FX ', 1, WHITE)
+        fxText = font.render('SOUND FX ', 1, BLACK)
         fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
         fxOnText = font.render('ON', 1, RED)
         fxOffText = font.render('OFF', 1, RED)
         fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
         fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
-        musicText = font.render('MUSIC', 1, WHITE)
+        musicText = font.render('MUSIC', 1, BLACK)
         musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
         musicOnText = font.render('ON', 1, RED)
         musicOffText = font.render('OFF', 1, RED)
         musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
         musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
-        helpText=font.render('HELP',1,WHITE)
+        helpText=font.render('HELP',1,BLACK)
         helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
-        quitText = font.render('QUIT', 1, WHITE)
+        quitText = font.render('QUIT', 1, BLACK)
         quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
-        selectText = font.render('*', 1, WHITE)
+        selectText = font.render('*', 1, BLACK)
         selectPos = selectText.get_rect(topright=startPos.topleft)
 
         # 본게임시작
