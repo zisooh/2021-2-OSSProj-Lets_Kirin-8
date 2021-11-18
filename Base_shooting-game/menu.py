@@ -3,9 +3,10 @@ from load import load_image, load_sound, load_music
 from collections import deque
 import random
 
-BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
+
 
 class Keyboard(object):
     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
@@ -41,14 +42,16 @@ class Menu:
 
         self.screen = pygame.display.set_mode((500, 500))
         self.font = pygame.font.Font(None, 36)
+        # 아래 title 두줄 없어도 되는데 loginPo가 얘 기준으로 잡고있음
         self.title, self.titleRect = load_image('title.png')
         self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
         #For init_page setting
-        self.loginText = self.font.render('LOG IN   ', 1, BLUE)
+
+        self.loginText = self.font.render('LOG IN', 1, BLACK)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.signText=self.font.render('SIGN UP',1,BLUE)
+        self.signText=self.font.render('SIGN UP',1,BLACK)
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
-        self.quitText=self.font.render('QUIT',1,BLUE)
+        self.quitText=self.font.render('QUIT',1,BLACK)
         self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
         #For login_page setting
         self.id=''
@@ -64,7 +67,7 @@ class Menu:
         self.pwdText = 0
         self.pwdPos =0
         #For selection '*' setting        
-        self.selectText = self.font.render('*', 1, BLUE)
+        self.selectText = self.font.render('*', 1, BLACK)
         self.selextPos=0
         self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
         self.menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
@@ -84,9 +87,10 @@ class Menu:
             self.screen.blit(
                 self.background, (0, 0), area=pygame.Rect(
                     0, self.backgroundLoc, 500, 500))
-            self.backgroundLoc -= self.speed
-            if self.backgroundLoc - self.speed <= self.speed:
-                self.backgroundLoc = 1500
+            
+            main_menu, main_menuRect = load_image("main_menu.png")
+            main_menuRect.midtop = self.screen.get_rect().midtop
+            self.screen.blit(main_menu, main_menuRect)
 
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT):
@@ -102,7 +106,7 @@ class Menu:
                         return 1
                     elif self.selection == 2:
                         return 2
-                    elif self.selection==3:
+                    elif self.selection == 3:
                         return 3
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_UP
@@ -118,7 +122,6 @@ class Menu:
             self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)
             self.textOverlays = zip([self.loginText, self.signText,self.quitText,self.selectText],
                                 [self.loginPos, self.signPos,self.quitPos,self.selectPos])
-            self.screen.blit(self.title, self.titleRect)
 
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
@@ -132,9 +135,11 @@ class Menu:
             self.screen.blit(
                 self.background, (0, 0), area=pygame.Rect(
                     0, self.backgroundLoc, 500, 500))
-            self.backgroundLoc -= self.speed
-            if self.backgroundLoc - self.speed <= self.speed:
-                self.backgroundLoc = 1500
+
+            main_menu, main_menuRect = load_image("main_menu.png")
+            main_menuRect.midtop = self.screen.get_rect().midtop
+            self.screen.blit(main_menu, main_menuRect)
+
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT):
                     return
@@ -190,14 +195,13 @@ class Menu:
             self.enterPwdPos=self.enterPwdText.get_rect(topleft=self.idPos.bottomleft)
             self.pwdText = self.font.render(self.pwd, 1, WHITE)
             self.pwdPos = self.pwdText.get_rect(topleft=self.enterPwdPos.bottomleft)
-            self.backText = self.font.render('BACK', 1, BLUE)
+            self.backText = self.font.render('BACK', 1, BLACK)
             self.backPos = self.backText.get_rect(topleft=self.pwdPos.bottomleft)
-            self.selectText = self.font.render('*', 1, BLUE)
+            self.selectText = self.font.render('*', 1, BLACK)
             self.loginDict={1:self.enterIdPos,2:self.idPos,3:self.enterPwdPos,4:self.pwdPos,5:self.backPos}
             self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
             self.textOverlays = zip([self.enterIdText, self.idText,self.enterPwdText,self.pwdText,self.selectText,self.backText],
                                 [self.enterIdPos, self.idPos,self.enterPwdPos,self.pwdPos,self.selectPos,self.backPos])
-            self.screen.blit(self.title, self.titleRect)
 
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
