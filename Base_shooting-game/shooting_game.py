@@ -138,6 +138,8 @@ def main():
 
     # 데베 함수 메뉴 구현
     hiScores=Database().getScores()
+    print(hiScores)
+    print(len(hiScores))
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
@@ -241,76 +243,13 @@ def main():
 #########################
 #    Start Menu Loop    #
 #########################
-    while inMenu:
-        clock.tick(clockTime) 
-#blit()
-        screen.blit(background, (0, 0))
-        screen.blit(main_menu, main_menuRect)
+    inSelectMenu=False
+    userSelection=Menu().inMenu_page()
+    if userSelection==1:
+        inSelectMenu=True
+    elif userSelection==6:
+        return
 
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
-                return
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_RETURN):
-                if showHiScores:
-                    showHiScores = False
-                elif showSelectModes:
-                    showSelectModes = False
-                elif selection == 1:
-                    showSelectModes=True 
-                    inMenu = False
-                    inSelectMenu=True
-                elif selection == 2:
-                    showHiScores = True
-                elif selection == 3:
-                    soundFX = not soundFX
-                    if soundFX:
-                        missile_sound.play()
-                    Database.setSound(int(soundFX))
-                elif selection == 4 and pygame.mixer:
-                    music = not music
-                    if music:
-                        pygame.mixer.music.play(loops=-1)
-                    else:
-                        pygame.mixer.music.stop()
-                    Database.setSound(int(music), music=True)
-                elif selection == 5:
-                    return 
-                elif selection == 6:
-                    return
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_UP
-                  and selection > 1
-                  and not showHiScores
-                  and not showSelectModes):
-                selection -= 1
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_DOWN
-                  and selection < len(menuDict)
-                  and not showHiScores
-                  and not showSelectModes):
-                selection += 1
-
-        selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
-
-        if showHiScores:
-            screen.blit(background, (0, 0))
-            screen.blit(img_menu, img_menuRect)
-            textOverlays = zip(highScoreTexts, highScorePos)
-        elif showSelectModes:
-            textOverlays = zip([singleText,timeText,pvpText],[singlePos,timePos,pvpPos])
-        else:
-            textOverlays = zip([startText, hiScoreText, helpText, fxText,
-                                musicText, quitText, selectText,
-                                fxOnText if soundFX else fxOffText,
-                                musicOnText if music else musicOffText],
-                               [startPos, hiScorePos, helpPos, fxPos,
-                                musicPos, quitPos, selectPos,
-                                fxOnPos if soundFX else fxOffPos,
-                                musicOnPos if music else musicOffPos])
-        for txt, pos in textOverlays:
-            screen.blit(txt, pos)
-        pygame.display.flip()
 
     showSingleMode = False
     showTimeMode = False
@@ -766,8 +705,10 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_RETURN
                   and len(name) > 0):
+                print("setScore 성공")
                 Database().setScore(hiScores,name, score, accuracy)
-                return True
+                print("setScore 성공(2)")
+                return True  
 
         if isHiScore:
             hiScoreText = font.render('SCORE', 1, RED)

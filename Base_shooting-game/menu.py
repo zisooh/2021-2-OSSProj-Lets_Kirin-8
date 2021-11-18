@@ -2,6 +2,7 @@ import pygame
 from load import load_image, load_sound, load_music
 from collections import deque
 import random
+from database import Database
 
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -66,6 +67,42 @@ class Menu:
         self.enterPwdPos=0
         self.pwdText = 0
         self.pwdPos =0
+        #For inMenu_page setting
+        self.startText = self.font.render('SELECT MODES', 1, BLACK)
+        self.startPos = self.startText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
+        self.hiScoreText = self.font.render('HIGH SCORES', 1, BLACK)
+        self.hiScorePos = self.hiScoreText.get_rect(topleft=self.startPos.bottomleft)
+        self.fxText = self.font.render('SOUND FX ', 1, BLACK)
+        self.fxPos = self.fxText.get_rect(topleft=self.hiScorePos.bottomleft)
+        self.fxOnText = self.font.render('ON', 1, RED)
+        self.fxOffText = self.font.render('OFF', 1, RED)
+        self.fxOnPos = self.fxOnText.get_rect(topleft=self.fxPos.topright)
+        self.fxOffPos = self.fxOffText.get_rect(topleft=self.fxPos.topright)
+        self.musicText = self.font.render('MUSIC', 1, BLACK)
+        self.musicPos = self.fxText.get_rect(topleft=self.fxPos.bottomleft)
+        self.musicOnText = self.font.render('ON', 1, RED)
+        self.musicOffText = self.font.render('OFF', 1, RED)
+        self.musicOnPos = self.musicOnText.get_rect(topleft=self.musicPos.topright)
+        self.musicOffPos = self.musicOffText.get_rect(topleft=self.musicPos.topright)
+        self.helpText=self.font.render('HELP',1,BLACK)
+        self.helpPos=self.helpText.get_rect(topleft=self.musicPos.bottomleft)
+        self.quitText = self.font.render('QUIT', 1, BLACK)
+        self.quitPos = self.quitText.get_rect(topleft=self.helpPos.bottomleft)
+        self.selectText = self.font.render('*', 1, BLACK)
+        self.selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
+
+        # Select Mode 안 글씨
+        self.singleText = self.font.render('SINGLE MODE', 1, BLACK)
+        self.singlePos = self.singleText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
+        self.timeText = self.font.render('TIME MODE', 1, BLACK)
+        self.timePos = self.timeText.get_rect(topleft=self.singlePos.bottomleft)
+        self.pvpText = self.font.render('PVP MODE ', 1, BLACK)
+        self.pvpPos = self.pvpText.get_rect(topleft=self.timePos.bottomleft)
+        self.backText=self.font.render('BACK',1,BLACK)
+        self.backPos=self.backText.get_rect(topleft=self.pvpPos.bottomleft)
+        self.selectText = self.font.render('*', 1, BLACK)
+        self.selectPos =self.selectText.get_rect(topright=self.singlePos.topleft)
+        self.menuDict = {1: self.startPos, 2: self.hiScorePos, 3:self.fxPos, 4: self.musicPos, 5:self.helpPos,6: self.quitPos}
         #For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLACK)
         self.selextPos=0
@@ -77,11 +114,22 @@ class Menu:
         self.showlogin=False
         self.showsign=False
         self.textOverlays=0
+        self.inMenu = False
+        self.showHelp=False
+        self.showSelectModes=False
+        self.showHiScores = False
+        self.inSelectMenu=False
+        self.soundFX = Database().getSound()
+        self.music = Database().getSound(music=True)
+        if self.music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         #user simple db
         self.log_test=[]
         self.userSelection=0
 
     def init_page(self):
+        self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
+        self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
         while self.ininitalMenu:
             self.clock.tick(self.clockTime) 
             self.screen.blit(
@@ -209,6 +257,94 @@ class Menu:
 
     def sign_page(self):
         Menu().login_page()
+    
+    def inMenu_page(self):
+        self.inMenu = True
+        self.selectPos =self.selectText.get_rect(topright=self.singlePos.topleft)
+        while self.inMenu:
+            self.clock.tick(self.clockTime) 
+            self.flag=True
+            main_menu, main_menuRect = load_image("main_menu.png")
+            main_menuRect.midtop = self.screen.get_rect().midtop
+            self.screen.blit(main_menu, main_menuRect)
+ 
+            for event in pygame.event.get():
+                if (event.type == pygame.QUIT):
+                    return
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_RETURN):
+                    if self.showHiScores:
+                        self.showHiScores = False
+                    elif self.showSelectModes:
+                        self.showSelectModes = False
+                    elif self.showHelp:
+                        self.showHelp=False
+                    elif self.selection == 1:
+                        self.showSelectModes=True 
+                        self.inMenu = False
+                        self.inSelectMenu=True
+                        return 1
+                    elif self.selection == 2:
+                        self.showHiScores = True
+                    elif self.selection == 3:
+                        self.soundFX = not self.soundFX
+                        if self.soundFX:
+                            self.missile_sound.play()
+                        Database().setSound(int(self.soundFX))
+                    elif self.selection == 4 and pygame.mixer:
+                        self.music = not self.music
+                        if self.music:
+                            pygame.mixer.music.play(loops=-1)
+                        else:
+                            pygame.mixer.music.stop()
+                        Database().setSound(int(self.music), music=True)
+                    elif self.selection == 5:
+                        self.showHelp=True                                        
+                    elif self.selection == 6:
+                        return 6
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_UP
+                    and self.selection > 1
+                    and not self.showHiScores
+                    and not self.showSelectModes
+                    and not self.showHelp):
+                    self.selection -= 1
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_DOWN
+                    and self.selection < len(self.menuDict)
+                    and not self.showHiScores
+                    and not self.showSelectModes):
+                    self.selection += 1
+            
+            self.menuDict = {1: self.startPos, 2: self.hiScorePos, 3:self.fxPos, 4: self.musicPos, 5:self.helpPos,6: self.quitPos}
+            self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)
+
+
+            if self.showHiScores:
+                self.screen.blit(background, (0, 0))
+                img_menu, img_menuRect = load_image("menu.png")
+                img_menuRect.midtop = screen.get_rect().midtop
+                self.screen.blit(img_menu, img_menuRect)
+                self.textOverlays = zip(self.highScoreTexts, self.highScorePos)
+            elif self.showHelp:
+                self.screen.blit(self.background, (0, 0))
+                img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
+                img_menuRect.midtop = self.screen.get_rect().midtop
+                self.screen.blit(img_menu, img_menuRect) 
+            elif self.showSelectModes:
+                self.textOverlays = zip([self.singleText,self.timeText,self.pvpText],[self.singlePos,self.timePos,self.pvpPos])
+            else:
+                self.textOverlays = zip([self.startText, self.hiScoreText, self.helpText, self.fxText,
+                                    self.musicText, self.quitText, self.selectText,
+                                    self.fxOnText if self.soundFX else self.fxOffText,
+                                    self.musicOnText if self.music else self.musicOffText],
+                                [self.startPos, self.hiScorePos, self.helpPos, self.fxPos,
+                                    self.musicPos, self.quitPos, self.selectPos,
+                                    self.fxOnPos if self.soundFX else self.fxOffPos,
+                                    self.musicOnPos if self.music else self.musicOffPos])
+            for txt, pos in self.textOverlays:
+                self.screen.blit(txt, pos)
+            pygame.display.flip()
 
 
     

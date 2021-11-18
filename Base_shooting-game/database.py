@@ -2,7 +2,7 @@ import pymysql
 import bcrypt
 
 class Database(object):
-    numScores = 15
+    numScores=15
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
         self.scoreDB=pymysql.connect(host=host,user=user,password=password,db=db,charset=charset)
         self.cursor=self.scoreDB.cursor(pymysql.cursors.DictCursor)
@@ -45,10 +45,12 @@ class Database(object):
 
     def setScore(self,hiScores,name, score, accuracy):
         curs = self.scoreDB.cursor()
+        print(len(hiScores))
 
         if len(hiScores) == Database.numScores:
             lowScoreName = hiScores[-1][0]
             lowScore = hiScores[-1][1]
+            print(lowScoreName,lowScore)
             sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
             curs.execute(sql,(lowScoreName,lowScore))
         sql="INSERT INTO scores VALUES (%s,%s,%s)"
