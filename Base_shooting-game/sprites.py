@@ -188,7 +188,61 @@ class Ship(MasterSprite):
     def bomb(self):
         return Bomb(self)
      
-# class Friendship(MasterSprite):
+class Friendship(MasterSprite):
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = load_image('friendship.png', -1)
+        self.original = self.image
+        # self.shield, self.rect = load_image('ship_shield.png', -1)
+        self.screen = pygame.display.get_surface()
+        self.area = self.screen.get_rect()
+        self.rect.midbottom = (self.screen.get_width() // 3, self.area.bottom)
+        # self.rect.midright = (self.screen.get_width() // 2, self.area.bottom)
+        self.radius = max(self.rect.width, self.rect.height)
+        self.alive = True
+        # self.shieldUp = False
+        self.vert = 0
+        self.horiz = 0
+        # self.life = 3
+
+    def initializeKeys(self):
+        # keyState = pygame.key.get_pressed()
+        self.vert = 0
+        self.horiz = 0
+        # if keyState[pygame.K_w]:
+        #     self.vert -= 2 * MasterSprite.speed
+        # if keyState[pygame.K_a]:
+        #     self.horiz -= 2 * MasterSprite.speed
+        # if keyState[pygame.K_s]:
+        #     self.vert += 2 * MasterSprite.speed
+        # if keyState[pygame.K_d]:
+        #     self.horiz += 2 * MasterSprite.speed
+    
+    def update(self):
+        newpos = self.rect.move((self.horiz, self.vert))
+        newhoriz = self.rect.move((self.horiz, 0))
+        newvert = self.rect.move((0, self.vert))
+
+        if not (newpos.left <= self.area.left
+                or newpos.top <= self.area.top
+                or newpos.right >= self.area.right
+                or newpos.bottom >= self.area.bottom):
+            self.rect = newpos
+        elif not (newhoriz.left <= self.area.left
+                  or newhoriz.right >= self.area.right):
+            self.rect = newhoriz
+        elif not (newvert.top <= self.area.top
+                  or newvert.bottom >= self.area.bottom):
+            self.rect = newvert
+
+        # if self.shieldUp and self.image != self.shield:
+        #     self.image = self.shield
+
+        # if not self.shieldUp and self.image != self.original:
+        #     self.image = self.original
+    
+    # def bomb(self):
+    #     return Bomb(self)  
 
 
 class Alien(MasterSprite):
