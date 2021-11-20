@@ -341,7 +341,7 @@ class Spikey(Alien):
 class Fasty(Alien):
     def __init__(self):
         super().__init__('white')
-        self.moveFunc = lambda: (0, 3 * self.loc)
+        self.moveFunc = lambda: (0, 1.5 * self.loc)
         self.pType = 'white'
 
 
