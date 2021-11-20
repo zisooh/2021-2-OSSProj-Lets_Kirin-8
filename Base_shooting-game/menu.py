@@ -15,7 +15,7 @@ ship_explode_sound = load_sound('ship_explode.ogg')
 load_music('music_loop.ogg')
 
 hiScores=Database().getScores()
-
+print(hiScores)
 class Keyboard(object):
     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
             pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
@@ -128,7 +128,7 @@ class Menu:
         #For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLACK)
         self.selextPos=0
-        self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
+        # self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
         self.menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
         self.loginDict={}
         self.selection = 1
@@ -197,7 +197,8 @@ class Menu:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
     
-    def login_page(self):
+    def login_sign_page(self,userSelection):
+        print(userSelection)
         self.showlogin=True
         self.ininitalMenu=False
         while self.showlogin:
@@ -219,8 +220,27 @@ class Menu:
                     or self.selection==2
                     or self.selection==3
                     or self.selection==4) :
-                        print("다음 Return 성공")
-                        return self.id,self.pwd
+                        # print("다음 Return 성공")
+                        if userSelection==1: #로그인 요청일때
+                            if Database().id_not_exists(self.id):
+                                print("아이디 없음")
+                            else: 
+                                if Database().compare_data(self.id, self.pwd):
+                                    print("로그인 성공")
+                                    return self.id
+                                else:
+                                    print("비번 확인")
+                        elif userSelection==2: #회원가입 요청일때
+                            if Database().id_not_exists(self.id):
+                                print("아이디 없음")
+                                if self.pwd!='':
+                                    Database().add_id_data(self.id)
+                                    Database().add_password_data(self.pwd, self.id)
+                                    print("회원가입 성공")
+                                    return self.id
+                            else:
+                                print("아이디 존재함")
+                        
                     elif self.selection == 5:
                         return 0
                     

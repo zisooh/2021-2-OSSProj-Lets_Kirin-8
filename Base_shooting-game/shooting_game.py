@@ -15,10 +15,16 @@ if not pygame.mixer:
 if not pygame.font:
     print('Warning, fonts disabled')
 
-BACK=0
+BACK = 0
+
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
+
+# if Database().id_not_exists('JIYOON'):
+#     Database().add_id_data('JIYOON')
+# Database().add_password_data('MOON','JIYOON')
+# print(Database().compare_data('JIYOON', 'HA'))
 
 direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
@@ -138,8 +144,8 @@ def main():
 
     # 데베 함수 메뉴 구현
     hiScores=Database().getScores()
-    print(hiScores)
-    print(len(hiScores))
+    # print(hiScores)
+    # print(len(hiScores))
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
@@ -162,28 +168,28 @@ def main():
     # Main menu 게임 메인 메뉴
     # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
     # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
-    startText = font.render('SELECT MODES', 1, BLACK)
-    startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
-    hiScoreText = font.render('HIGH SCORES', 1, BLACK)
-    hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
-    fxText = font.render('SOUND FX ', 1, BLACK)
-    fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
-    fxOnText = font.render('ON', 1, RED)
-    fxOffText = font.render('OFF', 1, RED)
-    fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
-    fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
-    musicText = font.render('MUSIC', 1, BLACK)
-    musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
-    musicOnText = font.render('ON', 1, RED)
-    musicOffText = font.render('OFF', 1, RED)
-    musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
-    musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
-    helpText=font.render('HELP',1,BLACK)
-    helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
-    quitText = font.render('QUIT', 1, BLACK)
-    quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
-    selectText = font.render('*', 1, BLACK)
-    selectPos = selectText.get_rect(topright=startPos.topleft)
+    # startText = font.render('SELECT MODES', 1, BLACK)
+    # startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
+    # hiScoreText = font.render('HIGH SCORES', 1, BLACK)
+    # hiScorePos = hiScoreText.get_rect(topleft=startPos.bottomleft)
+    # fxText = font.render('SOUND FX ', 1, BLACK)
+    # fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
+    # fxOnText = font.render('ON', 1, RED)
+    # fxOffText = font.render('OFF', 1, RED)
+    # fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
+    # fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
+    # musicText = font.render('MUSIC', 1, BLACK)
+    # musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
+    # musicOnText = font.render('ON', 1, RED)
+    # musicOffText = font.render('OFF', 1, RED)
+    # musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
+    # musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+    # helpText=font.render('HELP',1,BLACK)
+    # helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
+    # quitText = font.render('QUIT', 1, BLACK)
+    # quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
+    # selectText = font.render('*', 1, BLACK)
+    # selectPos = selectText.get_rect(topright=startPos.topleft)
 
     # Select Mode 안 글씨
     singleText = font.render('SINGLE MODE', 1, BLACK)
@@ -197,15 +203,14 @@ def main():
     selectText = font.render('*', 1, BLACK)
     selectPos = selectText.get_rect(topright=singlePos.topleft)
 
-    menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
+    # menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
     selection = 1
     showSelectModes=False
     showHiScores = False
-    soundFX = Database().getSound()
-    print(soundFX)
-    music = Database().getSound(music=True)
-    if music and pygame.mixer: 
-        pygame.mixer.music.play(loops=-1)
+    # soundFX = Database().getSound()
+    # music = Database().getSound(music=True)
+    # if music and pygame.mixer: 
+    #     pygame.mixer.music.play(loops=-1)
 
 #########################
 #    Init Menu Loop    #
@@ -222,22 +227,14 @@ def main():
         userSelection=Menu().init_page()
         flag=True
         while flag:   
-            if userSelection==1: #로그인
-                pageResult=Menu().login_page()
+            if userSelection==1 or userSelection==2: #로그인/회원가입
+                pageResult=Menu().login_sign_page(userSelection)
                 if pageResult==BACK: #back
                     flag=False  
-                else: #여기서 로그인 확인 기능 들어가야함
-                    print(pageResult)
+                else: 
+                    # print(pageResult)
                     flag=False
                     inInitMenu=False          
-            elif userSelection==2: #회원가입
-                pageResult=Menu().login_page()
-                if pageResult==BACK: #back
-                    flag=False  
-                else: #여기서 회원가입 확인 기능 들어가야함
-                    print(pageResult)
-                    flag=False
-                    inInitMenu=False 
             elif userSelection==3: #끝내기
                 return
 
@@ -706,9 +703,7 @@ def main():
             elif (event.type == pygame.KEYDOWN
                   and event.key == pygame.K_RETURN
                   and len(name) > 0):
-                print("setScore 성공")
                 Database().setScore(hiScores,name, score, accuracy)
-                print("setScore 성공(2)")
                 return True  
 
         if isHiScore:
