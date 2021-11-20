@@ -1,5 +1,7 @@
 import pymysql
 import bcrypt
+import pygame
+pygame.mixer.init()
 
 class Database(object):
     numScores=15
@@ -24,10 +26,10 @@ class Database(object):
         curs = self.scoreDB.cursor()
         if music:
             curs.execute("DELETE FROM music")
-            curs.execute("INSERT INTO music VALUES (?)", (setting,))
+            curs.execute("INSERT INTO music VALUES (%s)", (setting,))
         else:
             curs.execute("DELETE FROM sound")
-            curs.execute("INSERT INTO sound VALUES (?)", (setting,))
+            curs.execute("INSERT INTO sound VALUES (%s)", (setting,))
         self.scoreDB.commit()
         curs.close()
 

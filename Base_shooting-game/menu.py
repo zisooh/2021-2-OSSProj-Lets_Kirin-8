@@ -8,6 +8,13 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
+missile_sound = load_sound('missile.ogg')
+bomb_sound = load_sound('bomb.ogg')
+alien_explode_sound = load_sound('alien_explode.ogg')
+ship_explode_sound = load_sound('ship_explode.ogg')
+load_music('music_loop.ogg')
+
+hiScores=Database().getScores()
 
 class Keyboard(object):
     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
@@ -37,6 +44,7 @@ class Menu:
             x, y, size = self.finalStars.pop()
             pygame.draw.rect(
                 self.background, (255, 255, 0), pygame.Rect(x, y, size, size))
+        
         self.speed = 1.5
         self.clockTime = 60  # maximum FPS
         self.clock = pygame.time.Clock()
@@ -46,8 +54,22 @@ class Menu:
         # 아래 title 두줄 없어도 되는데 loginPo가 얘 기준으로 잡고있음
         self.title, self.titleRect = load_image('title.png')
         self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
+        #데베 호출
+        self.highScoreTexts = [self.font.render("NAME", 1, RED), #폰트 렌터
+                        self.font.render("SCORE", 1, RED),
+                        self.font.render("ACCURACY", 1, RED)]
+        self.highScorePos = [self.highScoreTexts[0].get_rect(
+                        topleft=self.screen.get_rect().inflate(-100, -100).topleft),
+                        self.highScoreTexts[1].get_rect(
+                        midtop=self.screen.get_rect().inflate(-100, -100).midtop),
+                        self.highScoreTexts[2].get_rect(
+                        topright=self.screen.get_rect().inflate(-100, -100).topright)]
+        for hs in hiScores:
+            self.highScoreTexts.extend([self.font.render(str(hs[x]), 1, BLACK)
+                                for x in range(3)])
+            self.highScorePos.extend([self.highScoreTexts[x].get_rect(
+                topleft=self.highScorePos[x].bottomleft) for x in range(-3, 0)])
         #For init_page setting
-
         self.loginText = self.font.render('LOG IN', 1, BLACK)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
         self.signText=self.font.render('SIGN UP',1,BLACK)
@@ -289,7 +311,7 @@ class Menu:
                     elif self.selection == 3:
                         self.soundFX = not self.soundFX
                         if self.soundFX:
-                            self.missile_sound.play()
+                            missile_sound.play()
                         Database().setSound(int(self.soundFX))
                     elif self.selection == 4 and pygame.mixer:
                         self.music = not self.music
@@ -321,9 +343,9 @@ class Menu:
 
 
             if self.showHiScores:
-                self.screen.blit(background, (0, 0))
+                self.screen.blit(self.background, (0, 0))
                 img_menu, img_menuRect = load_image("menu.png")
-                img_menuRect.midtop = screen.get_rect().midtop
+                img_menuRect.midtop = self.screen.get_rect().midtop
                 self.screen.blit(img_menu, img_menuRect)
                 self.textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif self.showHelp:
