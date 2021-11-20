@@ -7,6 +7,7 @@ from database import Database
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
+what_color=(0,255,255)
 
 missile_sound = load_sound('missile.ogg')
 bomb_sound = load_sound('bomb.ogg')
@@ -15,7 +16,7 @@ ship_explode_sound = load_sound('ship_explode.ogg')
 load_music('music_loop.ogg')
 
 hiScores=Database().getScores()
-print(hiScores)
+
 class Keyboard(object):
     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
             pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
@@ -109,7 +110,7 @@ class Menu:
         self.helpText=self.font.render('HELP',1,BLACK)
         self.helpPos=self.helpText.get_rect(topleft=self.musicPos.bottomleft)
         self.quitText = self.font.render('QUIT', 1, BLACK)
-        self.quitPos = self.quitText.get_rect(topleft=self.helpPos.bottomleft)
+        # self.quitPos = self.quitText.get_rect(topleft=self.helpPos.bottomleft)
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
 
@@ -151,6 +152,7 @@ class Menu:
 
     def init_page(self):
         self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
+        self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
         self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
         while self.ininitalMenu:
             self.clock.tick(self.clockTime) 
@@ -296,13 +298,10 @@ class Menu:
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
-
-    def sign_page(self):
-        Menu().login_page()
     
     def inMenu_page(self):
         self.inMenu = True
-        self.selectPos =self.selectText.get_rect(topright=self.singlePos.topleft)
+        self.quitPos = self.quitText.get_rect(topleft=self.helpPos.bottomleft)
         while self.inMenu:
             self.clock.tick(self.clockTime) 
             self.flag=True
