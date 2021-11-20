@@ -15,7 +15,8 @@ if not pygame.mixer:
 if not pygame.font:
     print('Warning, fonts disabled')
 
-BACK=0
+BACK = 0
+
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -46,11 +47,9 @@ def main():
         return aliensLeftThisWave, score
 
 # Create the background which will scroll and loop over a set of different
-# size stars
     background = pygame.Surface((500, 2000))
     background = background.convert()
     background.fill((0, 0, 0))
-    backgroundLoc = 1500
 
 # Display the background
     screen.blit(background, (0, 0))
@@ -138,6 +137,10 @@ def main():
 
     # 데베 함수 메뉴 구현
     hiScores=Database().getScores()
+    soundFX = Database().getSound()
+    music = Database().getSound(music=True)
+    # print(hiScores)
+    # print(len(hiScores))
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                       font.render("SCORE", 1, RED),
                       font.render("ACCURACY", 1, RED)]
@@ -172,7 +175,7 @@ def main():
     fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
     musicText = font.render('MUSIC', 1, BLACK)
     musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
-    musicOnText = font.render('ON', 1, RED)
+    musicOnText = font.render('ON', 1, RED) 
     musicOffText = font.render('OFF', 1, RED)
     musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
     musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
@@ -195,14 +198,10 @@ def main():
     selectText = font.render('*', 1, BLACK)
     selectPos = selectText.get_rect(topright=singlePos.topleft)
 
-    menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
+    # menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
     selection = 1
     showSelectModes=False
     showHiScores = False
-    soundFX = Database().getSound()
-    music = Database().getSound(music=True)
-    if music and pygame.mixer: 
-        pygame.mixer.music.play(loops=-1)
 
 #########################
 #    Init Menu Loop    #
@@ -219,98 +218,27 @@ def main():
         userSelection=Menu().init_page()
         flag=True
         while flag:   
-            if userSelection==1: #로그인
-                pageResult=Menu().login_page()
+            if userSelection==1 or userSelection==2: #로그인/회원가입
+                pageResult=Menu().login_sign_page(userSelection)
                 if pageResult==BACK: #back
                     flag=False  
-                else: #여기서 로그인 확인 기능 들어가야함
-                    print(pageResult)
+                else: 
+                    # print(pageResult)
                     flag=False
                     inInitMenu=False          
-            elif userSelection==2: #회원가입
-                pageResult=Menu().login_page()
-                if pageResult==BACK: #back
-                    flag=False  
-                else: #여기서 회원가입 확인 기능 들어가야함
-                    print(pageResult)
-                    flag=False
-                    inInitMenu=False 
             elif userSelection==3: #끝내기
                 return
 
 #########################
 #    Start Menu Loop    #
 #########################
-    while inMenu:
-        clock.tick(clockTime) 
-#blit()
-        screen.blit(background, (0, 0))
-        screen.blit(main_menu, main_menuRect)
+    inSelectMenu=False
+    userSelection=Menu().inMenu_page()
+    if userSelection==1:
+        inSelectMenu=True
+    elif userSelection==6:
+        return
 
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
-                return
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_RETURN):
-                if showHiScores:
-                    showHiScores = False
-                elif showSelectModes:
-                    showSelectModes = False
-                elif selection == 1:
-                    showSelectModes=True 
-                    inMenu = False
-                    inSelectMenu=True
-                elif selection == 2:
-                    showHiScores = True
-                elif selection == 3:
-                    soundFX = not soundFX
-                    if soundFX:
-                        missile_sound.play()
-                    Database.setSound(int(soundFX))
-                elif selection == 4 and pygame.mixer:
-                    music = not music
-                    if music:
-                        pygame.mixer.music.play(loops=-1)
-                    else:
-                        pygame.mixer.music.stop()
-                    Database.setSound(int(music), music=True)
-                elif selection == 5:
-                    return 
-                elif selection == 6:
-                    return
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_UP
-                  and selection > 1
-                  and not showHiScores
-                  and not showSelectModes):
-                selection -= 1
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_DOWN
-                  and selection < len(menuDict)
-                  and not showHiScores
-                  and not showSelectModes):
-                selection += 1
-
-        selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
-
-        if showHiScores:
-            screen.blit(background, (0, 0))
-            screen.blit(img_menu, img_menuRect)
-            textOverlays = zip(highScoreTexts, highScorePos)
-        elif showSelectModes:
-            textOverlays = zip([singleText,timeText,pvpText],[singlePos,timePos,pvpPos])
-        else:
-            textOverlays = zip([startText, hiScoreText, helpText, fxText,
-                                musicText, quitText, selectText,
-                                fxOnText if soundFX else fxOffText,
-                                musicOnText if music else musicOffText],
-                               [startPos, hiScorePos, helpPos, fxPos,
-                                musicPos, quitPos, selectPos,
-                                fxOnPos if soundFX else fxOffPos,
-                                musicOnPos if music else musicOffPos])
-        for txt, pos in textOverlays:
-            screen.blit(txt, pos)
-        pygame.display.flip()
 
     showSingleMode = False
     showTimeMode = False
@@ -767,7 +695,7 @@ def main():
                   and event.key == pygame.K_RETURN
                   and len(name) > 0):
                 Database().setScore(hiScores,name, score, accuracy)
-                return True
+                return True  
 
         if isHiScore:
             hiScoreText = font.render('SCORE', 1, RED)
@@ -784,6 +712,7 @@ def main():
                               [hiScorePos, scorePos,
                                enterNamePos, namePos])
         else:
+
             gameOverText = font.render('GAME OVER', 1, BLACK)
             gameOverPos = gameOverText.get_rect(
                 center=screen.get_rect().center)
