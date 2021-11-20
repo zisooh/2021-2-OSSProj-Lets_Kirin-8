@@ -34,6 +34,7 @@ def main():
     pygame.display.set_caption("Let\'s Kirin!")
     pygame.mouse.set_visible(0)
 
+
     def kill_alien(alien, aliensLeftThisWave, score) :
         aliensLeftThisWave -= 1
         if alien.pType == 'green':
