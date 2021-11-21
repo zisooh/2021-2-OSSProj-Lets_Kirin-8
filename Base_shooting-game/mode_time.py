@@ -118,7 +118,7 @@ class Time():
         alienPeriod = clockTime // 2
         curTime = 0
         aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-        wave = 5
+        wave = 1
         # 내려오는 미사일 먹으면 8초동안 spacebar로 사용 가능
         doublemissile = False
         # 수정
@@ -185,12 +185,12 @@ class Time():
             # Reset game contents
             curTime = 0
             aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-            wave = 5
+            wave = 1
             doublemissile = False
             bombsHeld = 3
             score = 0
             missilesFired = 0
-            powerupTime = 5 * clockTime
+            powerupTime = 10 * clockTime
             powerupTimeLeft = powerupTime
             betweenWaveTime = 3 * clockTime
             betweenWaveCount = betweenWaveTime
@@ -238,7 +238,7 @@ class Time():
                 
                 if timeCountLeft > 0:
                     timeCountLeft -= 1
-                #sssselif timeCountLeft == 0:
+                #elif timeCountLeft == 0:
                     #ship.alive = False
 
             # Event Handling
@@ -421,7 +421,7 @@ class Time():
                     curTime -= 1
 
             # Update text overlays
-                modeText = font.render("Time Mode", 1, BLACK)
+                modeText = font.render("Time Mode!", 1, BLACK)
                 #waveText = font.render("Wave: " + str(wave), 1, BLACK)
                 #leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
                 scoreText = font.render("Score: " + str(score), 1, BLACK)
@@ -475,10 +475,13 @@ class Time():
                         else:
                             aliensThisWave *= 2
                             aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
-                        if wave == 5:
+                        if wave == 1:
                             Alien.pool.add([Fasty() for _ in range(5)])
+                        if wave == 2:
                             Alien.pool.add([Roundy() for _ in range(5)])
+                        if wave == 3:
                             Alien.pool.add([Crawly() for _ in range(5)])
+                        wave += 1
                         betweenWaveCount = betweenWaveTime
 
                 textOverlays = zip(text, textposition)
