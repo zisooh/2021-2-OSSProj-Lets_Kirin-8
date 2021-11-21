@@ -728,7 +728,7 @@ def main():
             
             if half_tf :
                 waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE)
+                leftText = font.render("Aliens: " + str(aliensLeftThisWave), 1, WHITE)
                 scoreText = font.render("Score: " + str(score), 1, WHITE)
                 scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                 bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
@@ -750,18 +750,19 @@ def main():
     
             wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
             leftPos = leftText.get_rect(topleft=screen.get_rect().midtop)
-            scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
-            bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-            lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
-            scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
-            bombPos2 = bombText2.get_rect(bottomleft=screen.get_rect().midbottom)
-            lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
+            scorePos = scoreText.get_rect(topleft=screen.get_rect().bottomleft)
+            # bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
+            # lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
+            scorePos2 = scoreText2.get_rect(topright=screen.get_rect().midbottom)
+            # bombPos2 = bombText2.get_rect(bottomleft=screen.get_rect().midbottom)
+            # lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
             ship1winPos = ship1winText.get_rect(center=screen.get_rect().center)
             ship2winPos = ship2winText.get_rect(center=screen.get_rect().center)
             drawPos = drawText.get_rect(center=screen.get_rect().center)
 
             text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2, lifeText, lifeText2]
-            textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
+            # textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
+            textposition = [wavePos, leftPos, scorePos, scorePos2]
 
             if doublemissile:
                 if betweenDoubleCount > 0:
@@ -847,7 +848,7 @@ def main():
                 screen.blit(txt, pos)
 
         # Update life
-            life1Rect.topleft = lifePos.topright
+            # life1Rect.topleft = lifePos.topright
             life2Rect.topleft = life1Rect.topright
             life3Rect.topleft = life2Rect.topright
 
