@@ -1,6 +1,7 @@
 import pygame
 import random
 from collections import deque
+import sys
 
 from sprites import (MasterSprite, Ship2, Ship3, Friendship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
@@ -84,18 +85,18 @@ def main():
             backgroundLoc = 1500
         return screen, background, backgroundLoc
 
-    def ingame_text_update() :
-        return [font.render("Wave: " + str(wave), 1, WHITE),
-                font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE),
-                font.render("Score: " + str(score), 1, WHITE),
-                font.render("Score: " + str(score2), 1, WHITE),
-                font.render("Bombs: " + str(bombsHeld), 1, WHITE),
-                font.render("Bombs: " + str(bombsHeld2), 1, WHITE),
-                font.render("Life: ", 1, WHITE)
-                font.render("Life: ", 1, WHITE)
-                font.render('PLAYER 1 WIN!', 1, WHITE),
-                font.render('PLAYER 2 WIN!', 1, WHITE),
-                font.render('DRAW!', 1, WHITE)]
+    # def ingame_text_update() :
+    #     return [font.render("Wave: " + str(wave), 1, WHITE),
+    #             font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE),
+    #             font.render("Score: " + str(score), 1, WHITE),
+    #             font.render("Score: " + str(score2), 1, WHITE),
+    #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
+    #             font.render("Bombs: " + str(bombsHeld2), 1, WHITE),
+    #             # font.render("Life: ", 1, WHITE)
+    #             # font.render("Life: ", 1, WHITE)
+    #             font.render('PLAYER 1 WIN!', 1, WHITE),
+    #             font.render('PLAYER 2 WIN!', 1, WHITE),
+    #             font.render('DRAW!', 1, WHITE)]
 
 # Create the background which will scroll and loop over a set of different
 # size stars
@@ -259,6 +260,7 @@ def main():
     showHiScores = False
     soundFX = Database().getSound()
     music = Database().getSound(music=True)
+
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
 
@@ -268,13 +270,8 @@ def main():
 #########################
     while inMenu:
         clock.tick(clockTime) 
-#blit()
-        screen.blit(
-            background, (0, 0), area=pygame.Rect(
-                0, backgroundLoc, 500, 500))
-        backgroundLoc -= speed
-        if backgroundLoc - speed <= speed:
-            backgroundLoc = 1500
+
+        screen, background, backgroundLoc = background_update(screen, background, backgroundLoc)
 
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
@@ -345,6 +342,7 @@ def main():
     showPvpMode=False
     selectModeDict={1:singlePos,2:timePos,3:pvpPos,4:backPos}
     selection = 1
+
     while inSelectMenu:
                 clock.tick(clockTime) #시간으로 제어하는 너낌
         #blit()
@@ -712,10 +710,42 @@ def main():
                 curTime -= 1
 
         # Update text overlays
+            # if half_tf :
+            #     waveText, leftText, scoreText, scoreText2, bombText, bombText2, ship1winText, ship2winText, drawText = ingame_text_update()
+            # else :
+            #     waveText, leftText, scoreText2, scoreText, bombText2, bombText, ship1winText, ship2winText, drawText = ingame_text_update()
+            # font.render("Wave: " + str(wave), 1, WHITE),
+    #             font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE),
+    #             font.render("Score: " + str(score), 1, WHITE),
+    #             font.render("Score: " + str(score2), 1, WHITE),
+    #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
+    #             font.render("Bombs: " + str(bombsHeld2), 1, WHITE),
+    #             # font.render("Life: ", 1, WHITE)
+    #             # font.render("Life: ", 1, WHITE)
+    #             font.render('PLAYER 1 WIN!', 1, WHITE),
+    #             font.render('PLAYER 2 WIN!', 1, WHITE),
+    #             font.render('DRAW!', 1, WHITE)
+            
             if half_tf :
-                waveText, leftText, scoreText, scoreText2, bombText, bombText2, lifeText, lifeText2, ship1winText, ship2winText, drawText = ingame_text_update()
+                waveText = font.render("Wave: " + str(wave), 1, WHITE)
+                leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE)
+                scoreText = font.render("Score: " + str(score), 1, WHITE)
+                scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
+                bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
+                bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
+                lifeText = font.render("Life: ", 1, WHITE)
+                lifeText2 = font.render("Life: ", 1, WHITE)
+                ship1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
+                ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
+                drawText = font.render('DRAW!', 1, WHITE)
             else :
-                waveText, leftText, scoreText2, scoreText, bombText2, bombText, lifeText2, lifeText, ship1winText, ship2winText, drawText = ingame_text_update()
+                waveText = font.render("Wave: " + str(wave), 1, WHITE)
+                leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE)
+                scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
+                bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
+                lifeText2 = font.render("Life: ", 1, WHITE)
+                ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
+                drawText = font.render('DRAW!', 1, WHITE)
 
     
             wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
@@ -730,7 +760,7 @@ def main():
             ship2winPos = ship2winText.get_rect(center=screen.get_rect().center)
             drawPos = drawText.get_rect(center=screen.get_rect().center)
 
-            text = [waveText, leftText, scoreText, bombText, lifeText, scoreText2, bombText2, lifeText2]
+            text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2, lifeText, lifeText2]
             textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
 
             if doublemissile:
@@ -838,10 +868,10 @@ def main():
             pygame.display.flip()
 
 
-        accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
-        isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-        name = ''
-        nameBuffer = []
+        # accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
+        # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+        # name = ''
+        # nameBuffer = []
 
 
 #########################
@@ -851,55 +881,62 @@ def main():
     while True:
         clock.tick(clockTime)
 
-    # Event Handling
         for event in pygame.event.get():
-            if (event.type == pygame.QUIT
-                or not isHiScore
-                and event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_ESCAPE):
-                return False
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_RETURN
-                  and not isHiScore):
-                return True
-            elif (event.type == pygame.KEYDOWN
-                  and event.key in Keyboard.keys.keys()
-                  and len(nameBuffer) < 8):
-                nameBuffer.append(Keyboard.keys[event.key])
-                name = ''.join(nameBuffer)
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_BACKSPACE
-                  and len(nameBuffer) > 0):
-                nameBuffer.pop()
-                name = ''.join(nameBuffer)
-            elif (event.type == pygame.KEYDOWN
-                  and event.key == pygame.K_RETURN
-                  and len(name) > 0):
-                Database().setScore(hiScores,name, score, accuracy)
-                return True
+            if (event.type == pygame.QUIT):
+                pygame.quit()
+                sys.exit()
+            # elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN :
+            #     return scr_size, level_size, id, language
 
-        if isHiScore:
-            hiScoreText = font.render('HIGH SCORE!', 1, RED)
-            hiScorePos = hiScoreText.get_rect(
-                midbottom=screen.get_rect().center)
-            scoreText = font.render(str(score), 1, BLUE)
-            scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
-            enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
-            enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
-            nameText = font.render(name, 1, BLUE)
-            namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
-            textOverlay = zip([hiScoreText, scoreText,
-                               enterNameText, nameText],
-                              [hiScorePos, scorePos,
-                               enterNamePos, namePos])
-        else:
-            gameOverText = font.render('GAME OVER', 1, BLUE)
-            gameOverPos = gameOverText.get_rect(
-                center=screen.get_rect().center)
-            scoreText = font.render('SCORE: {}'.format(score), 1, BLUE)
-            scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
-            textOverlay = zip([gameOverText, scoreText],
-                              [gameOverPos, scorePos])
+    # # Event Handling
+    #     for event in pygame.event.get():
+    #         if (event.type == pygame.QUIT
+    #             or not isHiScore
+    #             and event.type == pygame.KEYDOWN
+    #                 and event.key == pygame.K_ESCAPE):
+    #             return False
+    #         elif (event.type == pygame.KEYDOWN
+    #               and event.key == pygame.K_RETURN
+    #               and not isHiScore):
+    #             return True
+    #         elif (event.type == pygame.KEYDOWN
+    #               and event.key in Keyboard.keys.keys()
+    #               and len(nameBuffer) < 8):
+    #             nameBuffer.append(Keyboard.keys[event.key])
+    #             name = ''.join(nameBuffer)
+    #         elif (event.type == pygame.KEYDOWN
+    #               and event.key == pygame.K_BACKSPACE
+    #               and len(nameBuffer) > 0):
+    #             nameBuffer.pop()
+    #             name = ''.join(nameBuffer)
+    #         elif (event.type == pygame.KEYDOWN
+    #               and event.key == pygame.K_RETURN
+    #               and len(name) > 0):
+    #             Database().setScore(hiScores,name, score, accuracy)
+    #             return True
+
+    #     if isHiScore:
+    #         hiScoreText = font.render('HIGH SCORE!', 1, RED)
+    #         hiScorePos = hiScoreText.get_rect(
+    #             midbottom=screen.get_rect().center)
+    #         scoreText = font.render(str(score), 1, BLUE)
+    #         scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
+    #         enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
+    #         enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
+    #         nameText = font.render(name, 1, BLUE)
+    #         namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
+    #         textOverlay = zip([hiScoreText, scoreText,
+    #                            enterNameText, nameText],
+    #                           [hiScorePos, scorePos,
+    #                            enterNamePos, namePos])
+    #     else:
+    #         gameOverText = font.render('GAME OVER', 1, BLUE)
+    #         gameOverPos = gameOverText.get_rect(
+    #             center=screen.get_rect().center)
+    #         scoreText = font.render('SCORE: {}'.format(score), 1, BLUE)
+    #         scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
+    #         textOverlay = zip([gameOverText, scoreText],
+    #                           [gameOverPos, scorePos])
 
     # Update and draw all sprites
         # ship1winPos = ship1winText.get_rect(center=screen.get_rect().center)
