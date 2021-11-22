@@ -7,7 +7,8 @@ from database import Database
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
-what_color=(0,255,255)
+what_color=(255,211,43)
+BRWON=(105,57,32)
 
 missile_sound = load_sound('missile.ogg')
 bomb_sound = load_sound('bomb.ogg')
@@ -90,6 +91,7 @@ class Menu:
         self.enterPwdPos=0
         self.pwdText = 0
         self.pwdPos =0
+        self.secretPwd=0
         #For inMenu_page setting
         self.startText = self.font.render('SELECT MODES', 1, BLACK)
         self.startPos = self.startText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
@@ -174,7 +176,6 @@ class Menu:
                     elif self.selection == 1:
                         self.showlogin=True 
                         self.ininitalMenu = False
-                        # Menu().login_page()
                         return 1
                     elif self.selection == 2:
                         return 2
@@ -218,11 +219,8 @@ class Menu:
                     return
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
-                    if (self.selection == 1
-                    or self.selection==2
-                    or self.selection==3
-                    or self.selection==4) :
-                        # print("다음 Return 성공")
+                    if (self.selection==1
+                    or self.selection==2) :
                         if userSelection==1: #로그인 요청일때
                             if Database().id_not_exists(self.id):
                                 print("아이디 없음")
@@ -243,33 +241,34 @@ class Menu:
                             else:
                                 print("아이디 존재함")
                         
-                    elif self.selection == 5:
-                        return 0
+                    elif self.selection == 3:
+                        return False
                     
                 elif (event.type == pygame.KEYDOWN
-                    and self.selection==2
+                    and self.selection==1
                     and event.key in Keyboard.keys.keys()
                     and len(self.idBuffer) < 8):
                     self.idBuffer.append(Keyboard.keys[event.key])
                     self.id = ''.join(self.idBuffer)
                 elif (event.type == pygame.KEYDOWN
-                    and self.selection==2
+                    and self.selection==1
                     and event.key == pygame.K_BACKSPACE
                     and len(self.idBuffer) > 0):
                     self.idBuffer.pop()
                     self.id = ''.join(self.idBuffer)
                 elif (event.type == pygame.KEYDOWN
-                    and self.selection==4
+                    and self.selection==2
                     and event.key in Keyboard.keys.keys()
                     and len(self.pwdBuffer) < 8):
                     self.pwdBuffer.append(Keyboard.keys[event.key])
                     self.pwd = ''.join(self.pwdBuffer)
                 elif (event.type == pygame.KEYDOWN
-                    and self.selection==4
+                    and self.selection==2
                     and event.key == pygame.K_BACKSPACE
                     and len(self.pwdBuffer) > 0):
                     self.pwdBuffer.pop()
-                    self.pwd = ''.join(self.pwdBuffer)    
+                    self.pwd = ''.join(self.pwdBuffer)
+                    
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_UP
                     and self.selection > 1):
@@ -279,18 +278,19 @@ class Menu:
                     and self.selection < len(self.loginDict)):
                     self.selection += 1
 
-            self.enterIdText=self.font.render('ID:  ',1,RED)
+            self.enterIdText=self.font.render('ID  ',1,BLACK)
             self.enterIdPos=self.enterIdText.get_rect(topright=self.titleRect.inflate(0, 100).midbottom)
             self.idText = self.font.render(self.id, 1, WHITE)
             self.idPos = self.idText.get_rect(topleft=self.enterIdPos.bottomleft)
-            self.enterPwdText=self.font.render('PWD:',1,RED)
+            self.enterPwdText=self.font.render('PWD',1,BLACK)
             self.enterPwdPos=self.enterPwdText.get_rect(topleft=self.idPos.bottomleft)
-            self.pwdText = self.font.render(self.pwd, 1, WHITE)
+            self.secretPwd='*'*len(self.pwd)
+            self.pwdText = self.font.render(self.secretPwd, 1, WHITE)
             self.pwdPos = self.pwdText.get_rect(topleft=self.enterPwdPos.bottomleft)
             self.backText = self.font.render('BACK', 1, BLACK)
             self.backPos = self.backText.get_rect(topleft=self.pwdPos.bottomleft)
             self.selectText = self.font.render('*', 1, BLACK)
-            self.loginDict={1:self.enterIdPos,2:self.idPos,3:self.enterPwdPos,4:self.pwdPos,5:self.backPos}
+            self.loginDict={1:self.idPos,2:self.pwdPos,3:self.backPos}
             self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
             self.textOverlays = zip([self.enterIdText, self.idText,self.enterPwdText,self.pwdText,self.selectText,self.backText],
                                 [self.enterIdPos, self.idPos,self.enterPwdPos,self.pwdPos,self.selectPos,self.backPos])

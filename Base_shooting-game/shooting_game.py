@@ -13,9 +13,10 @@ from mode_single import *
 if not pygame.mixer:
     print('Warning, sound disablead')
 if not pygame.font:
-    print('Warning, fonts disabled')
+    print('Warning, fonts disable d')
 
 BACK = 0
+
 
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -231,6 +232,7 @@ def main():
             elif userSelection==3: #끝내기
                 return
 
+
 #########################
 #    Start Menu Loop    #
 #########################
@@ -248,7 +250,7 @@ def main():
     selectModeDict = {1:singlePos,2:timePos,3:pvpPos,4:backPos}
     selection = 1
     while inSelectMenu:
-                clock.tick(clockTime) #시간으로 제어하는 너낌
+                clock.tick(clockTime)
         #blit()
                 screen.blit(background, (0, 0))
                 screen.blit(main_menu, main_menuRect)
@@ -659,8 +661,9 @@ def main():
             pygame.display.flip()
 
 
+
         accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
-        isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+        isHiScore = len(hiScores) < Database().numScores or score > hiScores[-1][1]
         name = ''
         nameBuffer = []
 

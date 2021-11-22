@@ -3,12 +3,13 @@ import bcrypt
 import pygame
 
 pygame.mixer.init()
+numScores=15
 
-class Database(object):
-    numScores=15
+class Database(object): 
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
         self.scoreDB=pymysql.connect(host=host,user=user,password=password,db=db,charset=charset)
         self.curs = self.scoreDB.cursor()
+        self.numScores=15
 
     def id_not_exists(self,input_id):
         sql="SELECT * FROM users WHERE user_id=%s"
@@ -79,14 +80,23 @@ class Database(object):
         return hiScores
 
     def setScore(self,hiScores,name, score, accuracy):
-        if len(hiScores) == Database.numScores:
-            lowScoreName = hiScores[-1][0]
-            lowScore = hiScores[-1][1]
-            sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
-            self.curs.execute(sql,(lowScoreName,lowScore))
-        sql="INSERT INTO scores VALUES (%s,%s,%s)"
-        self.curs.execute(sql,(name, score, accuracy))
-        self.scoreDB.commit()
-        self.curs.close()
+        sql="SELECT * FROM scores WHERE name=%s"
+        self.curs.execute(sql,name)
+        data=self.curs.fetchone()
+        
+        if data:
+            self.curs.close()
+            return 
+        else:
+            print(hiScores)
+            if len(hiScores) >= self.numScores:
+                lowScoreName = hiScores[-1][0]
+                lowScore = hiScores[-1][1]
+                sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
+                self.curs.execute(sql,(lowScoreName,lowScore))
+            sql="INSERT INTO scores VALUES (%s,%s,%s)"
+            self.curs.execute(sql,(name, score, accuracy))
+            self.scoreDB.commit()
+            self.curs.close()
     
 
