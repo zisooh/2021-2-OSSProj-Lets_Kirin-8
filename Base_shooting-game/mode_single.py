@@ -514,7 +514,7 @@ class Single():
 
 
             accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
-            isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+            isHiScore = len(hiScores) < Database().numScores or score > hiScores[-1][1]
             name = ''
             nameBuffer = []
 

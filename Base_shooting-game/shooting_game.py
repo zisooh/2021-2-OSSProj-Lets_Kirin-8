@@ -17,6 +17,7 @@ if not pygame.font:
 
 BACK = 0
 
+
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -164,6 +165,7 @@ def main():
             elif userSelection==3: #끝내기
                 return
 
+
 #########################
 #    Start Menu Loop    #
 #########################
@@ -245,7 +247,6 @@ def main():
         print('Pvp mode play')
         #ship.initializeKeys() Pvp 클래스 안에 넣기
         #Pvp.play()    
-
 
 if __name__ == '__main__':
     while(main()):
