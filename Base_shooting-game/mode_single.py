@@ -23,7 +23,7 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Single():
-    def play(): 
+    def playGame(): 
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
@@ -415,7 +415,7 @@ class Single():
                     curTime -= 1
 
             # Update text overlays
-                waveText = font.render("Single Wave: " + str(wave), 1, BLACK)
+                waveText = font.render("Wave: " + str(wave), 1, BLACK)
                 leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
                 scoreText = font.render("Score: " + str(score), 1, BLACK)
                 bombText = font.render("Fart Bombs: " + str(bombsHeld), 1, BLACK)
@@ -597,6 +597,6 @@ class Single():
             pygame.display.flip()
 
 
-if __name__ == '__play__':
-    while(play()):
+if __name__ == '__playGame__':
+    while(playGame()):
         pass
