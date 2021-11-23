@@ -198,6 +198,7 @@ class Single():
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             ship.alive = True
+            ship.initializeKeys()
 
             # pause 메뉴 글씨  
             restartText = font.render('RESTART GAME', 1, BLACK)

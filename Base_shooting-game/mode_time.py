@@ -199,6 +199,7 @@ class Time():
             timeCount = 27 #30 * clockTime
             timeCountLeft  = timeCount
             ship.alive = True
+            ship.initializeKeys()
 
             # pause 메뉴 글씨  
             restartText = font.render('RESTART GAME', 1, BLACK)

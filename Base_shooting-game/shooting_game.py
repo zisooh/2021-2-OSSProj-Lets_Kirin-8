@@ -35,7 +35,7 @@ def main():
     pygame.mouse.set_visible(0)
 
 
-    def kill_alien(alien, aliensLeftThisWave, score) :
+    def kill_alien(alien, aliensLeftThisWave, score) : # sprites 클래스에 넣을 수 있나욤
         aliensLeftThisWave -= 1
         if alien.pType == 'green':
             score += 1
@@ -65,81 +65,15 @@ def main():
     img_menu, img_menuRect = load_image("menu.png")
     img_menuRect.midtop = screen.get_rect().midtop
 
-    # Game field
-    field1, field1Rect = load_image("field.png")
-    field2, field2Rect = load_image("field.png")
-    field1Rect.midtop = screen.get_rect().midtop
-    field2Rect.midbottom = field1Rect.midtop
-
 # Prepare game objects
-    speed = 1.5
-    MasterSprite.speed = speed
-    alienPeriod = 60 / speed
     clockTime = 60  # maximum FPS
-    clock = pygame.time.Clock()
-    ship = Ship()
-    
-    initialAlienTypes = (Siney, Spikey)
-    # 수정
-    powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, FriendPowerup)
-
-    # pause
-    pause,pauseRect = load_image('pause.png')
-    pauseRect.midtop = screen.get_rect().midtop
-    pauseMenu = False
-
-    # Sprite groups
-    alldrawings = pygame.sprite.Group()
-    allsprites = pygame.sprite.RenderPlain((ship,))
-    MasterSprite.allsprites = allsprites
-    Alien.pool = pygame.sprite.Group(
-        [alien() for alien in initialAlienTypes for _ in range(5)])
-    Alien.active = pygame.sprite.Group()
-    Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
-    Missile.active = pygame.sprite.Group()
-    Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
-    Explosion.active = pygame.sprite.Group()
-    
-    # doublemissile = pygame.sprite.Group()
-    bombs = pygame.sprite.Group()
-    powerups = pygame.sprite.Group()
-
-    # life
-    life1, life1Rect = load_image('heart1.png')
-    life2, life2Rect = load_image('heart2.png')
-    life3, life3Rect = load_image('heart3.png')
-
-    # Sounds
-    missile_sound = load_sound('missile.ogg')
-    bomb_sound = load_sound('bomb.ogg')
-    alien_explode_sound = load_sound('alien_explode.ogg')
-    ship_explode_sound = load_sound('ship_explode.ogg')
-    load_music('music_loop.ogg')
-
-    alienPeriod = clockTime // 2
-    curTime = 0
-    aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-    wave = 1
-    # 내려오는 미사일 먹으면 8초동안 spacebar로 사용 가능
-    doublemissile = False
-    # 수정
-    friendship = False
-    bombsHeld = 3
-    score = 0
-    missilesFired = 0
-    powerupTime = 10 * clockTime
-    powerupTimeLeft = powerupTime
-    betweenWaveTime = 3 * clockTime
-    betweenWaveCount = betweenWaveTime
-    betweenDoubleTime = 8 * clockTime
-    betweenDoubleCount = betweenDoubleTime
+    clock = pygame.time.Clock()  
     font = pygame.font.Font(None, 36)
-    inMenu = True
 
     # 데베 함수 메뉴 구현
     hiScores=Database().getScores()
-    soundFX = Database().getSound()
-    music = Database().getSound(music=True)
+    soundFX = Database().getSound() # 지워도 댐?
+    music = Database().getSound(music=True) # 지워도댐?
     # print(hiScores)
     # print(len(hiScores))
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -247,8 +181,7 @@ def main():
     selectModeDict = {1:singlePos,2:timePos,3:pvpPos,4:backPos}
     selection = 1
     while inSelectMenu:
-                clock.tick(clockTime) #시간으로 제어하는 너낌
-        #blit()
+                clock.tick(clockTime)
                 screen.blit(background, (0, 0))
                 screen.blit(main_menu, main_menuRect)
 
@@ -266,15 +199,12 @@ def main():
                         elif selection == 1:
                             inSelectMenu = False
                             selectMode = 'SingleMode'
-                            ship.initializeKeys()
                         elif selection == 2:
                             inSelectMenu = False
                             selectMode = 'TimeMode'
-                            ship.initializeKeys()
                         elif selection == 3:
                             inSelectMenu = False
                             selectMode = 'PvpMode'
-                            ship.initializeKeys()
                         elif selection == 4:
                             inMenu = True
                             inSelectMenu = False
@@ -313,6 +243,7 @@ def main():
         Time.playGame()
     elif selectMode == 'PvpMode':
         print('Pvp mode play')
+        #ship.initializeKeys() Pvp 클래스 안에 넣기
         #Pvp.play()    
 
 
