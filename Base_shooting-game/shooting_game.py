@@ -213,30 +213,7 @@ def main():
 # login_page = enter ID, enter PWD, BACK
 # signup_page = enter ID, enter PWD, BACK
 
-    inInitMenu=True
-    
-    while inInitMenu:
-        userSelection=Menu().init_page()
-        flag=True
-        while flag:   
-            if userSelection==1: #로그인
-                pageResult=Menu().login_sign_page()
-                if pageResult==BACK: #back
-                    flag=False  
-                else: #여기서 로그인 확인 기능 들어가야함
-                    print(pageResult)
-                    flag=False
-                    inInitMenu=False          
-            elif userSelection==2: #회원가입
-                pageResult=Menu().login_page()
-                if pageResult==BACK: #back
-                    flag=False  
-                else: #여기서 회원가입 확인 기능 들어가야함
-                    print(pageResult)
-                    flag=False
-                    inInitMenu=False 
-            elif userSelection==3: #끝내기
-                return
+
 
 #########################
 #    Start Menu Loop    #
