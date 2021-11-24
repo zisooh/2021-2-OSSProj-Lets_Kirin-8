@@ -22,7 +22,7 @@ WHITE = (255, 255, 255)
 direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
-class Single():
+class Time():
     def playGame(): 
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
@@ -133,6 +133,9 @@ class Single():
         betweenDoubleTime = 8 * clockTime
         betweenDoubleCount = betweenDoubleTime
         font = pygame.font.Font(None, 36)
+        timeFont = pygame.font.Font(None, 50)
+        timeCount = 27  #30 * clockTime
+        timeCountLeft = timeCount
 
         # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
@@ -157,11 +160,7 @@ class Single():
 
     # load만 일단
         title, titleRect = load_image('title.png')
-        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
-
-        # Main menu 게임 메인 메뉴
-        # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
-        # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
+        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop 
 
 
     #########################
@@ -197,6 +196,8 @@ class Single():
             betweenWaveCount = betweenWaveTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
+            timeCount = 27 #30 * clockTime
+            timeCountLeft  = timeCount
             ship.alive = True
             ship.initializeKeys()
 
@@ -235,6 +236,11 @@ class Single():
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
                     random.choice(powerupTypes)().add(powerups, allsprites)
+                
+                if timeCountLeft > 0:
+                    timeCountLeft -= 1
+                #elif timeCountLeft == 0:
+                    #ship.alive = False
 
             # Event Handling
                 for event in pygame.event.get():
@@ -276,7 +282,7 @@ class Single():
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
                         pauseMenu = True
-                        menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                        pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
                                     4: musicPos, 5: helpPos, 6: quitPos}
                         
                         while pauseMenu:
@@ -324,12 +330,12 @@ class Single():
                                     selection -= 1
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_DOWN
-                                    and selection < len(menuDict)
+                                    and selection < len(pauseMenuDict)
                                     and not showHiScores):
                                     selection += 1
                                 
 
-                            selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+                            selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
                                 textOverlays = zip(highScoreTexts, highScorePos)
@@ -416,20 +422,22 @@ class Single():
                     curTime -= 1
 
             # Update text overlays
-                waveText = font.render("Wave: " + str(wave), 1, BLACK)
-                leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
+                modeText = font.render("Time Mode!", 1, BLACK)
+                #waveText = font.render("Wave: " + str(wave), 1, BLACK)
+                #leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
                 scoreText = font.render("Score: " + str(score), 1, BLACK)
                 bombText = font.render("Fart Bombs: " + str(bombsHeld), 1, BLACK)
-                #lifeText = font.render("Life: ", 1, BLACK)
+                countDownText = timeFont.render(str(timeCount), 1, RED)
 
-                wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
-                leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
+                modePos = modeText.get_rect(topleft=screen.get_rect().topleft)
+                #wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
+                #leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
                 scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
                 bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-                #lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
+                countDownPos = countDownText.get_rect(topleft=screen.get_rect().midtop)
 
-                text = [waveText, leftText, scoreText, bombText] #, lifeText]
-                textposition = [wavePos, leftPos, scorePos, bombPos] #, lifePos]
+                text = [scoreText, bombText, countDownText, modeText] #waveText, leftText
+                textposition = [scorePos, bombPos, countDownPos, modePos]  #wavePos, leftPos
 
                 if doublemissile:
                     if betweenDoubleCount > 0:
@@ -499,9 +507,9 @@ class Single():
                     screen.blit(txt, pos)
 
             # Update life
-                life1Rect.topleft = wavePos.bottomleft #lifePos.topright
-                life2Rect.topleft = wavePos.bottomleft #lifePos.topright
-                life3Rect.topleft = wavePos.bottomleft #lifePos.topright
+                life1Rect.topleft = modePos.bottomleft #lifePos.topright
+                life2Rect.topleft = modePos.bottomleft #lifePos.topright
+                life3Rect.topleft = modePos.bottomleft #lifePos.topright
 
                 if ship.life == 3:
                     screen.blit(life3, life3Rect)
