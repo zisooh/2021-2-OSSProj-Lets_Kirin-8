@@ -203,8 +203,8 @@ class Friendship(MasterSprite):
         # self.shieldUp = False
         self.vert = 0
         self.horiz = 0
-        # self.life = 3
-
+        # self.life = 3  
+    
     def initializeKeys(self):
         # keyState = pygame.key.get_pressed()
         self.vert = 0
@@ -241,8 +241,8 @@ class Friendship(MasterSprite):
         # if not self.shieldUp and self.image != self.original:
         #     self.image = self.original
     
-    # def bomb(self):
-    #     return Bomb(self)  
+        # def bomb(self):
+        #     return Bomb(self)  
 
 class Ship2(MasterSprite):
     def __init__(self):
