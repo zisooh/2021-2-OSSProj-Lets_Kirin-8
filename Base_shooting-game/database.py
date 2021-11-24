@@ -3,7 +3,7 @@ import bcrypt
 import pygame
 
 pygame.mixer.init()
-numScores=15
+
 
 class Database(object): 
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
