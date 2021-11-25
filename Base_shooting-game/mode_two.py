@@ -105,23 +105,10 @@ class Pvp() :
         #             font.render('DRAW!', 1, WHITE)]
 
     # Create the background which will scroll and loop over a set of different
-    # size stars
         background = pygame.Surface((500, 2000))
         background = background.convert()
         background.fill((0, 0, 0))
         backgroundLoc = 1500
-        finalStars = deque()
-        for y in range(0, 1500, 30):
-            size = random.randint(2, 5)
-            x = random.randint(0, 500 - size)
-            if y <= 500:
-                finalStars.appendleft((x, y + 1500, size))
-            pygame.draw.rect(
-                background, (255, 255, 0), pygame.Rect(x, y, size, size))
-        while finalStars:
-            x, y, size = finalStars.pop()
-            pygame.draw.rect(
-                background, (255, 255, 0), pygame.Rect(x, y, size, size))
 
     # Display the background
         screen.blit(background, (0, 0))
