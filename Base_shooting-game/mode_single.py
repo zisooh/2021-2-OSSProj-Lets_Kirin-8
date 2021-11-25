@@ -198,6 +198,7 @@ class Single():
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             ship.alive = True
+            ship.initializeKeys()
 
             # pause 메뉴 글씨  
             restartText = font.render('RESTART GAME', 1, BLACK)
@@ -513,7 +514,7 @@ class Single():
 
 
             accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
-            isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+            isHiScore = len(hiScores) < Database().numScores or score > hiScores[-1][1]
             name = ''
             nameBuffer = []
 
