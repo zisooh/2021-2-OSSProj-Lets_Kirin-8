@@ -9,6 +9,7 @@ from load import load_image, load_sound, load_music
 from menu import *
 from mode_single import *
 from mode_time import *
+from mode_two import *
 
 if not pygame.mixer:
     print('Warning, sound disablead')
@@ -16,7 +17,6 @@ if not pygame.font:
     print('Warning, fonts disabled')
 
 BACK = 0
-
 
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -247,7 +247,7 @@ def main():
     elif selectMode == 'PvpMode':
         print('Pvp mode play')
         #ship.initializeKeys() Pvp 클래스 안에 넣기
-        #Pvp.play()    
+        Pvp.playGame()    
 
 if __name__ == '__main__':
     while(main()):

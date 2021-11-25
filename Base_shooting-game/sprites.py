@@ -138,12 +138,16 @@ class Ship(MasterSprite):
         self.image, self.rect = load_image('ship.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('ship_shield.png', -1)
+        # 수정 쉴드랑 조금 다른 방법이 필요함
+        self.bomb, self.rect = load_image('ship_bomb.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
+        # 수정
+        self.bombUp = False
         self.vert = 0
         self.horiz = 0
         self.life = 3  
@@ -182,6 +186,13 @@ class Ship(MasterSprite):
             self.image = self.shield
 
         if not self.shieldUp and self.image != self.original:
+            self.image = self.original
+        
+        # 수정
+        if self.bombUp and self.image != self.bomb:
+            self.image = self.bomb
+
+        if not self.bombUp and self.image != self.original:
             self.image = self.original
 
     def bomb(self):
