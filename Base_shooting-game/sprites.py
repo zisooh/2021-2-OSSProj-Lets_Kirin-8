@@ -138,7 +138,7 @@ class Ship(MasterSprite):
         self.image, self.rect = load_image('ship.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('ship_shield.png', -1)
-        # 수정
+        # 수정 쉴드랑 조금 다른 방법이 필요함
         self.bomb, self.rect = load_image('ship_bomb.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
