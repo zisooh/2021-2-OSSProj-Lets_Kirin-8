@@ -43,7 +43,6 @@ class Pvp() :
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
         screen_width = 500   # 스크린가로
-        screen_width = 500   # 스크린가로
         screen_height = 500  # 스크린세로
         screen = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption("Let's Kirin!")
@@ -75,7 +74,7 @@ class Pvp() :
             screen.blit(
                 background, (0, 0), area=pygame.Rect(
                     0, backgroundLoc, 500, 500))
-            # screen.fill((80, 20, 30, 125),(0, 0, screen.get_width()//2, screen.get_height()), special_flags = 1) # special_flags = 3 : 별 색깔만 바뀜
+            screen.fill((80, 20, 30, 125),(0, 0, screen.get_width()//2, screen.get_height()), special_flags = 1) # special_flags = 3 : 별 색깔만 바뀜
             backgroundLoc -= speed
             if backgroundLoc - speed <= speed:
                 backgroundLoc = 1500

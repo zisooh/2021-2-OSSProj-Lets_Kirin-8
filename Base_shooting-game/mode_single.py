@@ -231,7 +231,7 @@ class Single():
                 clock.tick(clockTime)
 
                 # 게임 test를 위해 잠시 조절
-                if aliensLeftThisWave >= 5:
+                if aliensLeftThisWave >= 1:
                     powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
@@ -249,7 +249,7 @@ class Single():
                         if friendship :
                             ship.horiz += direction[event.key][0] * speed
                             ship.vert += direction[event.key][1] * speed
-                            miniship.horiz = ship.horiz 
+                            miniship.horiz = ship.horiz
                             miniship.vert = ship.vert
                         else :
                             ship.horiz += direction[event.key][0] * speed
@@ -423,9 +423,9 @@ class Single():
                         elif powerup.pType == 'friendship' :
                             friendship = True
                             miniship.alive = True
-                            # 해결해야 함
                             allsprites = pygame.sprite.RenderPlain((ship,miniship,))
-                            MasterSprite.allsprites = allsprites    
+                            MasterSprite.allsprites = allsprites  
+
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -466,11 +466,11 @@ class Single():
                     elif betweenDoubleCount == 0:
                         friendship = False
                         miniship.alive = False
+                        betweenDoubleCount = betweenDoubleTime
                         allsprites = pygame.sprite.RenderPlain((ship,))
                         MasterSprite.allsprites = allsprites
-                        allsprites.update()
                         allsprites.draw(screen)
-                        betweenDoubleCount = betweenDoubleTime
+                        alldrawings.update()
 
             # Detertmine when to move to next wave
                 if aliensLeftThisWave <= 0:
