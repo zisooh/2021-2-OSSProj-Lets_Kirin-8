@@ -79,7 +79,6 @@ class Time():
         ship = Ship()
         
         initialAlienTypes = (Siney, Spikey)
-        # 수정
         powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, FriendPowerup)
 
         # pause
@@ -168,8 +167,8 @@ class Time():
     #########################
 
         restart = True
-        while restart == True:
 
+        while restart == True:
             # Reset Sprite groups
             alldrawings = pygame.sprite.Group()
             allsprites = pygame.sprite.RenderPlain((ship,))
@@ -422,22 +421,18 @@ class Time():
                     curTime -= 1
 
             # Update text overlays
-                modeText = font.render("Time Mode!", 1, BLACK)
-                #waveText = font.render("Wave: " + str(wave), 1, BLACK)
-                #leftText = font.render("Bears Left: " + str(aliensLeftThisWave), 1, BLACK)
+                waveText = font.render("Wave: -", 1, BLACK)
+                countDownText = timeFont.render(str(timeCount), 1, RED)
                 scoreText = font.render("Score: " + str(score), 1, BLACK)
                 bombText = font.render("Fart Bombs: " + str(bombsHeld), 1, BLACK)
-                countDownText = timeFont.render(str(timeCount), 1, RED)
-
-                modePos = modeText.get_rect(topleft=screen.get_rect().topleft)
-                #wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
-                #leftPos = leftText.get_rect(midtop=screen.get_rect().midtop)
+                
+                wavePos = waveText.get_rect(topleft=screen.get_rect().topleft)
+                countDownPos = countDownText.get_rect(topleft=screen.get_rect().midtop)
                 scorePos = scoreText.get_rect(topright=screen.get_rect().topright)
                 bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-                countDownPos = countDownText.get_rect(topleft=screen.get_rect().midtop)
 
-                text = [scoreText, bombText, countDownText, modeText] #waveText, leftText
-                textposition = [scorePos, bombPos, countDownPos, modePos]  #wavePos, leftPos
+                text = [waveText, countDownText, scoreText, bombText]
+                textposition = [wavePos, countDownPos, scorePos, bombPos]
 
                 if doublemissile:
                     if betweenDoubleCount > 0:
@@ -445,6 +440,12 @@ class Time():
                     elif betweenDoubleCount == 0:
                         doublemissile = False
                         betweenDoubleCount = betweenDoubleTime
+
+            # CountDown before TimeMode
+                #if beforeWaveCount > 0:
+                #    beforeWaveCount -= 1
+                #    beforeWaveCountText = font.render(str(beforeWaveCount), 1, BLACK)
+
 
             # Detertmine when to move to next wave
                 if aliensLeftThisWave <= 0:
@@ -507,9 +508,9 @@ class Time():
                     screen.blit(txt, pos)
 
             # Update life
-                life1Rect.topleft = modePos.bottomleft #lifePos.topright
-                life2Rect.topleft = modePos.bottomleft #lifePos.topright
-                life3Rect.topleft = modePos.bottomleft #lifePos.topright
+                life1Rect.topleft = wavepos.bottomleft #lifePos.topright
+                life2Rect.topleft = wavePos.bottomleft #lifePos.topright
+                life3Rect.topleft = wavePos.bottomleft #lifePos.topright
 
                 if ship.life == 3:
                     screen.blit(life3, life3Rect)
