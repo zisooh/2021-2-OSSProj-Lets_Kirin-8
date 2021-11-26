@@ -115,27 +115,10 @@ class Time():
         ship_explode_sound = load_sound('ship_explode.ogg')
         load_music('music_loop.ogg')
 
-        alienPeriod = clockTime // 2
-        curTime = 0
-        aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-        wave = 1
-        # 내려오는 미사일 먹으면 8초동안 spacebar로 사용 가능
-        doublemissile = False
-        # 수정
-        friendship = False
-        bombsHeld = 3
-        score = 0
-        missilesFired = 0
-        powerupTime = 10 * clockTime
-        powerupTimeLeft = powerupTime
-        betweenWaveTime = 3 * clockTime
-        betweenWaveCount = betweenWaveTime
-        betweenDoubleTime = 8 * clockTime
-        betweenDoubleCount = betweenDoubleTime
+        # font
         font = pygame.font.Font(None, 36)
-        timeFont = pygame.font.Font(None, 50)
-        timeCount = 27  #30 * clockTime
-        timeCountLeft = timeCount
+        beforeWaveTimeFont = pygame.font.Font(None, 60)
+        leftTimeFont = pygame.font.Font(None, 60)
 
         # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
@@ -182,21 +165,26 @@ class Time():
             Explosion.active = pygame.sprite.Group()
 
             # Reset game contents
+            alienPeriod = clockTime // 2
             curTime = 0
             aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
             wave = 1
+            freiendship = False
             doublemissile = False
             bombsHeld = 3
             score = 0
             missilesFired = 0
+
             powerupTime = 10 * clockTime
             powerupTimeLeft = powerupTime
             betweenWaveTime = 3 * clockTime
             betweenWaveCount = betweenWaveTime
+            beforeWaveTime = 3 * clockTime      # 게임시작 전 3, 2, 1...
+            beforeWaveCount = betweenWaveTime
+            leftTime = 30 * clockTime           # 타임모드 카운트다운
+            leftTimeCount = leftTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
-            timeCount = 27 #30 * clockTime
-            timeCountLeft  = timeCount
             ship.alive = True
             ship.initializeKeys()
 
@@ -236,8 +224,8 @@ class Time():
                     powerupTimeLeft = powerupTime
                     random.choice(powerupTypes)().add(powerups, allsprites)
                 
-                if timeCountLeft > 0:
-                    timeCountLeft -= 1
+                #if timeCountLeft > 0:
+                #    timeCountLeft -= 1
                 #elif timeCountLeft == 0:
                     #ship.alive = False
 
@@ -295,7 +283,6 @@ class Time():
                                 if (event.type == pygame.QUIT
                                     or event.type == pygame.KEYDOWN
                                         and event.key == pygame.K_ESCAPE):
-                                    windowShhow = False
                                     pygame.quit()
                                     sys.exit()
                                 elif (event.type == pygame.KEYDOWN  # unpause
@@ -449,9 +436,9 @@ class Time():
                         betweenDoubleCount = betweenDoubleTime
 
             # CountDown before TimeMode
-                #if beforeWaveCount > 0:
-                #    beforeWaveCount -= 1
-                #    beforeWaveCountText = font.render(str(beforeWaveCount), 1, BLACK)
+            #    if beforeWaveCount > 0:
+            #        beforeWaveCount -= 1
+            #        beforeWaveCountText = font.render(str(beforeWaveCount), 1, BLACK)
 
 
             # Detertmine when to move to next wave
