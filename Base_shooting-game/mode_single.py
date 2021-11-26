@@ -1,5 +1,6 @@
 import pygame
 import random
+import sys
 
 from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
@@ -276,7 +277,7 @@ class Single():
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
                         pauseMenu = True
-                        menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                        pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
                                     4: musicPos, 5: helpPos, 6: quitPos}
                         
                         while pauseMenu:
@@ -286,12 +287,13 @@ class Single():
                             screen.blit(pause, pauseRect)
 
                             for event in pygame.event.get():
-                                if (event.type == pygame.QUIT):
+                                if (event.type == pygame.QUIT
+                                    or event.type == pygame.KEYDOWN
+                                        and event.key == pygame.K_ESCAPE):
                                     return
                                 elif (event.type == pygame.KEYDOWN  # unpause
                                     and event.key == pygame.K_p):
                                     pauseMenu = False
-                                # Pause Menu
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_RETURN):
                                     if showHiScores:
@@ -324,12 +326,12 @@ class Single():
                                     selection -= 1
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_DOWN
-                                    and selection < len(menuDict)
+                                    and selection < len(pauseMenuDict)
                                     and not showHiScores):
                                     selection += 1
                                 
 
-                            selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+                            selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
                                 textOverlays = zip(highScoreTexts, highScorePos)
@@ -596,8 +598,3 @@ class Single():
             for txt, pos in textOverlay:
                 screen.blit(txt, pos)
             pygame.display.flip()
-
-
-if __name__ == '__playGame__':
-    while(playGame()):
-        pass

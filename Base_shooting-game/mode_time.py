@@ -1,5 +1,6 @@
 import pygame
 import random
+import sys
 
 from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
@@ -167,7 +168,6 @@ class Time():
     #########################
 
         restart = True
-
         while restart == True:
             # Reset Sprite groups
             alldrawings = pygame.sprite.Group()
@@ -246,7 +246,8 @@ class Time():
                     if (event.type == pygame.QUIT
                         or event.type == pygame.KEYDOWN
                             and event.key == pygame.K_ESCAPE):
-                        return
+                        pygame.quit()
+                        sys.exit()
                     # Ship Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -291,8 +292,12 @@ class Time():
                             screen.blit(pause, pauseRect)
 
                             for event in pygame.event.get():
-                                if (event.type == pygame.QUIT):
-                                    return
+                                if (event.type == pygame.QUIT
+                                    or event.type == pygame.KEYDOWN
+                                        and event.key == pygame.K_ESCAPE):
+                                    windowShhow = False
+                                    pygame.quit()
+                                    sys.exit()
                                 elif (event.type == pygame.KEYDOWN  # unpause
                                     and event.key == pygame.K_p):
                                     pauseMenu = False
@@ -318,10 +323,12 @@ class Time():
                                         else:
                                             pygame.mixer.music.stop()
                                         Database.setSound(int(music), music=True)
-                                    elif selection == 5:
-                                        return
+                                    elif selection == 5:              
+                                        pygame.quit()
+                                        sys.exit()
                                     elif selection == 6:
-                                        return
+                                        pygame.quit()
+                                        sys.exit()
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_UP
                                     and selection > 1
@@ -508,7 +515,7 @@ class Time():
                     screen.blit(txt, pos)
 
             # Update life
-                life1Rect.topleft = wavepos.bottomleft #lifePos.topright
+                life1Rect.topleft = wavePos.bottomleft #lifePos.topright
                 life2Rect.topleft = wavePos.bottomleft #lifePos.topright
                 life3Rect.topleft = wavePos.bottomleft #lifePos.topright
 
@@ -539,7 +546,7 @@ class Time():
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT
                     or not isHiScore
-                    and event.type == pygame.KEYDOWN
+                    or event.type == pygame.KEYDOWN
                         and event.key == pygame.K_ESCAPE):
                     return False
                 elif (event.type == pygame.KEYDOWN
@@ -577,7 +584,6 @@ class Time():
                                 [hiScorePos, scorePos,
                                 enterNamePos, namePos])
             else:
-
                 gameOverText = font.render('GAME OVER', 1, BLACK)
                 gameOverPos = gameOverText.get_rect(
                     center=screen.get_rect().center)
@@ -606,7 +612,3 @@ class Time():
                 screen.blit(txt, pos)
             pygame.display.flip()
 
-
-if __name__ == '__playGame__':
-    while(playGame()):
-        pass
