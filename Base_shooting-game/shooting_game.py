@@ -96,9 +96,7 @@ def main():
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
-    # Main menu 게임 메인 메뉴
-    # 폰트 렌더 함수 font.render('글씨',1(옵션인가봄),색깔)
-    # 폰트 위치 함수 font객체.get_rect(위치선언변수=기준이미지객체.inflate(좌,표).찐위치)    
+    # Main menu 게임 메인 메뉴 
     startText = font.render('SELECT MODES', 1, BLACK)
     startPos = startText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)
     hiScoreText = font.render('HIGH SCORES', 1, BLACK)
@@ -173,6 +171,9 @@ def main():
     userSelection=Menu().inMenu_page()
     if userSelection==1:
         inSelectMenu=True
+    elif userSelection==2:
+        inScoreMenu=True
+        print("이제 스코어 나올차례")
     elif userSelection==6:
         return
 
@@ -231,6 +232,91 @@ def main():
                     screen.blit(txt, pos)
                 
                 pygame.display.flip()
+    
+    singleText=font.render('SINGLE  ',1,BLACK)
+    singlePos=singleText.get_rect(topright=titleRect.inflate(0, 100).midbottom)
+    timeText = font.render('TIME', 1, BLACK)
+    timePos = timeText.get_rect(topleft=singlePos.bottomleft)
+    backText = font.render('BACK', 1, BLACK)
+    backPos = backText.get_rect(topleft=timePos.bottomleft)
+
+    # selectPos = selectText.get_rect(topright=selectScoresDict[selection].topleft)
+    showSingleScores =False
+    showTimeScores=False
+    selectScoresDict = {1:singlePos,2:timePos,3:backPos}
+    selection = 1
+    while inScoreMenu:
+        # clock.tick(clockTime) 
+        # flag=True
+        # main_menu, main_menuRect = load_image("main_menu.png")
+        # main_menuRect.midtop = screen.get_rect().midtop
+        # screen.blit(main_menu, main_menuRect)
+        clock.tick(clockTime)
+        screen.blit(background, (0, 0))
+        screen.blit(main_menu, main_menuRect)
+        for event in pygame.event.get():
+            if (event.type == pygame.QUIT):
+                return
+            elif (event.type == pygame.KEYDOWN
+                and event.key == pygame.K_RETURN):
+                if showSingleScores:
+                    showSingleScores = False
+                elif showTimeScores:
+                    showTimeScores = False
+                elif selection == 1:
+                    showSingleScores=True 
+                    # inScoreMenu = False
+                elif selection == 2:
+                    showTimeScores = True
+                    # inScoreMenu=False
+                elif selection == 3:
+                    return 
+            elif (event.type == pygame.KEYDOWN
+                and event.key == pygame.K_UP
+                and selection > 1
+                and not showSingleScores
+                and not showTimeScores):
+                selection -= 1
+            elif (event.type == pygame.KEYDOWN
+                and event.key == pygame.K_DOWN
+                and selection < len(selectScoresDict)
+                and not showSingleScores
+                and not showTimeScores):
+                selection += 1
+        
+        
+        
+        # singleText=font.render('SINGLE  ',1,BLACK)
+        # singlePos=singleText.get_rect(topright=titleRect.inflate(0, 100).midbottom)
+        # timeText = font.render('TIME', 1, BLACK)
+        # timePos = timeText.get_rect(topleft=singlePos.bottomleft)
+        # backText = font.render('BACK', 1, BLACK)
+        # backPos = backText.get_rect(topleft=timePos.bottomleft)
+
+        selectPos = selectText.get_rect(topright=selectScoresDict[selection].topleft)
+        # self.menuDict = {1: self.enterIdPos, 2: self.idPos,3:self.backPos}
+        # self.selectText = self.font.render('*', 1, BLACK)
+        # self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)       
+
+
+        if showSingleScores:
+            screen.blit(background, (0, 0))
+            img_menu, img_menuRect = load_image("menu.png")
+            img_menuRect.midtop = screen.get_rect().midtop
+            screen.blit(img_menu, img_menuRect)
+            textOverlays = zip(highScoreTexts, highScorePos)
+        elif showTimeScores:
+            screen.blit(background, (0, 0))
+            img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
+            img_menuRect.midtop = screen.get_rect().midtop
+            screen.blit(img_menu, img_menuRect) 
+        else:
+            textOverlays = zip([singleText, timeText,backText,selectText],
+                            [singlePos, timePos,backPos, selectPos])
+        for txt, pos in textOverlays:
+            screen.blit(txt, pos)
+        pygame.display.flip()
+
 
 
 
