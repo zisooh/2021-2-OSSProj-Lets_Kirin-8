@@ -423,9 +423,6 @@ class Single():
                         elif powerup.pType == 'friendship' :
                             friendship = True
                             miniship.alive = True
-                            # 해결해야 함
-                            # alldrawings = pygame.sprite.Group()
-
                             allsprites = pygame.sprite.RenderPlain((ship,miniship,))
                             MasterSprite.allsprites = allsprites  
 
@@ -470,28 +467,10 @@ class Single():
                         friendship = False
                         miniship.alive = False
                         betweenDoubleCount = betweenDoubleTime
-
                         allsprites = pygame.sprite.RenderPlain((ship,))
                         MasterSprite.allsprites = allsprites
                         allsprites.draw(screen)
                         alldrawings.update()
-                        
-                        # allsprites.update()
-                        # allsprites.draw(screen)
-
-                        # betweenDoubleCount = betweenDoubleTime
-
-                        # allsprites.update()
-            # allsprites.draw(screen)
-            # alldrawings.update()
-            # for txt, pos in textOverlay:
-            #     screen.blit(txt, pos)
-            # pygame.display.flip()
-
-            # alldrawings = pygame.sprite.Group()
-            # allsprites = pygame.sprite.RenderPlain((ship,))
-            # MasterSprite.allsprites = allsprites
-
 
             # Detertmine when to move to next wave
                 if aliensLeftThisWave <= 0:
