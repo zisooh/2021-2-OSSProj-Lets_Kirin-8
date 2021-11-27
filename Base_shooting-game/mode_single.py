@@ -233,7 +233,7 @@ class Single():
                 clock.tick(clockTime)
 
                 # 게임 test를 위해 잠시 조절
-                if aliensLeftThisWave >= 1:
+                if aliensLeftThisWave >= 0:
                     powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
@@ -249,8 +249,6 @@ class Single():
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
                         if friendship :
-                            # miniship.horiz = ship.horiz
-                            # miniship.vert = ship.vert
                             ship.horiz += direction[event.key][0] * speed
                             ship.vert += direction[event.key][1] * speed
                             miniship.horiz = ship.horiz
@@ -261,8 +259,6 @@ class Single():
                     elif (event.type == pygame.KEYUP
                         and event.key in direction.keys()):
                         if friendship :
-                            # miniship.horiz = ship.horiz
-                            # miniship.vert = ship.vert
                             ship.horiz -= direction[event.key][0] * speed
                             ship.vert -= direction[event.key][1] * speed
                             miniship.horiz = ship.horiz 
@@ -429,9 +425,9 @@ class Single():
                         elif powerup.pType == 'friendship' :
                             friendship = True
                             miniship.alive = True
+                            # 문제인 부분
                             allsprites = pygame.sprite.RenderPlain((ship,miniship,))
                             MasterSprite.allsprites = allsprites  
-
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -472,11 +468,12 @@ class Single():
                     elif betweenDoubleCount == 0:
                         friendship = False
                         miniship.alive = False
+                        miniship.remove()
                         betweenDoubleCount = betweenDoubleTime
-                        allsprites = pygame.sprite.RenderPlain((ship,))
-                        MasterSprite.allsprites = allsprites
-                        allsprites.draw(screen)
-                        alldrawings.update()
+                        # allsprites = pygame.sprite.RenderPlain((ship,))
+                        # MasterSprite.allsprites = allsprites
+                        # allsprites.draw(screen)
+                        # alldrawings.update()
 
             # Detertmine when to move to next wave
                 if aliensLeftThisWave <= 0:
