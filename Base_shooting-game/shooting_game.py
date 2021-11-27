@@ -157,19 +157,6 @@ while windowShow:
 #    Start Menu Loop    #
 #########################
 
-    inSelectMenu=False
-    userSelection=Menu().inMenu_page()
-    if userSelection==1:
-        inSelectMenu=True
-    elif userSelection==6:
-        pygame.quit()
-        sys.exit()
-
-
-###############################
-#    Select Mode Menu Loop    #
-###############################
-
     inMainMenu=True
     while inMainMenu:
         userSelection=Menu().inMenu_page()
