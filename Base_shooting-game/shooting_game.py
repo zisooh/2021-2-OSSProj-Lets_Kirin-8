@@ -116,12 +116,11 @@ backPos=backText.get_rect(topleft=pvpPos.bottomleft)
 selectText = font.render('*', 1, BLACK)
 selectPos = selectText.get_rect(topright=singlePos.topleft)
 
-# menuDict = {1: startPos, 2: hiScorePos, 3:fxPos, 4: musicPos, 5:helpPos,6: quitPos}
 selection = 1
 showSelectModes=False
 showHiScores = False
 
-#-------------------------------------------------------------------#
+#--------------------------------------------------------------------#
 
 #########################
 #    Init Menu Loop     #
