@@ -226,6 +226,7 @@ class Time():
             selectPos = selectText.get_rect(topright=restartPos.topleft)
             selection = 1
             showHiScores = False
+            showHelp=False
 
             # 본게임시작
             while ship.alive:
@@ -302,6 +303,8 @@ class Time():
                                     and event.key == pygame.K_RETURN):
                                     if showHiScores:
                                         showHiScores = False
+                                    elif showHelp:
+                                        showHelp=False
                                     elif selection == 1:    
                                         pauseMenu = False
                                         ship.alive = False
@@ -311,16 +314,16 @@ class Time():
                                         soundFX = not soundFX
                                         if soundFX:
                                             missile_sound.play()
-                                        Database.setSound(int(soundFX))
+                                        Database().setSound(int(soundFX))
                                     elif selection == 4 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
-                                        Database.setSound(int(music), music=True)
+                                        Database().setSound(int(music), music=True)
                                     elif selection == 5:
-                                        return
+                                        showHelp=True
                                     elif selection == 6:
                                         return
                                 elif (event.type == pygame.KEYDOWN
@@ -338,7 +341,14 @@ class Time():
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
+                                img_menu, img_menuRect = load_image("menu.png")
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect)
                                 textOverlays = zip(highScoreTexts, highScorePos)
+                            elif showHelp:
+                                img_menu, img_menuRect = load_image("pause.png") 
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect) 
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
