@@ -1,7 +1,6 @@
 import pygame
 import random
 import sys
-
 from sprites import (MasterSprite, Ship, Friendship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, LifePowerup,
                      Siney, Spikey, Fasty, Roundy, Crawly)
@@ -98,14 +97,13 @@ class Single():
         miniship = Friendship()
         
         initialAlienTypes = (Siney, Spikey)
-        #powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, 
-        #                FriendPowerup, LifePowerup)
-        powerupTypes = (BombPowerup, FriendPowerup)
+        powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, 
+                        FriendPowerup, LifePowerup)
         
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-        
+
     # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
         soundFX = Database().getSound()
@@ -197,8 +195,6 @@ class Single():
             betweenWaveCount = betweenWaveTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
-            betweenfriendTime = 8 * clockTime
-            betweenfriendCount = betweenfriendTime
             
             ship.alive = True
             ship.life = 3
@@ -227,34 +223,24 @@ class Single():
                     # Ship Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
-                        ship.horiz += direction[event.key][0] * speed
-                        ship.vert += direction[event.key][1] * speed
+                        if friendship :
+                            ship.horiz += direction[event.key][0] * speed
+                            ship.vert += direction[event.key][1] * speed
+                            miniship.horiz = ship.horiz
+                            miniship.vert = ship.vert
+                        else :
+                            ship.horiz += direction[event.key][0] * speed
+                            ship.vert += direction[event.key][1] * speed
                     elif (event.type == pygame.KEYUP
                         and event.key in direction.keys()):
-                        ship.horiz -= direction[event.key][0] * speed
-                        ship.vert -= direction[event.key][1] * speed
-
-                #    elif (event.type == pygame.KEYDOWN
-                #        and event.key in direction.keys()):
-                #        if friendship :
-                #            ship.horiz += direction[event.key][0] * speed
-                #            ship.vert += direction[event.key][1] * speed
-                #            miniship.horiz = ship.horiz
-                #            miniship.vert = ship.vert
-                #        else :
-                #            ship.horiz += direction[event.key][0] * speed
-                #            ship.vert += direction[event.key][1] * speed
-                #    elif (event.type == pygame.KEYUP
-                #        and event.key in direction.keys()):
-                #        if friendship :
-                #            ship.horiz -= direction[event.key][0] * speed
-                #            ship.vert -= direction[event.key][1] * speed
-                #            miniship.horiz = ship.horiz 
-                #            miniship.vert = ship.vert
-                #        else :
-                #            ship.horiz -= direction[event.key][0] * speed
-                #            ship.vert -= direction[event.key][1] * speed
-
+                        if friendship :
+                            ship.horiz -= direction[event.key][0] * speed
+                            ship.vert -= direction[event.key][1] * speed
+                            miniship.horiz = ship.horiz 
+                            miniship.vert = ship.vert
+                        else :
+                            ship.horiz -= direction[event.key][0] * speed
+                            ship.vert -= direction[event.key][1] * speed
                     # Missile
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_SPACE):
@@ -262,14 +248,14 @@ class Single():
                             Missile.position(ship.rect.topleft)
                             Missile.position(ship.rect.topright)
                             missilesFired += 2
-                        elif friendship :
-                            Missile.position(ship.rect.midtop)
-                #            Missile.position(miniship.rect.midtop)     # 자동발사가 되어야함
-                #            missilesFired += 2     # 하이스코어에 영향주는데 괜찮나
-                            missilesFired += 1
-                        else :
-                            Missile.position(ship.rect.midtop)
-                            missilesFired += 1
+                        else : 
+                            if friendship :
+                                Missile.position(ship.rect.midtop)
+                                Missile.position(miniship.rect.midtop)
+                                missilesFired += 2
+                            else :
+                                Missile.position(ship.rect.midtop)
+                                missilesFired += 1
                         if soundFX:
                             missile_sound.play()
                     # Bomb
@@ -423,11 +409,12 @@ class Single():
                             if ship.life < 3:
                                 ship.life += 1 
                         elif powerup.pType == 'friendship' :
-                            friendship = True   
-                    #        miniship.alive = True
-                    #        # 문제인 부분
-                    #        allsprites = pygame.sprite.RenderPlain((ship,miniship,))
-                    #        MasterSprite.allsprites = allsprites
+                            friendship = True
+                            miniship.alive = True
+                            # 문제인 부분
+                            MasterSprite.allsprites.add(miniship)
+                            allsprites.update()
+                            allsprites.draw(screen) 
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -453,7 +440,6 @@ class Single():
                 text = [waveText, leftText, scoreText, bombText]
                 textposition = [wavePos, leftPos, scorePos, bombPos]
 
-                # Doublemissile Time
                 if doublemissile:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
@@ -461,26 +447,14 @@ class Single():
                         doublemissile = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                # friend Time
-                friend, friendRect = load_image("friendship.png")
-                friendRect.bottomleft = ship.rect.bottomright
                 if friendship:
-                    screen.blit(friend, friendRect)
-                    if betweenfriendCount > 0:
-                        betweenfriendCount -= 1
+                    if betweenDoubleCount > 0:
+                        betweenDoubleCount -= 1
                     elif betweenDoubleCount == 0:
                         friendship = False
-                        betweenfriendCount = betweenfriendTime
-
-                
-                #if friendship:
-                #    if betweenDoubleCount > 0:
-                #        betweenDoubleCount -= 1
-                #    elif betweenDoubleCount == 0:
-                #        friendship = False
-                #        miniship.alive = False
-                #        miniship.remove()
-                #        betweenDoubleCount = betweenDoubleTime
+                        miniship.alive = False
+                        miniship.remove()
+                        betweenDoubleCount = betweenDoubleTime
                         # allsprites = pygame.sprite.RenderPlain((ship,))
                         # MasterSprite.allsprites = allsprites
                         # allsprites.draw(screen)
@@ -528,7 +502,7 @@ class Single():
                 textOverlays = zip(text, textposition)
 
             # moving field
-                field1Rect.y += 2 # speed? float(x) / int(o)
+                field1Rect.y += 2
                 field2Rect.y += 2
                 if field1Rect.y >= screen_height:
                     field1Rect.midbottom = field2Rect.midtop
@@ -623,7 +597,7 @@ class Single():
                                 [gameOverPos, scorePos])
 
         # moving field         
-            field1Rect.y += 2 # speed? float(x) / int(o)
+            field1Rect.y += 2
             field2Rect.y += 2
             if field1Rect.y >= screen_height:
                 field1Rect.midbottom = field2Rect.midtop
