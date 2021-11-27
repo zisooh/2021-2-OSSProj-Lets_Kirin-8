@@ -138,6 +138,8 @@ class Single():
         hiScores=Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         # print(hiScores)
         # print(len(hiScores))
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -225,6 +227,7 @@ class Single():
             selectPos = selectText.get_rect(topright=restartPos.topleft)
             selection = 1
             showHiScores = False
+            showHelp=False
 
             # 본게임시작
             while ship.alive:
@@ -296,6 +299,8 @@ class Single():
                                     and event.key == pygame.K_RETURN):
                                     if showHiScores:
                                         showHiScores = False
+                                    elif showHelp:
+                                        showHelp=False
                                     elif selection == 1:    
                                         pauseMenu = False
                                         ship.alive = False
@@ -305,16 +310,16 @@ class Single():
                                         soundFX = not soundFX
                                         if soundFX:
                                             missile_sound.play()
-                                        Database.setSound(int(soundFX))
+                                        Database().setSound(int(soundFX))
                                     elif selection == 4 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
-                                        Database.setSound(int(music), music=True)
+                                        Database().setSound(int(music), music=True)
                                     elif selection == 5:
-                                        return
+                                        showHelp=True
                                     elif selection == 6:
                                         return
                                 elif (event.type == pygame.KEYDOWN
@@ -332,7 +337,16 @@ class Single():
                             selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
 
                             if showHiScores:
+                                # self.screen.blit(self.background, (0, 0))
+                                img_menu, img_menuRect = load_image("menu.png")
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect)
                                 textOverlays = zip(highScoreTexts, highScorePos)
+                            elif showHelp:
+                                # screen.blit(background, (0, 0))
+                                img_menu, img_menuRect = load_image("pause.png") 
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect) 
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
@@ -596,6 +610,7 @@ class Single():
             for txt, pos in textOverlay:
                 screen.blit(txt, pos)
             pygame.display.flip()
+
 
 
 if __name__ == '__playGame__':
