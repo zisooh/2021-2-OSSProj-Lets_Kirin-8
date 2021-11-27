@@ -167,170 +167,41 @@ def main():
 #########################
 #    Start Menu Loop    #
 #########################
-    inSelectMenu=False
-    userSelection=Menu().inMenu_page()
-    if userSelection==1:
-        inSelectMenu=True
-    elif userSelection==2:
-        inScoreMenu=True
-        print("이제 스코어 나올차례")
-    elif userSelection==6:
-        return
 
-
-    showSingleMode = False
-    showTimeMode = False
-    showPvpMode = False
-    selectModeDict = {1:singlePos,2:timePos,3:pvpPos,4:backPos}
-    selection = 1
-    while inSelectMenu:
-                clock.tick(clockTime)
-                screen.blit(background, (0, 0))
-                screen.blit(main_menu, main_menuRect)
-
-                for event in pygame.event.get():
-                    if (event.type == pygame.QUIT):
-                        return
-                    elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_RETURN):
-                        if showSingleMode:
-                            showSingleMode = False
-                        elif showTimeMode:
-                            showTimeMode = False
-                        elif showPvpMode:
-                            showPvpMode = False
-                        elif selection == 1:
-                            inSelectMenu = False
-                            selectMode = 'SingleMode'
-                        elif selection == 2:
-                            inSelectMenu = False
-                            selectMode = 'TimeMode'
-                        elif selection == 3:
-                            inSelectMenu = False
-                            selectMode = 'PvpMode'
-                        elif selection == 4:
-                            inMenu = True
-                            inSelectMenu = False
-                    elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_UP
-                        and selection > 1
-                        and not showSingleMode
-                        and not showTimeMode
-                        and not showPvpMode):
-                        selection -= 1
-                    elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_DOWN
-                        and selection < len(selectModeDict)
-                        and not showSingleMode
-                        and not showTimeMode
-                        and not showPvpMode):
-                        selection += 1
-                selectPos = selectText.get_rect(topright=selectModeDict[selection].topleft)
-
-                textOverlays = zip([singleText,timeText,pvpText,selectText,backText],[singlePos,timePos,pvpPos,selectPos,backPos])
-                for txt, pos in textOverlays:
-                    screen.blit(txt, pos)
-                
-                pygame.display.flip()
-    
-    singleText=font.render('SINGLE  ',1,BLACK)
-    singlePos=singleText.get_rect(topright=titleRect.inflate(0, 100).midbottom)
-    timeText = font.render('TIME', 1, BLACK)
-    timePos = timeText.get_rect(topleft=singlePos.bottomleft)
-    backText = font.render('BACK', 1, BLACK)
-    backPos = backText.get_rect(topleft=timePos.bottomleft)
-
-    # selectPos = selectText.get_rect(topright=selectScoresDict[selection].topleft)
-    showSingleScores =False
-    showTimeScores=False
-    selectScoresDict = {1:singlePos,2:timePos,3:backPos}
-    selection = 1
-    while inScoreMenu:
-        # clock.tick(clockTime) 
-        # flag=True
-        # main_menu, main_menuRect = load_image("main_menu.png")
-        # main_menuRect.midtop = screen.get_rect().midtop
-        # screen.blit(main_menu, main_menuRect)
-        clock.tick(clockTime)
-        screen.blit(background, (0, 0))
-        screen.blit(main_menu, main_menuRect)
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
+    inMainMenu=True
+    while inMainMenu:
+        userSelection=Menu().inMenu_page()
+        flag=True
+        while flag:
+            if userSelection==1:
+                pageResult=Menu().select_game_page()
+                if pageResult==BACK: #back
+                    flag=False
+                elif (pageResult=='SingleMode' or 
+                    pageResult=='TimeMode' or
+                    pageResult=='PVPMode'):
+                    flag=False
+                    inMainMenu=False 
+            elif userSelection==2:
+                pageResult=Menu().score_page()
+                if pageResult==BACK:
+                    flag=False
+            elif userSelection==6:
                 return
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_RETURN):
-                if showSingleScores:
-                    showSingleScores = False
-                elif showTimeScores:
-                    showTimeScores = False
-                elif selection == 1:
-                    showSingleScores=True 
-                    # inScoreMenu = False
-                elif selection == 2:
-                    showTimeScores = True
-                    # inScoreMenu=False
-                elif selection == 3:
-                    return 
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_UP
-                and selection > 1
-                and not showSingleScores
-                and not showTimeScores):
-                selection -= 1
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_DOWN
-                and selection < len(selectScoresDict)
-                and not showSingleScores
-                and not showTimeScores):
-                selection += 1
-        
-        
-        
-        # singleText=font.render('SINGLE  ',1,BLACK)
-        # singlePos=singleText.get_rect(topright=titleRect.inflate(0, 100).midbottom)
-        # timeText = font.render('TIME', 1, BLACK)
-        # timePos = timeText.get_rect(topleft=singlePos.bottomleft)
-        # backText = font.render('BACK', 1, BLACK)
-        # backPos = backText.get_rect(topleft=timePos.bottomleft)
 
-        selectPos = selectText.get_rect(topright=selectScoresDict[selection].topleft)
-        # self.menuDict = {1: self.enterIdPos, 2: self.idPos,3:self.backPos}
-        # self.selectText = self.font.render('*', 1, BLACK)
-        # self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)       
-
-
-        if showSingleScores:
-            screen.blit(background, (0, 0))
-            img_menu, img_menuRect = load_image("menu.png")
-            img_menuRect.midtop = screen.get_rect().midtop
-            screen.blit(img_menu, img_menuRect)
-            textOverlays = zip(highScoreTexts, highScorePos)
-        elif showTimeScores:
-            screen.blit(background, (0, 0))
-            img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
-            img_menuRect.midtop = screen.get_rect().midtop
-            screen.blit(img_menu, img_menuRect) 
-        else:
-            textOverlays = zip([singleText, timeText,backText,selectText],
-                            [singlePos, timePos,backPos, selectPos])
-        for txt, pos in textOverlays:
-            screen.blit(txt, pos)
-        pygame.display.flip()
-
-
-
+    
 
 #########################
 #    Start Game Loop    #
 #########################
 
-    if selectMode == 'SingleMode':
+    if pageResult == 'SingleMode':
         print('Single mode play')
         Single.playGame()
-    elif selectMode == 'TimeMode':
+    elif pageResult == 'TimeMode':
         print('Time mode play')
         Time.playGame()
-    elif selectMode == 'PvpMode':
+    elif pageResult == 'PvpMode':
         print('Pvp mode play')
         #ship.initializeKeys() Pvp 클래스 안에 넣기
         #Pvp.play()    

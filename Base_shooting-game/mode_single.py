@@ -225,6 +225,7 @@ class Single():
             selectPos = selectText.get_rect(topright=restartPos.topleft)
             selection = 1
             showHiScores = False
+            showHelp=False
 
             # 본게임시작
             while ship.alive:
@@ -275,6 +276,7 @@ class Single():
                     # Pause
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
+                        mode=0 
                         pauseMenu = True
                         menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
                                     4: musicPos, 5: helpPos, 6: quitPos}
@@ -296,6 +298,8 @@ class Single():
                                     and event.key == pygame.K_RETURN):
                                     if showHiScores:
                                         showHiScores = False
+                                    elif showHelp:
+                                        showHelp=False
                                     elif selection == 1:    
                                         pauseMenu = False
                                         ship.alive = False
@@ -314,7 +318,7 @@ class Single():
                                             pygame.mixer.music.stop()
                                         Database.setSound(int(music), music=True)
                                     elif selection == 5:
-                                        return
+                                        showHelp=True
                                     elif selection == 6:
                                         return
                                 elif (event.type == pygame.KEYDOWN
@@ -332,7 +336,16 @@ class Single():
                             selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
 
                             if showHiScores:
+                                # self.screen.blit(self.background, (0, 0))
+                                img_menu, img_menuRect = load_image("menu.png")
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect)
                                 textOverlays = zip(highScoreTexts, highScorePos)
+                            elif showHelp:
+                                # screen.blit(background, (0, 0))
+                                img_menu, img_menuRect = load_image("pause.png") 
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect) 
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
