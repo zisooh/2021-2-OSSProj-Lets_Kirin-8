@@ -197,7 +197,7 @@ class Ship(MasterSprite):
 
     def bomb(self):
         return Bomb(self)
-     
+
 class Friendship(MasterSprite):
     def __init__(self):
         super().__init__()
@@ -208,6 +208,8 @@ class Friendship(MasterSprite):
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() // 3, self.area.bottom)
         # self.rect.midright = (self.screen.get_width() // 2, self.area.bottom)
+        # s = Ship()
+        # self.rect.right = ship.rect.left
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         # self.shieldUp = False
@@ -262,7 +264,8 @@ class Ship2(MasterSprite):
         self.shield, self.rect = load_image('ship_shield.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
+        self.rect.midbottom = (self.screen.get_width() * (1/4) , self.area.bottom)
+        # self.rect.midbottom = (500 * 1/3, 500)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
@@ -309,7 +312,8 @@ class Ship3(MasterSprite):
         self.shield, self.rect = load_image('ship_shield.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
+        self.rect.midbottom = (self.screen.get_width() * (3/4), self.area.bottom)
+        # self.rect.midbottom = (500 * 0.5, 500)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
