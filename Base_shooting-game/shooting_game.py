@@ -75,6 +75,8 @@ def main():
     hiScores=Database().getScores()
     soundFX = Database().getSound() # 지워도 댐?
     music = Database().getSound(music=True) # 지워도댐?
+    if music and pygame.mixer: 
+        pygame.mixer.music.play(loops=-1)
     # print(hiScores)
     # print(len(hiScores))
     highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터

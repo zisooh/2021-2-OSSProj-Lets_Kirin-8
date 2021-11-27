@@ -138,6 +138,8 @@ class Single():
         hiScores=Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         # print(hiScores)
         # print(len(hiScores))
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -276,7 +278,6 @@ class Single():
                     # Pause
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
-                        mode=0 
                         pauseMenu = True
                         menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
                                     4: musicPos, 5: helpPos, 6: quitPos}
@@ -309,14 +310,14 @@ class Single():
                                         soundFX = not soundFX
                                         if soundFX:
                                             missile_sound.play()
-                                        Database.setSound(int(soundFX))
+                                        Database().setSound(int(soundFX))
                                     elif selection == 4 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
-                                        Database.setSound(int(music), music=True)
+                                        Database().setSound(int(music), music=True)
                                     elif selection == 5:
                                         showHelp=True
                                     elif selection == 6:

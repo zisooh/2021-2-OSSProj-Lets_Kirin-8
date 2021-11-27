@@ -134,8 +134,6 @@ class Menu:
         self.inSelectMenu=False
         self.soundFX = Database().getSound()
         self.music = Database().getSound(music=True)
-        if self.music and pygame.mixer: 
-            pygame.mixer.music.play(loops=-1)
         #user simple db
         self.log_test=[]
         self.userSelection=0
@@ -545,26 +543,6 @@ class Menu:
 
         # pause 메뉴 글씨  
         self.startText = self.font.render('RESTART GAME', 1, BLACK)
-        # restartPos = restartText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)  
-        # hiScoreText = self.font.render('HIGH SCORES', 1, BLACK)
-        # hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
-        # fxText = font.render('SOUND FX ', 1, BLACK)
-        # fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
-        # fxOnText = font.render('ON', 1, RED)
-        # fxOffText = font.render('OFF', 1, RED)
-        # fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
-        # fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
-        # musicText = font.render('MUSIC', 1, BLACK)
-        # musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
-        # musicOnText = font.render('ON', 1, RED)
-        # musicOffText = font.render('OFF', 1, RED)
-        # musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
-        # musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
-        # helpText=font.render('HELP',1,BLACK)
-        # helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
-        # quitText = font.render('QUIT', 1, BLACK)
-        # quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
-        # selectText = font.render('*', 1, BLACK)
         selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
         selection = 1
         showHiScores = False
