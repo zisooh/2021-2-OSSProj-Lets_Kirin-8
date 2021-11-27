@@ -1,5 +1,5 @@
 import pygame
-import random
+import random 
 
 from sprites import (MasterSprite, Ship, Friendship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
@@ -9,7 +9,7 @@ from load import load_image, load_sound, load_music
 from menu import *
 from mode_single import *
 from mode_time import *
-from mode_two import *
+from mode_pvp import *
 
 if not pygame.mixer:
     print('Warning, sound disablead')
@@ -92,7 +92,7 @@ def main():
         highScorePos.extend([highScoreTexts[x].get_rect(
             topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
-   # load만 일단
+   # load만 일단 
     title, titleRect = load_image('title.png')
     titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 

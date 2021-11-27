@@ -9,7 +9,7 @@ from database import Database
 from load import load_image, load_sound, load_music
 from menu import *
 
-if not pygame.mixer:
+if not pygame.mixer: 
     print('Warning, sound disabled')
 if not pygame.font:
     print('Warning, fonts disabled')
@@ -668,7 +668,7 @@ class Pvp() :
                     screen.blit(txt, pos)
 
             # Update life
-                # life1Rect.topleft = lifePos.topright
+                life1Rect.topleft = lifePos.topright
                 life2Rect.topleft = life1Rect.topright
                 life3Rect.topleft = life2Rect.topright
 
