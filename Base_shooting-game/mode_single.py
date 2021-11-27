@@ -14,6 +14,7 @@ if not pygame.font:
     print('Warning, fonts disabled')
 
 BACK = 0
+SINGLE=0
 
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -564,8 +565,12 @@ class Single():
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and len(name) > 0):
-                    Database().setScore(hiScores,name, score, accuracy)
-                    return True  
+                    if Database().name_not_exists(name,mode=SINGLE):
+                        Database().setScore(hiScores,name, score, accuracy)
+                        return True 
+                    else:
+                        print("중복된 이름 존재함")
+                     
 
             if isHiScore:
                 hiScoreText = font.render('SCORE', 1, RED)

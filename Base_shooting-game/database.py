@@ -100,19 +100,18 @@ class Database(object):
             self.curs.close()
     
     def getTimeScores(self): #For TimeMode
-        self.curs.execute('''CREATE TABLE if not exists scores
+        self.curs.execute('''CREATE TABLE if not exists time
                      (name text, score integer, accuracy real)''')
-        self.curs.execute("SELECT * FROM scores ORDER BY score DESC")
+        self.curs.execute("SELECT * FROM time ORDER BY score DESC")
         self.scoreDB.commit()
         hiScores = self.curs.fetchall()
         self.curs.close()
         return hiScores
     
     def setTimeScore(self,hiScores,name, score, accuracy): #For TimeMode
-        sql="SELECT * FROM scores WHERE name=%s"
+        sql="SELECT * FROM time WHERE name=%s"
         self.curs.execute(sql,name)
         data=self.curs.fetchone()
-        
         if data:
             self.curs.close()
             return 
@@ -121,11 +120,23 @@ class Database(object):
             if len(hiScores) >= self.numScores:
                 lowScoreName = hiScores[-1][0]
                 lowScore = hiScores[-1][1]
-                sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
+                sql="DELETE FROM time WHERE (name = %s AND score = %s)"
                 self.curs.execute(sql,(lowScoreName,lowScore))
-            sql="INSERT INTO scores VALUES (%s,%s,%s)"
+            sql="INSERT INTO time VALUES (%s,%s,%s)"
             self.curs.execute(sql,(name, score, accuracy))
             self.scoreDB.commit()
             self.curs.close()
+    
+    def name_not_exists(self,name,mode):
+        if mode==0:
+            sql="SELECT * FROM scores WHERE name=%s"
+        elif mode==1:
+            sql="SELECT * FROM time WHERE name=%s"
+        self.curs.execute(sql,name)
+        data=self.curs.fetchone()
+        if data:
+            return False
+        else:
+            return True 
     
 

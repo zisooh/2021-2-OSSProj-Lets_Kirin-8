@@ -17,7 +17,6 @@ alien_explode_sound = load_sound('alien_explode.ogg')
 ship_explode_sound = load_sound('ship_explode.ogg')
 load_music('music_loop.ogg')
 
-hiScores=Database().getScores()
 
 class Keyboard(object):
     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
@@ -45,6 +44,8 @@ class Menu:
         self.title, self.titleRect = load_image('title.png')
         self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
         #데베 호출
+        self.hiScores=Database().getScores()
+        self.timeHiScores=Database().getTimeScores()
         self.highScoreTexts = [self.font.render("NAME", 1, RED), #폰트 렌터
                         self.font.render("SCORE", 1, RED),
                         self.font.render("ACCURACY", 1, RED)]
@@ -54,11 +55,25 @@ class Menu:
                         midtop=self.screen.get_rect().inflate(-100, -100).midtop),
                         self.highScoreTexts[2].get_rect(
                         topright=self.screen.get_rect().inflate(-100, -100).topright)]
-        for hs in hiScores:
+        self.timeHighScoreTexts= [self.font.render("NAME", 1, RED), #폰트 렌터
+                        self.font.render("SCORE", 1, RED),
+                        self.font.render("ACCURACY", 1, RED)]
+        self.timeHighScorePos = [self.timeHighScoreTexts[0].get_rect(
+                        topleft=self.screen.get_rect().inflate(-100, -100).topleft),
+                        self.timeHighScoreTexts[1].get_rect(
+                        midtop=self.screen.get_rect().inflate(-100, -100).midtop),
+                        self.timeHighScoreTexts[2].get_rect(
+                        topright=self.screen.get_rect().inflate(-100, -100).topright)]
+        for hs in self.hiScores:
             self.highScoreTexts.extend([self.font.render(str(hs[x]), 1, BLACK)
                                 for x in range(3)])
             self.highScorePos.extend([self.highScoreTexts[x].get_rect(
                 topleft=self.highScorePos[x].bottomleft) for x in range(-3, 0)])
+        for hs in self.timeHiScores:
+            self.timeHighScoreTexts.extend([self.font.render(str(hs[x]), 1, BLACK)
+                                for x in range(3)])
+            self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
+                topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
         #For init_page setting
         self.loginText = self.font.render('LOG IN', 1, BLACK)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
@@ -309,9 +324,7 @@ class Menu:
                     sys.exit()
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
-                    if self.showHiScores:
-                        self.showHiScores = False
-                    elif self.showSelectModes:
+                    if self.showSelectModes:
                         self.showSelectModes = False
                     elif self.showHelp:
                         self.showHelp=False
@@ -321,8 +334,6 @@ class Menu:
                         self.inSelectMenu=True
                         return 1
                     elif self.selection == 2:
-                        # self.showHiScores = True
-                        # Menu().score_page()
                         return 2
                     elif self.selection == 3:
                         self.soundFX = not self.soundFX
@@ -358,13 +369,7 @@ class Menu:
             self.selectPos = self.selectText.get_rect(topright=self.menuDict[self.selection].topleft)
 
 
-            if self.showHiScores:
-                self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("menu.png")
-                img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect)
-                self.textOverlays = zip(self.highScoreTexts, self.highScorePos)
-            elif self.showHelp:
+            if self.showHelp:
                 self.screen.blit(self.background, (0, 0))
                 img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
                 img_menuRect.midtop = self.screen.get_rect().midtop
@@ -463,7 +468,7 @@ class Menu:
     
     def score_page(self):
         singleText=self.font.render('SINGLE  ',1,BLACK)
-        singlePos=singleText.get_rect(topright=self.titleRect.inflate(0, 100).midbottom)
+        singlePos=singleText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
         timeText = self.font.render('TIME', 1, BLACK)
         timePos = timeText.get_rect(topleft=singlePos.bottomleft)
         backText = self.font.render('BACK', 1, BLACK)
@@ -495,10 +500,8 @@ class Menu:
                         showTimeScores = False
                     elif selection == 1:
                         showSingleScores=True 
-                        # inScoreMenu = False
                     elif selection == 2:
                         showTimeScores = True
-                        # inScoreMenu=False
                     elif selection == 3:
                         return BACK 
                 elif (event.type == pygame.KEYDOWN
@@ -523,9 +526,10 @@ class Menu:
                 textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif showTimeScores:
                 self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
+                img_menu, img_menuRect = load_image("menu.png")
                 img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect) 
+                self.screen.blit(img_menu, img_menuRect)
+                textOverlays = zip(self.timeHighScoreTexts, self.timeHighScorePos)
             else:
                 textOverlays = zip([singleText, timeText,backText,self.selectText],
                                 [singlePos, timePos,backPos, selectPos])
@@ -609,7 +613,6 @@ class Menu:
                     img_menuRect.midtop = self.screen.get_rect().midtop
                     self.screen.blit(img_menu, img_menuRect)
                     textOverlays = zip(self.highScoreTexts, self.highScorePos)
-                    textOverlays = zip(highScoreTexts, highScorePos)
                 elif mode==1:
                     self.screen.blit(self.background, (0, 0))
                     img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
