@@ -360,15 +360,15 @@ class Menu:
 
             if self.showHiScores:
                 self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("menu.png")
-                img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect)
+                menu, menuRect = load_image("menu.png")
+                menuRect.midtop = self.screen.get_rect().midtop
+                self.screen.blit(menu, menuRect)
                 self.textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif self.showHelp:
                 self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
-                img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect) 
+                menu, menuRect = load_image("pause.png") #Help 이미지는 예시로
+                menuRect.midtop = self.screen.get_rect().midtop
+                self.screen.blit(menu, menuRect) 
             elif self.showSelectModes:
                 self.textOverlays = zip([self.singleText,self.timeText,self.pvpText],[self.singlePos,self.timePos,self.pvpPos])
             else:
@@ -517,15 +517,15 @@ class Menu:
             selectPos = self.selectText.get_rect(topright=selectScoresDict[selection].topleft)
             if showSingleScores:
                 self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("menu.png")
-                img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect)
+                menu, menuRect = load_image("menu.png")
+                menuRect.midtop = self.screen.get_rect().midtop
+                self.screen.blit(menu, menuRect)
                 textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif showTimeScores:
                 self.screen.blit(self.background, (0, 0))
-                img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
-                img_menuRect.midtop = self.screen.get_rect().midtop
-                self.screen.blit(img_menu, img_menuRect) 
+                menu, menuRect = load_image("pause.png") #Help 이미지는 예시로
+                menuRect.midtop = self.screen.get_rect().midtop
+                self.screen.blit(menu, menuRect) 
             else:
                 textOverlays = zip([singleText, timeText,backText,self.selectText],
                                 [singlePos, timePos,backPos, selectPos])
@@ -605,16 +605,16 @@ class Menu:
             if showHiScores:
                 if mode==0:
                     self.screen.blit(self.background, (0, 0))
-                    img_menu, img_menuRect = load_image("menu.png")
-                    img_menuRect.midtop = self.screen.get_rect().midtop
-                    self.screen.blit(img_menu, img_menuRect)
+                    menu, menuRect = load_image("menu.png")
+                    menuRect.midtop = self.screen.get_rect().midtop
+                    self.screen.blit(menu, menuRect)
                     textOverlays = zip(self.highScoreTexts, self.highScorePos)
                     textOverlays = zip(highScoreTexts, highScorePos)
                 elif mode==1:
                     self.screen.blit(self.background, (0, 0))
-                    img_menu, img_menuRect = load_image("pause.png") #Help 이미지는 예시로
-                    img_menuRect.midtop = self.screen.get_rect().midtop
-                    self.screen.blit(img_menu, img_menuRect)    
+                    menu, menuRect = load_image("pause.png") #Help 이미지는 예시로
+                    menuRect.midtop = self.screen.get_rect().midtop
+                    self.screen.blit(menu, menuRect)    
 
             else:
                 textOverlays = zip([self.startText, self.hiScoreText, self.helpText, self.fxText,
