@@ -1,7 +1,6 @@
 import pygame
 import sys
 #import random
-
 #from sprites import (MasterSprite, Ship, Friendship, Alien, Missile, BombPowerup,
 #                     ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
 #                     Roundy, Crawly)
@@ -10,6 +9,7 @@ from load import load_image, load_sound, load_music
 from menu import *
 from mode_single import *
 from mode_time import *
+from mode_pvp import *
 
 if not pygame.mixer:
     print('Warning, sound disablead')
@@ -17,6 +17,10 @@ if not pygame.font:
     print('Warning, fonts disabled')
 
 BACK = 0
+
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+WHITE = (255, 255, 255)
 
 direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
@@ -74,7 +78,7 @@ for hs in hiScores:
     highScorePos.extend([highScoreTexts[x].get_rect(
         topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
-# load만 일단
+# temp - only load
 title, titleRect = load_image('title.png')
 titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
 
@@ -192,6 +196,6 @@ while windowShow:
     elif pageResult == 'PvpMode':
         print('Pvp mode play')
         #ship.initializes() Pvp 클래스 안에 넣기
-        #Pvp.play()    
+        Pvp.playGame()    
     
-    print("Game End")
+    print("Game End")   
