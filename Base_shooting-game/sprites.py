@@ -133,6 +133,11 @@ class FriendPowerup(Powerup):
         super().__init__('friendship')
         self.pType = 'friendship'
 
+class LifePowerup(Powerup):
+    def __init__(self):
+        super().__init__('life')
+        self.pType = 'life'
+
 class Ship(MasterSprite):
     def __init__(self):
         super().__init__()
