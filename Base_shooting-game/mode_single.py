@@ -77,7 +77,7 @@ class Single():
         clockTime = 60  # maximum FPS
         clock = pygame.time.Clock()
         ship = Ship()
-        miniship = Friendship()
+        miniship = Friendship(ship)
         
         initialAlienTypes = (Siney, Spikey)
         # powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, FriendPowerup)
@@ -426,8 +426,9 @@ class Single():
                             friendship = True
                             miniship.alive = True
                             # 문제인 부분
-                            allsprites = pygame.sprite.RenderPlain((ship,miniship,))
-                            MasterSprite.allsprites = allsprites  
+                            MasterSprite.allsprites.add(miniship) 
+                            allsprites.update()
+                            allsprites.draw(screen)
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()

@@ -199,13 +199,14 @@ class Ship(MasterSprite):
         return Bomb(self)
 
 class Friendship(MasterSprite):
-    def __init__(self):
+    def __init__(self, ship):
         super().__init__()
         self.image, self.rect = load_image('friendship.png', -1)
         self.original = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        self.rect.midbottom = (self.screen.get_width() // 3, self.area.bottom)
+        # self.rect.midbottom = (self.screen.get_width() // 3, self.area.bottom)
+        self.rect.bottomright = ship.rect.bottomleft
         self.radius = max(self.rect.width, self.rect.height)
         # 초기 위치를 ship이랑 연관짓고 싶은데 잘안됨
         # self.rect.right = ship.rect.left
@@ -236,7 +237,8 @@ class Friendship(MasterSprite):
             self.rect = newvert
     
     def remove(self) :
-        self.kill()
+        # self.kill()
+        pygame.sprite.Sprite.kill(self)
 
 class Ship2(MasterSprite):
     def __init__(self):
