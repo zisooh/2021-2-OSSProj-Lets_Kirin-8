@@ -121,9 +121,10 @@ selection = 1
 showSelectModes=False
 showHiScores = False
 
+#-------------------------------------------------------------------#
 
 #########################
-#    Init Menu Loop    #
+#    Init Menu Loop     #
 #########################
 
 # inInitMenu loop = Init_page & login_page & signup_page
@@ -148,12 +149,14 @@ while inInitMenu:
             sys.exit()
 
 
+# After login - infinite loop
 windowShow = True
 while windowShow:
 
 #########################
 #    Start Menu Loop    #
 #########################
+
     inSelectMenu=False
     userSelection=Menu().inMenu_page()
     if userSelection==1:
@@ -163,63 +166,9 @@ while windowShow:
         sys.exit()
 
 
-    showSingleMode = False
-    showTimeMode = False
-    showPvpMode = False
-    selectModeDict = {1:singlePos,2:timePos,3:pvpPos,4:backPos}
-    selection = 1
-    while inSelectMenu:
-        clock.tick(clockTime)
-        screen.blit(background, (0, 0))
-        screen.blit(main_menu, main_menuRect)
-
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT
-                or event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_ESCAPE):
-                pygame.quit()
-                sys.exit()
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_RETURN):
-                if showSingleMode:
-                    showSingleMode = False
-                elif showTimeMode:
-                    showTimeMode = False
-                elif showPvpMode:
-                    showPvpMode = False
-                elif selection == 1:
-                    inSelectMenu = False
-                    selectMode = 'SingleMode'
-                elif selection == 2:
-                    inSelectMenu = False
-                    selectMode = 'TimeMode'
-                elif selection == 3:
-                    inSelectMenu = False
-                    selectMode = 'PvpMode'
-                elif selection == 4:
-                    inMenu = True
-                    inSelectMenu = False
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_UP
-                and selection > 1
-                and not showSingleMode
-                and not showTimeMode
-                and not showPvpMode):
-                selection -= 1
-            elif (event.type == pygame.KEYDOWN
-                and event.key == pygame.K_DOWN
-                and selection < len(selectModeDict)
-                and not showSingleMode
-                and not showTimeMode
-                and not showPvpMode):
-                selection += 1
-        selectPos = selectText.get_rect(topright=selectModeDict[selection].topleft)
-
-        textOverlays = zip([singleText,timeText,pvpText,selectText,backText],[singlePos,timePos,pvpPos,selectPos,backPos])
-        for txt, pos in textOverlays:
-            screen.blit(txt, pos)
-        
-        pygame.display.flip()
+###############################
+#    Select Mode Menu Loop    #
+###############################
 
     inMainMenu=True
     while inMainMenu:
@@ -243,7 +192,6 @@ while windowShow:
                 pygame.quit()
                 sys.exit()
 
-    
 
 #########################
 #    Start Game Loop    #
@@ -251,11 +199,11 @@ while windowShow:
 
     if pageResult == 'SingleMode':
         print('Single mode play')
-        windowShow = Single.playGame()
-    elif selectMode == 'TimeMode':
+        Single.playGame()
+    elif pageResult == 'TimeMode':
         print('Time mode play')
-        windowShow = Time.playGame()
-    elif selectMode == 'PvpMode':
+        Time.playGame()
+    elif pageResult == 'PvpMode':
         print('Pvp mode play')
         #ship.initializes() Pvp 클래스 안에 넣기
         #Pvp.play()    
