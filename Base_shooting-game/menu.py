@@ -148,7 +148,7 @@ class Menu:
         self.showHiScores = False
         self.inSelectMenu=False
         self.soundFX = Database().getSound()
-        self.music = Database().getSound(music=True)
+        self.music = Database.getSound(music=True)
         #user simple db
         self.log_test=[]
         self.userSelection=0

@@ -68,7 +68,7 @@ def main():
 
 # Sound loop
     soundFX = Database().getSound() 
-    music = Database().getSound(music=True) 
+    music = Database.getSound(music=True) 
     if music and pygame.mixer: 
         pygame.mixer.music.play(loops=-1)
 
