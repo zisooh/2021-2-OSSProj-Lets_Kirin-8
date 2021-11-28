@@ -195,8 +195,10 @@ class Time():
             leftCount = leftTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
-            betweenfriendTime = 8 * clockTime
-            betweenfriendCount = betweenfriendTime
+            friendshipTime = 8 * clockTime
+            friendshipCount = friendshipTime
+            friendshipMissileTime = 0.2 * clockTime
+            friendshipMissileCount = friendshipMissileTime
             
             ship.alive = True
             ship.life = 3
@@ -237,13 +239,8 @@ class Time():
                             Missile.position(ship.rect.topright)
                             missilesFired += 2
                         else : 
-                            if friendship :
-                                Missile.position(ship.rect.midtop)
-                                Missile.position(miniship.rect.midtop)
-                                missilesFired += 2
-                            else :
-                                Missile.position(ship.rect.midtop)
-                                missilesFired += 1
+                            Missile.position(ship.rect.midtop)
+                            missilesFired += 1
                         if soundFX:
                             missile_sound.play()
                     # Bomb
@@ -395,7 +392,7 @@ class Time():
                         elif powerup.pType == 'shield':
                             ship.shieldUp = True
                         elif powerup.pType == 'doublemissile' :
-                            doublemissile = True   
+                            doublemissile = True 
                         elif powerup.pType == 'life':
                             if ship.life < 3:
                                 ship.life += 1
@@ -438,12 +435,19 @@ class Time():
                 
                 miniship.rect.bottomright = ship.rect.bottomleft
                 if friendship:
-                    if betweenfriendCount > 0:
-                        betweenfriendCount -= 1
-                    elif betweenfriendCount == 0:
+                    if friendshipCount > 0:
+                        friendshipCount -= 1
+                    elif friendshipCount == 0:
                         friendship = False
                         miniship.remove()
-                        betweenfriendCount = betweenfriendTime
+                        friendshipCount = friendshipTime
+                
+                if friendship:
+                    if friendshipMissileCount > 0:
+                        friendshipMissileCount -= 1
+                    elif friendshipMissileCount == 0:
+                        friendshipMissileCount = friendshipMissileTime
+                        Missile.position(miniship.rect.midtop)
 
             # leftCount - Count Down to 0
                 if aliensLeftThisWave > 0:

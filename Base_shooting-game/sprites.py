@@ -211,7 +211,6 @@ class Friendship(MasterSprite):
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        # self.alive = True
    
     def remove(self) :
         pygame.sprite.Sprite.kill(self)
