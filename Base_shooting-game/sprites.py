@@ -132,6 +132,11 @@ class FriendPowerup(Powerup):
         super().__init__('friendship')
         self.pType = 'friendship'
 
+class LifePowerup(Powerup):
+    def __init__(self):
+        super().__init__('life')
+        self.pType = 'life'
+
 class Ship(MasterSprite):
     def __init__(self):
         super().__init__()
@@ -205,38 +210,11 @@ class Friendship(MasterSprite):
         self.original = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        self.rect.midbottom = (self.screen.get_width() // 3, self.area.bottom)
         self.radius = max(self.rect.width, self.rect.height)
-        # 초기 위치를 ship이랑 연관짓고 싶은데 잘안됨
-        # self.rect.right = ship.rect.left
-        # self.radius = max(ship.rect.left, self.rect.height)
-        self.alive = True
-        self.vert = 0
-        self.horiz = 0
-      
-    def initializeKeys(self):
-        self.vert = 0
-        self.horiz = 0
-    
-    def update(self):
-        newpos = self.rect.move((self.horiz, self.vert))
-        newhoriz = self.rect.move((self.horiz, 0))
-        newvert = self.rect.move((0, self.vert))
-
-        if not (newpos.left <= self.area.left
-                or newpos.top <= self.area.top
-                or newpos.right >= self.area.right
-                or newpos.bottom >= self.area.bottom):
-            self.rect = newpos
-        elif not (newhoriz.left <= self.area.left
-                  or newhoriz.right >= self.area.right):
-            self.rect = newhoriz
-        elif not (newvert.top <= self.area.top
-                  or newvert.bottom >= self.area.bottom):
-            self.rect = newvert
-    
+        # self.alive = True
+   
     def remove(self) :
-        self.kill()
+        pygame.sprite.Sprite.kill(self)
 
 class Ship2(MasterSprite):
     def __init__(self):

@@ -3,7 +3,7 @@ import bcrypt
 import pygame
 
 pygame.mixer.init()
-numScores=15
+
 
 class Database(object): 
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
@@ -80,6 +80,35 @@ class Database(object):
         return hiScores
 
     def setScore(self,hiScores,name, score, accuracy):
+        sql="SELECT * FROM scores WHERE name=%s"
+        self.curs.execute(sql,name)
+        data=self.curs.fetchone()
+        
+        if data:
+            self.curs.close()
+            return 
+        else:
+            print(hiScores)
+            if len(hiScores) >= self.numScores:
+                lowScoreName = hiScores[-1][0]
+                lowScore = hiScores[-1][1]
+                sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
+                self.curs.execute(sql,(lowScoreName,lowScore))
+            sql="INSERT INTO scores VALUES (%s,%s,%s)"
+            self.curs.execute(sql,(name, score, accuracy))
+            self.scoreDB.commit()
+            self.curs.close()
+    
+    def getTimeScores(self): #For TimeMode
+        self.curs.execute('''CREATE TABLE if not exists scores
+                     (name text, score integer, accuracy real)''')
+        self.curs.execute("SELECT * FROM scores ORDER BY score DESC")
+        self.scoreDB.commit()
+        hiScores = self.curs.fetchall()
+        self.curs.close()
+        return hiScores
+    
+    def setTimeScore(self,hiScores,name, score, accuracy): #For TimeMode
         sql="SELECT * FROM scores WHERE name=%s"
         self.curs.execute(sql,name)
         data=self.curs.fetchone()
