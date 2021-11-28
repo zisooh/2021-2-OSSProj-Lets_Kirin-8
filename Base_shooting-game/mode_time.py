@@ -395,9 +395,7 @@ class Time():
                         elif powerup.pType == 'shield':
                             ship.shieldUp = True
                         elif powerup.pType == 'doublemissile' :
-                            doublemissile = True
-                        elif powerup.pType == 'friendship' :
-                            friendship = True    
+                            doublemissile = True   
                         elif powerup.pType == 'life':
                             if ship.life < 3:
                                 ship.life += 1
