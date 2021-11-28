@@ -162,9 +162,9 @@ class Pvp() :
         powerups = pygame.sprite.Group()
 
         # life
-        life1, life1Rect = load_image('heart1.png')
-        life2, life2Rect = load_image('heart2.png')
-        life3, life3Rect = load_image('heart3.png')
+        # life1, life1Rect = load_image('heart1.png')
+        # life2, life2Rect = load_image('heart2.png')
+        # life3, life3Rect = load_image('heart3.png')
 
         # Sounds
         missile_sound = load_sound('missile.ogg')
@@ -553,8 +553,8 @@ class Pvp() :
                     scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                     bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
                     bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                    lifeText = font.render("Life: ", 1, WHITE)
-                    lifeText2 = font.render("Life: ", 1, WHITE)
+                    # lifeText = font.render("Life: ", 1, WHITE)
+                    # lifeText2 = font.render("Life: ", 1, WHITE)
                     ship1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
                     ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                     drawText = font.render('DRAW!', 1, WHITE)
@@ -563,7 +563,7 @@ class Pvp() :
                     leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE)
                     scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                     bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                    lifeText2 = font.render("Life: ", 1, WHITE)
+                    # lifeText2 = font.render("Life: ", 1, WHITE)
                     ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                     drawText = font.render('DRAW!', 1, WHITE)
 
@@ -580,7 +580,7 @@ class Pvp() :
                 ship2winPos = ship2winText.get_rect(center=screen.get_rect().center)
                 drawPos = drawText.get_rect(center=screen.get_rect().center)
 
-                text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2, lifeText, lifeText2]
+                text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2] # lifeText, lifeText2]
                 # textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
                 textposition = [wavePos, leftPos, scorePos, scorePos2]
 
@@ -667,24 +667,24 @@ class Pvp() :
                 for txt, pos in textOverlays:
                     screen.blit(txt, pos)
 
-            # Update life
-                life1Rect.topleft = lifePos.topright
-                life2Rect.topleft = life1Rect.topright
-                life3Rect.topleft = life2Rect.topright
+            # # Update life
+            #     life1Rect.topleft = lifePos.topright
+            #     life2Rect.topleft = life1Rect.topright
+            #     life3Rect.topleft = life2Rect.topright
 
-                if ship.life >= 3:
-                    screen.blit(life3, life3Rect)
-                if ship.life >= 2:
-                    screen.blit(life2, life2Rect)
-                if ship.life >= 1:
-                    screen.blit(life1, life1Rect)
+            #     if ship.life >= 3:
+            #         screen.blit(life3, life3Rect)
+            #     if ship.life >= 2:
+            #         screen.blit(life2, life2Rect)
+            #     if ship.life >= 1:
+            #         screen.blit(life1, life1Rect)
                 
-                if ship2.life >= 3:
-                    screen.blit(life3, life3Rect)
-                if ship2.life >= 2:
-                    screen.blit(life2, life2Rect)
-                if ship2.life >= 1:
-                    screen.blit(life1, life1Rect)
+            #     if ship2.life >= 3:
+            #         screen.blit(life3, life3Rect)
+            #     if ship2.life >= 2:
+            #         screen.blit(life2, life2Rect)
+            #     if ship2.life >= 1:
+            #         screen.blit(life1, life1Rect)
 
                 pygame.display.flip()
 

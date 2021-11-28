@@ -2,7 +2,7 @@ import pygame
 import random
 import sys
 
-from sprites import (MasterSprite, Ship, Alien, Missile, BombPowerup,
+from sprites import (MasterSprite, Ship, Friendship, Alien, Missile, BombPowerup,
                      ShieldPowerup, DoublemissilePowerup, FriendPowerup, LifePowerup, Explosion, 
                      Siney, Spikey, Fasty, Roundy, Crawly)
 from database import Database
@@ -96,6 +96,7 @@ class Time():
         clockTime = 60  # maximum FPS
         clock = pygame.time.Clock()
         ship = Ship()
+        miniship = Friendship()
         
         initialAlienTypes = (Siney, Spikey, Fasty, Roundy, Crawly)
         powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup, 
@@ -194,6 +195,8 @@ class Time():
             leftCount = leftTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
+            betweenfriendTime = 8 * clockTime
+            betweenfriendCount = betweenfriendTime
             
             ship.alive = True
             ship.life = 3
@@ -234,8 +237,13 @@ class Time():
                             Missile.position(ship.rect.topright)
                             missilesFired += 2
                         else : 
-                            Missile.position(ship.rect.midtop)
-                            missilesFired += 1
+                            if friendship :
+                                Missile.position(ship.rect.midtop)
+                                Missile.position(miniship.rect.midtop)
+                                missilesFired += 2
+                            else :
+                                Missile.position(ship.rect.midtop)
+                                missilesFired += 1
                         if soundFX:
                             missile_sound.play()
                     # Bomb
@@ -393,6 +401,11 @@ class Time():
                         elif powerup.pType == 'life':
                             if ship.life < 3:
                                 ship.life += 1
+                        elif powerup.pType == 'friendship' :
+                            friendship = True
+                            MasterSprite.allsprites.add(miniship) 
+                            allsprites.update()
+                            allsprites.draw(screen)
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -424,6 +437,15 @@ class Time():
                     elif betweenDoubleCount == 0:
                         doublemissile = False
                         betweenDoubleCount = betweenDoubleTime
+                
+                miniship.rect.bottomright = ship.rect.bottomleft
+                if friendship:
+                    if betweenfriendCount > 0:
+                        betweenfriendCount -= 1
+                    elif betweenfriendCount == 0:
+                        friendship = False
+                        miniship.remove()
+                        betweenfriendCount = betweenfriendTime
 
             # leftCount - Count Down to 0
                 if aliensLeftThisWave > 0:
