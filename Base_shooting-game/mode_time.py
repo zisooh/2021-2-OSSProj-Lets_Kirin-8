@@ -14,7 +14,7 @@ if not pygame.font:
     print('Warning, fonts disabled')
 
 BACK = 0
-
+TIME=1
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -138,7 +138,7 @@ class Time():
         timeCountLeft = timeCount
 
         # 데베 함수 메뉴 구현
-        hiScores=Database().getScores()
+        hiScores=Database().getTimeScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
         # print(hiScores)
@@ -568,8 +568,12 @@ class Time():
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and len(name) > 0):
-                    Database().setScore(hiScores,name, score, accuracy)
-                    return True  
+                    if Database().name_not_exists(name,mode=TIME):
+                        Database().setTimeScore(hiScores,name, score, accuracy)
+                        return True
+                    else:
+                        print("중복된 이름 존재함")
+                      
 
             if isHiScore:
                 hiScoreText = font.render('SCORE', 1, RED)

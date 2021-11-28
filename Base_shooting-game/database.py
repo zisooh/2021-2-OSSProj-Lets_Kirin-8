@@ -1,11 +1,15 @@
 import pymysql
 import bcrypt
 import pygame
+import sqlite3
+import os
 
 pygame.mixer.init()
+main_dir = os.path.split(os.path.abspath(__file__))[0]
+data_dir = os.path.join(main_dir, 'data')
 
-
-class Database(object): 
+class Database(object):
+    path = os.path.join(data_dir, 'hiScores.db')
     def __init__(self,host='database-1.c79ahye2go7m.ap-northeast-2.rds.amazonaws.com',user='admin',password='letskirin',db='hiScores',charset='utf8'):
         self.scoreDB=pymysql.connect(host=host,user=user,password=password,db=db,charset=charset)
         self.curs = self.scoreDB.cursor()
@@ -48,27 +52,32 @@ class Database(object):
         self.scoreDB.commit()  #서버로 추가 사항 보내기
         self.curs.close()  
 
-    def getSound(self,music=False):
+    @staticmethod
+    def getSound(music=False):
+        conn = sqlite3.connect(Database.path)
+        c = conn.cursor()
         if music:
-            self.curs.execute("CREATE TABLE if not exists music (setting integer)")
-            self.curs.execute("SELECT * FROM music")
+            c.execute("CREATE TABLE if not exists music (setting integer)")
+            c.execute("SELECT * FROM music")
         else:
-            self.curs.execute("CREATE TABLE if not exists sound (setting integer)")
-            self.curs.execute("SELECT * FROM sound")
-        self.scoreDB.commit()
-        setting = self.curs.fetchall()
-        self.curs.close()
+            c.execute("CREATE TABLE if not exists sound (setting integer)")
+            c.execute("SELECT * FROM sound")
+        setting = c.fetchall()
+        conn.close()
         return bool(setting[0][0]) if len(setting) > 0 else False
 
-    def setSound(self,setting, music=False):
+    @staticmethod
+    def setSound(setting, music=False):
+        conn = sqlite3.connect(Database.path)
+        c = conn.cursor()
         if music:
-            self.curs.execute("DELETE FROM music")
-            self.curs.execute("INSERT INTO music VALUES (%s)", (setting,))
+            c.execute("DELETE FROM music")
+            c.execute("INSERT INTO music VALUES (?)", (setting,))
         else:
-            self.curs.execute("DELETE FROM sound")
-            self.curs.execute("INSERT INTO sound VALUES (%s)", (setting,))
-        self.scoreDB.commit()
-        self.curs.close()
+            c.execute("DELETE FROM sound")
+            c.execute("INSERT INTO sound VALUES (?)", (setting,))
+        conn.commit()
+        conn.close()
 
     def getScores(self):
         self.curs.execute('''CREATE TABLE if not exists scores
@@ -100,19 +109,18 @@ class Database(object):
             self.curs.close()
     
     def getTimeScores(self): #For TimeMode
-        self.curs.execute('''CREATE TABLE if not exists scores
+        self.curs.execute('''CREATE TABLE if not exists time
                      (name text, score integer, accuracy real)''')
-        self.curs.execute("SELECT * FROM scores ORDER BY score DESC")
+        self.curs.execute("SELECT * FROM time ORDER BY score DESC")
         self.scoreDB.commit()
         hiScores = self.curs.fetchall()
         self.curs.close()
         return hiScores
     
     def setTimeScore(self,hiScores,name, score, accuracy): #For TimeMode
-        sql="SELECT * FROM scores WHERE name=%s"
+        sql="SELECT * FROM time WHERE name=%s"
         self.curs.execute(sql,name)
         data=self.curs.fetchone()
-        
         if data:
             self.curs.close()
             return 
@@ -121,11 +129,23 @@ class Database(object):
             if len(hiScores) >= self.numScores:
                 lowScoreName = hiScores[-1][0]
                 lowScore = hiScores[-1][1]
-                sql="DELETE FROM scores WHERE (name = %s AND score = %s)"
+                sql="DELETE FROM time WHERE (name = %s AND score = %s)"
                 self.curs.execute(sql,(lowScoreName,lowScore))
-            sql="INSERT INTO scores VALUES (%s,%s,%s)"
+            sql="INSERT INTO time VALUES (%s,%s,%s)"
             self.curs.execute(sql,(name, score, accuracy))
             self.scoreDB.commit()
             self.curs.close()
+    
+    def name_not_exists(self,name,mode):
+        if mode==0:
+            sql="SELECT * FROM scores WHERE name=%s"
+        elif mode==1:
+            sql="SELECT * FROM time WHERE name=%s"
+        self.curs.execute(sql,name)
+        data=self.curs.fetchone()
+        if data:
+            return False
+        else:
+            return True 
     
 
