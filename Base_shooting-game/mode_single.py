@@ -100,29 +100,6 @@ class Single():
         
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
-
-        # # 이 부분이 없는거.. 맞나..?
-        # alienPeriod = clockTime // 2
-        # curTime = 0
-        # aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-        # wave = 1
-        # doublemissile = False
-        # friendship = False
-        # # miniship.alive = False
-
-        # bombsHeld = 3
-        # score = 0
-        # missilesFired = 0
-        # powerupTime = 10 * clockTime
-        # powerupTimeLeft = powerupTime
-        # betweenWaveTime = 3 * clockTime
-        # betweenWaveCount = betweenWaveTime
-        # betweenDoubleTime = 8 * clockTime
-        # betweenDoubleCount = betweenDoubleTime
-        # betweenfriendTime = 8 * clockTime
-        # betweenfriendCount = betweenfriendTime
-        # # betweenDoubleTime3 = 8 * clockTime
-        # # betweenDoubleCount3 = betweenDoubleTime3
         
         # font
         font = pygame.font.Font(None, 36)
@@ -218,13 +195,14 @@ class Single():
             betweenWaveCount = betweenWaveTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
-            betweenfriendTime = 8 * clockTime
-            betweenfriendCount = betweenfriendTime
+            friendshipTime = 8 * clockTime
+            friendshipCount = friendshipTime
+            friendshipMissileTime = 0.2 * clockTime
+            friendshipMissileCount = friendshipMissileTime
             
             ship.alive = True
             ship.life = 3
             ship.initializeKeys()
-            # miniship.alive = False
 
 
         # 본게임시작
@@ -252,7 +230,6 @@ class Single():
                         ship.vert += direction[event.key][1] * speed
                     elif (event.type == pygame.KEYUP
                         and event.key in direction.keys()):
-                        miniship.rect.bottomright = ship.rect.bottomleft
                         ship.horiz -= direction[event.key][0] * speed
                         ship.vert -= direction[event.key][1] * speed
                     # Missile
@@ -263,15 +240,8 @@ class Single():
                             Missile.position(ship.rect.topright)
                             missilesFired += 2
                         else : 
-                            # Missile.position(ship.rect.midtop)
-                            # missilesFired += 1
-                            if friendship :
-                                Missile.position(ship.rect.midtop)
-                                Missile.position(miniship.rect.midtop)
-                                missilesFired += 2
-                            else :
-                                Missile.position(ship.rect.midtop)
-                                missilesFired += 1
+                            Missile.position(ship.rect.midtop)
+                            missilesFired += 1
                         if soundFX:
                             missile_sound.play()
                     # Bomb
@@ -463,20 +433,19 @@ class Single():
         
                 miniship.rect.bottomright = ship.rect.bottomleft
                 if friendship:
-                    if betweenfriendCount > 0:
-                        betweenfriendCount -= 1
-                    elif betweenfriendCount == 0:
+                    if friendshipCount > 0:
+                        friendshipCount -= 1
+                    elif friendshipCount == 0:
                         friendship = False
                         miniship.remove()
-                        betweenfriendCount = betweenfriendTime
+                        friendshipCount = friendshipTime
                 
-                # miniship.alive = False
-                        # Missile_on = False
-                
-                # if Missile_on == True and time % Missile_gap == 0:
-                #     Missile.position(miniship.rect.midtop)
-                # if Missile_on == True and betweenDoubleCount2 // 60 == 0:
-                #     Missile.position(miniship.rect.midtop)
+                if friendship:
+                    if friendshipMissileCount > 0:
+                        friendshipMissileCount -= 1
+                    elif friendshipMissileCount == 0:
+                        friendshipMissileCount = friendshipMissileTime
+                        Missile.position(miniship.rect.midtop)
 
             # Detertmine when to move to next wave
                 if aliensLeftThisWave <= 0:
@@ -631,5 +600,4 @@ class Single():
             alldrawings.update()
             for txt, pos in textOverlay:
                 screen.blit(txt, pos)
-
             pygame.display.flip()
