@@ -52,17 +52,6 @@ class Database(object):
         self.scoreDB.commit()  #서버로 추가 사항 보내기
         self.curs.close()  
 
-    # def getSound(self,music=False):
-    #     if music:
-    #         self.curs.execute("CREATE TABLE if not exists music (setting integer)")
-    #         self.curs.execute("SELECT * FROM music")
-    #     else:
-    #         self.curs.execute("CREATE TABLE if not exists sound (setting integer)")
-    #         self.curs.execute("SELECT * FROM sound")
-    #     self.scoreDB.commit()
-    #     setting = self.curs.fetchall()
-    #     self.curs.close()
-    #     return bool(setting[0][0]) if len(setting) > 0 else False
     @staticmethod
     def getSound(music=False):
         conn = sqlite3.connect(Database.path)
@@ -76,6 +65,7 @@ class Database(object):
         setting = c.fetchall()
         conn.close()
         return bool(setting[0][0]) if len(setting) > 0 else False
+
     @staticmethod
     def setSound(setting, music=False):
         conn = sqlite3.connect(Database.path)
@@ -88,16 +78,6 @@ class Database(object):
             c.execute("INSERT INTO sound VALUES (?)", (setting,))
         conn.commit()
         conn.close()
-
-    # def setSound(self,setting, music=False):
-    #     if music:
-    #         self.curs.execute("DELETE FROM music")
-    #         self.curs.execute("INSERT INTO music VALUES (%s)", (setting,))
-    #     else:
-    #         self.curs.execute("DELETE FROM sound")
-    #         self.curs.execute("INSERT INTO sound VALUES (%s)", (setting,))
-    #     self.scoreDB.commit()
-    #     self.curs.close()
 
     def getScores(self):
         self.curs.execute('''CREATE TABLE if not exists scores
