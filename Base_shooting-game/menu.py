@@ -96,9 +96,9 @@ class Menu:
         self.pwdPos =0
         self.secretPwd=0
         #For inMenu_page setting
-        self.startText = self.font.render('SELECT MODES', 1, BLACK)
+        self.startText = self.font.render('SELECT MODE', 1, BLACK)
         self.startPos = self.startText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.hiScoreText = self.font.render('HIGH SCORES', 1, BLACK)
+        self.hiScoreText = self.font.render('HIGH SCORE', 1, BLACK)
         self.hiScorePos = self.hiScoreText.get_rect(topleft=self.startPos.bottomleft)
         self.fxText = self.font.render('SOUND FX ', 1, BLACK)
         self.fxPos = self.fxText.get_rect(topleft=self.hiScorePos.bottomleft)
