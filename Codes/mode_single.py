@@ -95,8 +95,8 @@ class Single():
         clock = pygame.time.Clock()
         
         # speed
-            speed = 1.5
-            MasterSprite.speed = speed
+        speed = 1.5
+        MasterSprite.speed = speed
         
         # object
         kirin = Kirin()
@@ -442,15 +442,15 @@ class Single():
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                if friendship:
+                if friendkirin:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
                     elif betweenDoubleCount == 0:
-                        friendship = False
-                        miniship.alive = False
-                        miniship.remove()
+                        friendkirinship = False
+                        minikirin.alive = False
+                        minikirin.remove()
                         betweenDoubleCount = betweenDoubleTime
-                        # allsprites = pygame.sprite.RenderPlain((ship,))
+                        # allsprites = pygame.sprite.RenderPlain((kirin,))
                         # MasterSprite.allsprites = allsprites
                         # allsprites.draw(screen)
                         # alldrawings.update()
