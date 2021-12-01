@@ -2,7 +2,7 @@ import pygame
 import sys
 from load import load_image, load_sound, load_music
 from collections import deque
-import random
+#import random
 from database import Database
 
 BLACK = (0, 0, 0)
@@ -11,10 +11,10 @@ WHITE = (255, 255, 255)
 
 BACK=0
 
-missile_sound = load_sound('missile.ogg')
+leaf_sound = load_sound('leaf.ogg')
 bomb_sound = load_sound('bomb.ogg')
-alien_explode_sound = load_sound('alien_explode.ogg')
-ship_explode_sound = load_sound('ship_explode.ogg')
+bear_explode_sound = load_sound('bear_explode.ogg')
+kirin_explode_sound = load_sound('kirin_explode.ogg')
 load_music('music_loop.ogg')
 
 hiScores=Database().getScores()
@@ -81,9 +81,9 @@ class Menu:
         self.pwdPos =0
         self.secretPwd=0
         #For inMenu_page setting
-        self.startText = self.font.render('SELECT MODES', 1, BLACK)
+        self.startText = self.font.render('SELECT MODE', 1, BLACK)
         self.startPos = self.startText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
-        self.hiScoreText = self.font.render('HIGH SCORES', 1, BLACK)
+        self.hiScoreText = self.font.render('HIGH SCORE', 1, BLACK)
         self.hiScorePos = self.hiScoreText.get_rect(topleft=self.startPos.bottomleft)
         self.fxText = self.font.render('SOUND FX ', 1, BLACK)
         self.fxPos = self.fxText.get_rect(topleft=self.hiScorePos.bottomleft)
@@ -327,7 +327,7 @@ class Menu:
                     elif self.selection == 3:
                         self.soundFX = not self.soundFX
                         if self.soundFX:
-                            missile_sound.play()
+                            leaf_sound.play()
                         Database().setSound(int(self.soundFX))
                     elif self.selection == 4 and pygame.mixer:
                         self.music = not self.music
@@ -569,13 +569,13 @@ class Menu:
                         showHiScores = False
                     elif selection == 1:    
                         pauseMenu = False
-                        ship.alive = False
+                        kirin.alive = False
                     elif selection == 2:
                         showHiScores = True
                     elif selection == 3:
                         soundFX = not soundFX
                         if soundFX:
-                            missile_sound.play()
+                            leaf_sound.play()
                         Database.setSound(int(soundFX))
                     elif selection == 4 and pygame.mixer:
                         music = not music

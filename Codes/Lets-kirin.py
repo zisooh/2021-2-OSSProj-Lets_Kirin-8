@@ -1,11 +1,7 @@
 import pygame
 import sys
-#import random
-#from sprites import (MasterSprite, Ship, Friendship, Alien, Missile, BombPowerup,
-#                     ShieldPowerup, DoublemissilePowerup, FriendPowerup, Explosion, Siney, Spikey, Fasty,
-#                     Roundy, Crawly)
 from database import Database
-from load import load_image, load_sound, load_music
+from load import load_image #load_sound, load_music
 from menu import *
 from mode_single import *
 from mode_time import *
@@ -59,8 +55,8 @@ font = pygame.font.Font(None, 36)
 
 # 데베 함수 메뉴 구현
 hiScores=Database().getScores()
-soundFX = Database().getSound() # 지워도 댐?
-music = Database().getSound(music=True) # 지워도댐?
+soundFX = Database().getSound()
+music = Database().getSound(music=True)
 # print(hiScores)
 # print(len(hiScores))
 highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -171,7 +167,7 @@ while windowShow:
                     flag=False
                 elif (pageResult=='SingleMode' or 
                     pageResult=='TimeMode' or
-                    pageResult=='PVPMode'):
+                    pageResult=='PvpMode'):
                     flag=False
                     inMainMenu=False 
             elif userSelection==2:
@@ -195,7 +191,6 @@ while windowShow:
         Time.playGame()
     elif pageResult == 'PvpMode':
         print('Pvp mode play')
-        #ship.initializes() Pvp 클래스 안에 넣기
         Pvp.playGame()    
     
     print("Game End")   
