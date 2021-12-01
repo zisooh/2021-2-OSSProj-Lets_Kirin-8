@@ -441,6 +441,19 @@ class Single():
                     elif betweenDoubleCount == 0:
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
+                
+                if friendship:
+                    if betweenDoubleCount > 0:
+                        betweenDoubleCount -= 1
+                    elif betweenDoubleCount == 0:
+                        friendship = False
+                        miniship.alive = False
+                        miniship.remove()
+                        betweenDoubleCount = betweenDoubleTime
+                        # allsprites = pygame.sprite.RenderPlain((ship,))
+                        # MasterSprite.allsprites = allsprites
+                        # allsprites.draw(screen)
+                        # alldrawings.update()
 
                 # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
@@ -617,4 +630,5 @@ class Single():
             alldrawings.update()
             for txt, pos in textOverlay:
                 screen.blit(txt, pos)
+
             pygame.display.flip()
