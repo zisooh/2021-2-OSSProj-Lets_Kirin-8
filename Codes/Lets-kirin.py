@@ -56,7 +56,7 @@ font = pygame.font.Font(None, 36)
 # 데베 함수 메뉴 구현
 hiScores=Database().getScores()
 soundFX = Database().getSound()
-music = Database().getSound(music=True)
+music = Database.getSound(music=True)
 # print(hiScores)
 # print(len(hiScores))
 highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
@@ -161,20 +161,20 @@ while windowShow:
         userSelection=Menu().inMenu_page()
         flag=True
         while flag:
-            if userSelection==1:
+            if userSelection == 1:
                 pageResult=Menu().select_game_page()
-                if pageResult==BACK: #back
-                    flag=False
-                elif (pageResult=='SingleMode' or 
-                    pageResult=='TimeMode' or
-                    pageResult=='PvpMode'):
-                    flag=False
-                    inMainMenu=False 
-            elif userSelection==2:
-                pageResult=Menu().score_page()
-                if pageResult==BACK:
-                    flag=False
-            elif userSelection==6:
+                if pageResult == BACK: #back
+                    flag = False
+                elif (pageResult == 'SingleMode' or 
+                    pageResult == 'TimeMode' or
+                    pageResult == 'PvpMode'):
+                    flag = False
+                    inMainMenu = False 
+            elif userSelection == 2:
+                pageResult = Menu().score_page()
+                if pageResult == BACK:
+                    flag = False
+            elif userSelection == 6:
                 pygame.quit()
                 sys.exit()
 

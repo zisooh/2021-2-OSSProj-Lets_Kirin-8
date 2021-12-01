@@ -2,8 +2,9 @@ import pygame
 import random
 import sys
 
-from sprites import (MasterSprite, Kirin, Friendkirin, Bear, Leaf, BombPowerup,
-                     ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup, Explosion, 
+from sprites import (MasterSprite, 
+                     Kirin, Friendkirin, Bear, Leaf, Explosion, 
+                     BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup,
                      Siney, Spikey, Fasty, Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
@@ -15,6 +16,7 @@ if not pygame.font:
     print('Warning, fonts disabled')
 
 BACK = 0
+TIME = 1
 
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -34,7 +36,7 @@ class Time():
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
-
+    # 좋은 위치를 못 찾은 함수
         def kill_bear(bear, score) : # 남은 곰 개수 줄이는 역할 제거
             if bear.pType == 'green':
                 score += 1
@@ -46,7 +48,7 @@ class Time():
                 score += 8
             return score
 
-    # Create the background which will scroll and loop over a set of different
+       # Create the background which will scroll and loop over a set of different
         background = pygame.Surface((500, 2000))
         background = background.convert()
         background.fill((0, 0, 0))
@@ -71,7 +73,7 @@ class Time():
         pauseRect.midtop = screen.get_rect().midtop
         pauseMenu = False        
 
-    # Prepare game objects : non-reset
+    # Prepare game contents : non-reset
         # life
         life1, life1Rect = load_image('heart1.png')
         life2, life2Rect = load_image('heart2.png')
@@ -89,24 +91,25 @@ class Time():
         beforeWaveCountFont = pygame.font.Font(None, 60)
         leftCountFont = pygame.font.Font(None, 60)
 
-    # Etc... 아래 루프에 넣어야하나
-        speed = 2
-        MasterSprite.speed = speed
-        bearPeriod = 60 / speed
+        # clock - 60 FPS game
         clockTime = 60  # maximum FPS
         clock = pygame.time.Clock()
+
+        # speed
+        speed = 2
+        MasterSprite.speed = speed
+        
+        # object
         kirin = Kirin()
         minikirin = Friendkirin()
-        
         initialBearTypes = (Siney, Spikey, Fasty, Roundy, Crawly)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, 
                         FriendPowerup, LifePowerup)
-
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-    # 데베 함수 메뉴 구현
-        hiScores=Database().getScores()
+    # High Score
+        hiScores=Database().getTimeScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
         # print(hiScores)
@@ -185,7 +188,12 @@ class Time():
             score = 0
             leafFired = 0
 
-            bearPeriod = clockTime // 2
+            # speed
+            speed = 2
+            MasterSprite.speed = speed
+
+            # Reset all time
+            bearPeriod = clockTime // speed
             curTime = 0
             powerupTime = 4 * clockTime
             powerupTimeLeft = powerupTime
@@ -193,6 +201,7 @@ class Time():
             beforeWaveCount = beforeWaveTime
             leftTime = 60 * clockTime           # 타임모드 카운트다운
             leftCount = leftTime
+            
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             friendkirinTime = 8 * clockTime
@@ -426,6 +435,8 @@ class Time():
                 text = [waveText, leftCountText, scoreText, bombText]
                 textposition = [wavePos, leftCountPos, scorePos, bombPos]
 
+            # Update using items(activate)
+                # item - doubleleaf 
                 if doubleleaf:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
@@ -433,23 +444,24 @@ class Time():
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
+                # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
                 if friendkirin:
+                    # friendkirin
                     if friendkirinCount > 0:
                         friendkirinCount -= 1
                     elif friendkirinCount == 0:
                         friendkirin = False
                         minikirin.remove()
                         friendkirinCount = friendkirinTime
-                
-                if friendkirin:
+                    # friendkirin's leaf
                     if friendkirinLeafCount > 0:
                         friendkirinLeafCount -= 1
                     elif friendkirinLeafCount == 0:
                         friendkirinLeafCount = friendkirinLeafTime
                         Leaf.position(minikirin.rect.midtop)
 
-            # leftCount - Count Down to 0
+            # leftCount - Count Down 60 to 0
                 if bearsLeftThisWave > 0:
                     if leftCount > 0:
                         leftCount -= 1
@@ -461,7 +473,7 @@ class Time():
                         if soundFX:
                             kirin_explode_sound.play()
 
-            # beforeWaveCount
+            # beforeWaveCount - Count Down 3, 2, 1, START!
                 if bearsLeftThisWave == 0:
                     if beforeWaveCount >= 1 * clockTime:
                         beforeWaveCount -= 1
@@ -514,6 +526,7 @@ class Time():
                 pygame.display.flip()
 
 
+        # Data for Highscore
             accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
             isHiScore = len(hiScores) < Database().numScores or score > hiScores[-1][1]
             name = ''
@@ -551,8 +564,12 @@ class Time():
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and len(name) > 0):
-                    Database().setScore(hiScores,name, score, accuracy)
-                    return True  
+                    if Database().name_not_exists(name,mode=TIME):
+                        Database().setTimeScore(hiScores,name, score, accuracy)
+                        return True
+                    else:
+                        print("중복된 이름 존재함")
+                      
 
             if isHiScore:
                 hiScoreText = font.render('SCORE', 1, RED)
