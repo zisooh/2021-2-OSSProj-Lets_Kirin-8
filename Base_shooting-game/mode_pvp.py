@@ -60,35 +60,35 @@ class Pvp() :
                 score += 8
             return aliensLeftThisWave, score
         
-        def background_update(screen, background, backgroundLoc) :
-            screen.blit(
-                background, (0, 0), area=pygame.Rect(
-                    0, backgroundLoc, 500, 500))
-            backgroundLoc -= speed
-            if backgroundLoc - speed <= speed:
-                backgroundLoc = 1500
-            return screen, background, backgroundLoc
+        # def background_update(screen, background, backgroundLoc) :
+        #     screen.blit(
+        #         background, (0, 0), area=pygame.Rect(
+        #             0, backgroundLoc, 500, 500))
+        #     backgroundLoc -= speed
+        #     if backgroundLoc - speed <= speed:
+        #         backgroundLoc = 1500
+        #     return screen, background, backgroundLoc
 
-        # 인게임에서 배경색으로 플레이어 영역 구분
-        def background_update_half(screen, background, backgroundLoc) :
-            screen.blit(
-                background, (0, 0), area=pygame.Rect(
-                    0, backgroundLoc, 500, 500))
-            screen.fill((80, 20, 30, 125),(0, 0, screen.get_width()//2, screen.get_height()), special_flags = 1) # special_flags = 3 : 별 색깔만 바뀜
-            backgroundLoc -= speed
-            if backgroundLoc - speed <= speed:
-                backgroundLoc = 1500
-            return screen, background, backgroundLoc
+        # # 인게임에서 배경색으로 플레이어 영역 구분
+        # def background_update_half(screen, background, backgroundLoc) :
+        #     screen.blit(
+        #         background, (0, 0), area=pygame.Rect(
+        #             0, backgroundLoc, 500, 500))
+        #     screen.fill((80, 20, 30, 125),(0, 0, screen.get_width()//2, screen.get_height()), special_flags = 1) # special_flags = 3 : 별 색깔만 바뀜
+        #     backgroundLoc -= speed
+        #     if backgroundLoc - speed <= speed:
+        #         backgroundLoc = 1500
+        #     return screen, background, backgroundLoc
 
-        def background_update_half_two(screen, background, backgroundLoc) :
-            screen.blit(
-                background, (0, 0), area=pygame.Rect(
-                    0, backgroundLoc, 500, 500))
-            screen.fill((80, 20, 30, 125),(screen.get_width()//2, 0, screen.get_width()//size.x_background_ratio, screen.get_height()), special_flags = 1)
-            backgroundLoc -= speed
-            if backgroundLoc - speed <= speed:
-                backgroundLoc = 1500
-            return screen, background, backgroundLoc
+        # def background_update_half_two(screen, background, backgroundLoc) :
+        #     screen.blit(
+        #         background, (0, 0), area=pygame.Rect(
+        #             0, backgroundLoc, 500, 500))
+        #     screen.fill((80, 20, 30, 125),(screen.get_width()//2, 0, screen.get_width()//size.x_background_ratio, screen.get_height()), special_flags = 1)
+        #     backgroundLoc -= speed
+        #     if backgroundLoc - speed <= speed:
+        #         backgroundLoc = 1500
+        #     return screen, background, backgroundLoc
 
         # def ingame_text_update() :
         #     return [font.render("Wave: " + str(wave), 1, WHITE),
@@ -107,60 +107,38 @@ class Pvp() :
         background = pygame.Surface((500, 2000))
         background = background.convert()
         background.fill((0, 0, 0))
-        backgroundLoc = 1500
+        # backgroundLoc = 1500
 
     # Display the background
         screen.blit(background, (0, 0))
         pygame.display.flip()
     
     # Prepare background image
-        # Main_menu
-        main_menu, main_menuRect = load_image("main_menu.png")
-        main_menuRect.midtop = screen.get_rect().midtop
-
-        # Menu
-        img_menu, img_menuRect = load_image("menu.png")
-        img_menuRect.midtop = screen.get_rect().midtop
-
         # Game field
         field1, field1Rect = load_image("field_pvp.png")
         field2, field2Rect = load_image("field_pvp.png")
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
 
-    # Prepare game objects
-        speed = 1.5
-        MasterSprite.speed = speed
-        alienPeriod = 60 / speed
-        clockTime = 60  # maximum FPS
-        clock = pygame.time.Clock()
-        ship = Ship2()
-        ship2 = Ship3() 
-        
-        initialAlienTypes = (Siney, Spikey)
-        powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
+        # Menu - pause 메뉴 Highscore & help
+        menu, menuRect = load_image("menu.png")
+        menuRect.midtop = screen.get_rect().midtop
 
         # pause
         pause,pauseRect = load_image('pause.png')
-        pauseRect.midtop = screen.get_rect().inflate(0, -200).midtop
-        pauseMenu = False
+        pauseRect.midtop = screen.get_rect().midtop
+        pauseMenu = False 
 
-        # Sprite groups
-        alldrawings = pygame.sprite.Group()
-        allsprites = pygame.sprite.RenderPlain((ship,ship2))
-        MasterSprite.allsprites = allsprites
-        Alien.pool = pygame.sprite.Group(
-            [alien() for alien in initialAlienTypes for _ in range(5)])
-        Alien.active = pygame.sprite.Group()
-        Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
-        Missile.active = pygame.sprite.Group()
-        Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
-        Explosion.active = pygame.sprite.Group()
-        
-        bombs = pygame.sprite.Group()
-        bombs2 = pygame.sprite.Group()
-        powerups = pygame.sprite.Group()
+        # # Main_menu
+        # main_menu, main_menuRect = load_image("main_menu.png")
+        # main_menuRect.midtop = screen.get_rect().midtop
 
+        # # Menu
+        # img_menu, img_menuRect = load_image("menu.png")
+        # img_menuRect.midtop = screen.get_rect().midtop
+
+
+    # Prepare game objects
         # life
         # life1, life1Rect = load_image('heart1.png')
         # life2, life2Rect = load_image('heart2.png')
@@ -173,35 +151,67 @@ class Pvp() :
         ship_explode_sound = load_sound('ship_explode.ogg')
         load_music('music_loop.ogg')
 
-        alienPeriod = clockTime // 2
-        curTime = 0
-        aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-        wave = 1
+        speed = 1.5
+        MasterSprite.speed = speed
+        alienPeriod = 60 / speed
+        clockTime = 60  # maximum FPS
+        clock = pygame.time.Clock()
+        ship = Ship2()
+        ship2 = Ship3() 
+        
+        initialAlienTypes = (Siney, Spikey)
+        powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
 
-        doublemissile = False
-        doublemissile2 = False
-        bombsHeld = 3
-        bombsHeld2 = 3
-        score = 0
-        score2 = 0
+        bombs = pygame.sprite.Group()
+        bombs2 = pygame.sprite.Group()
+        powerups = pygame.sprite.Group()
 
-        missilesFired = 0
-        powerupTime = 10 * clockTime
-        powerupTimeLeft = powerupTime
-        betweenWaveTime = 3 * clockTime
-        betweenWaveCount = betweenWaveTime
-        betweenDoubleTime = 8 * clockTime
-        betweenDoubleCount = betweenDoubleTime
-        betweenDoubleCount2 = betweenDoubleTime
+        # font
         font = pygame.font.Font(None, 36)
-        # ?
-        inMenu = True
-        half_tf = True
+
+        # # Sprite groups
+        # alldrawings = pygame.sprite.Group()
+        # allsprites = pygame.sprite.RenderPlain((ship,ship2))
+        # MasterSprite.allsprites = allsprites
+        # Alien.pool = pygame.sprite.Group(
+        #     [alien() for alien in initialAlienTypes for _ in range(5)])
+        # Alien.active = pygame.sprite.Group()
+        # Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
+        # Missile.active = pygame.sprite.Group()
+        # Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
+        # Explosion.active = pygame.sprite.Group()
+
+        # alienPeriod = clockTime // 2
+        # curTime = 0
+        # aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
+        # wave = 1
+
+        # doublemissile = False
+        # doublemissile2 = False
+        # bombsHeld = 3
+        # bombsHeld2 = 3
+        # score = 0
+        # score2 = 0
+
+        # missilesFired = 0
+        # powerupTime = 10 * clockTime
+        # powerupTimeLeft = powerupTime
+        # betweenWaveTime = 3 * clockTime
+        # betweenWaveCount = betweenWaveTime
+        # betweenDoubleTime = 8 * clockTime
+        # betweenDoubleCount = betweenDoubleTime
+        # betweenDoubleCount2 = betweenDoubleTime
+
+        # # # ?
+        # # inMenu = True
+        # # half_tf = True
 
         # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
@@ -217,9 +227,35 @@ class Pvp() :
             highScorePos.extend([highScoreTexts[x].get_rect(
                 topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
-    
+    # Temp - only load for Rect
         title, titleRect = load_image('title.png')
         titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
+    
+    # pause menu text
+        restartText = font.render('RESTART GAME', 1, BLACK)
+        restartPos = restartText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)  
+        hiScoreText = font.render('HIGH SCORES', 1, BLACK)
+        hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
+        fxText = font.render('SOUND FX ', 1, BLACK)
+        fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
+        fxOnText = font.render('ON', 1, RED)
+        fxOffText = font.render('OFF', 1, RED)
+        fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
+        fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
+        musicText = font.render('MUSIC', 1, BLACK)
+        musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
+        musicOnText = font.render('ON', 1, RED)
+        musicOffText = font.render('OFF', 1, RED)
+        musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
+        musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+        helpText=font.render('HELP',1,BLACK)
+        helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
+        quitText = font.render('QUIT', 1, BLACK)
+        quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
+        selectText = font.render('*', 1, BLACK)
+        selectPos = selectText.get_rect(topright=restartPos.topleft)
+        selection = 1
+        showHiScores = False 
 
     #########################
     #    Start Pvp Loop    #
@@ -227,6 +263,7 @@ class Pvp() :
         restart = True
         while restart == True:
 
+        # Prepare game objects : reset
             # Reset Sprite groups
             alldrawings = pygame.sprite.Group()
             allsprites = pygame.sprite.RenderPlain((ship,ship2))
@@ -240,9 +277,7 @@ class Pvp() :
             Explosion.active = pygame.sprite.Group()
 
             # Reset game contents
-            curTime = 0
             aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
-            wave = 1
             doublemissile = False
             bombsHeld = 3
             score = 0
@@ -250,16 +285,27 @@ class Pvp() :
             bombsHeld2 = 3
             score2 = 0
             missilesFired = 0
-            powerupTime = 10 * clockTime
+            wave = 1
+
+            alienPeriod = clockTime // 2
+            curTime = 0
+            powerupTime = 8 * clockTime
             powerupTimeLeft = powerupTime
             betweenWaveTime = 3 * clockTime
             betweenWaveCount = betweenWaveTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
-            betweenDoubleCount2 = betweenDoubleTime
-            half_tf = True
+            # friendshipTime = 8 * clockTime
+            # friendshipCount = friendshipTime
+            # friendshipMissileTime = 0.2 * clockTime
+            # friendshipMissileCount = friendshipMissileTime
+            
             ship.alive = True
+            ship.life = 3
+            ship.initializeKeys()
             ship2.alive = True
+            ship2.life = 3
+            ship2.initializeKeys()
 
             # 본게임시작
             while ship.alive and ship2.alive :
@@ -318,7 +364,7 @@ class Pvp() :
                         ship2.vert -= direction2[event.key][1] * speed
                     # Missile2
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_SPACE):
+                        and event.key == pygame.K_m):
                         if doublemissile2 :
                             Missile.position(ship2.rect.topleft)
                             Missile.position(ship2.rect.topright)
@@ -655,10 +701,10 @@ class Pvp() :
                 # if backgroundLoc - speed <= speed:
                 #     backgroundLoc = 1500
 
-                if half_tf:
-                    screen, background, backgroundLoc = background_update_half(screen, background, backgroundLoc)
-                else:
-                    screen, background, backgroundLoc = background_update_half_two(screen, background, backgroundLoc)
+                # if half_tf:
+                #     screen, background, backgroundLoc = background_update_half(screen, background, backgroundLoc)
+                # else:
+                #     screen, background, backgroundLoc = background_update_half_two(screen, background, backgroundLoc)
 
                 allsprites.update()
                 allsprites.draw(screen)
@@ -790,8 +836,8 @@ class Pvp() :
                 elif score == score2 :
                     screen.blit(drawText, drawPos)
 
-            for txt, pos in textOverlay:
-                screen.blit(txt, pos)
+            # for txt, pos in textOverlay:
+            #     screen.blit(txt, pos)
             pygame.display.flip()
 
 

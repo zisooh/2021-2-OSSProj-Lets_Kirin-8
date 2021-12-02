@@ -171,7 +171,7 @@ while windowShow:
                     flag=False
                 elif (pageResult=='SingleMode' or 
                     pageResult=='TimeMode' or
-                    pageResult=='PVPMode'):
+                    pageResult=='PvpMode'):
                     flag=False
                     inMainMenu=False 
             elif userSelection==2:
