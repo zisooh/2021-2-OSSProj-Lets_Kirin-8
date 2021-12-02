@@ -295,6 +295,7 @@ class Pvp() :
             betweenWaveCount = betweenWaveTime
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
+            betweenDoubleCount2 = betweenDoubleTime
             # friendshipTime = 8 * clockTime
             # friendshipCount = friendshipTime
             # friendshipMissileTime = 0.2 * clockTime
@@ -307,11 +308,13 @@ class Pvp() :
             ship2.life = 3
             ship2.initializeKeys()
 
+            # half_tf = True
+
             # 본게임시작
             while ship.alive and ship2.alive :
                 clock.tick(clockTime)
 
-                if aliensLeftThisWave >= 20:
+                if aliensLeftThisWave >= 0:
                     powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
@@ -334,7 +337,7 @@ class Pvp() :
                         ship.vert -= direction[event.key][1] * speed
                     # Missile1
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_SPACE):
+                        and event.key == pygame.K_m):
                         if doublemissile :
                             Missile.position(ship.rect.topleft)
                             Missile.position(ship.rect.topright)
@@ -364,7 +367,7 @@ class Pvp() :
                         ship2.vert -= direction2[event.key][1] * speed
                     # Missile2
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_m):
+                        and event.key == pygame.K_SPACE):
                         if doublemissile2 :
                             Missile.position(ship2.rect.topleft)
                             Missile.position(ship2.rect.topright)
@@ -383,83 +386,93 @@ class Pvp() :
                             newBomb.add(bombs2, alldrawings)
                             if soundFX:
                                 bomb_sound.play()
-                    # # Pause
-                    # elif (event.type == pygame.KEYDOWN
-                    #     and event.key == pygame.K_p):
-                    #     pauseMenu = True
-                    #     menuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
-                    #                 4: musicPos, 5: helpPos, 6: quitPos}
+                    # Pause
+                    elif (event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_p):
+                        pauseMenu = True
+                        pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                                    4: musicPos, 5: helpPos, 6: quitPos}
                         
-                    #     while pauseMenu:
-                    #         clock.tick(clockTime)
+                        while pauseMenu:
+                            clock.tick(clockTime)
 
-                    #         screen.blit(
-                    #             background, (0, 0), area=pygame.Rect(
-                    #                 0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
+                            # screen.blit(
+                            #     background, (0, 0), area=pygame.Rect(
+                            #         0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
 
-                    #         for event in pygame.event.get():
-                    #             if (event.type == pygame.QUIT):
-                    #                 return
-                    #             elif (event.type == pygame.KEYDOWN  # unpause
-                    #                 and event.key == pygame.K_p):
-                    #                 pauseMenu = False
-                    #             # Pause Menu
-                    #             elif (event.type == pygame.KEYDOWN
-                    #                 and event.key == pygame.K_RETURN):
-                    #                 if showHiScores:
-                    #                     showHiScores = False
-                    #                 elif selection == 1:    
-                    #                     pauseMenu = False
-                    #                     ship.alive = False
-                    #                 elif selection == 2:
-                    #                     showHiScores = True
-                    #                 elif selection == 3:
-                    #                     soundFX = not soundFX
-                    #                     if soundFX:
-                    #                         missile_sound.play()
-                    #                     Database.setSound(int(soundFX))
-                    #                 elif selection == 4 and pygame.mixer:
-                    #                     music = not music
-                    #                     if music:
-                    #                         pygame.mixer.music.play(loops=-1)
-                    #                     else:
-                    #                         pygame.mixer.music.stop()
-                    #                     Database.setSound(int(music), music=True)
-                    #                 elif selection == 5:
-                    #                     return
-                    #                 elif selection == 6:
-                    #                     return
-                    #             elif (event.type == pygame.KEYDOWN
-                    #                 and event.key == pygame.K_w
-                    #                 and selection > 1
-                    #                 and not showHiScores):
-                    #                 selection -= 1
-                    #             elif (event.type == pygame.KEYDOWN
-                    #                 and event.key == pygame.K_s
-                    #                 and selection < len(menuDict)
-                    #                 and not showHiScores):
-                    #                 selection += 1
+                            screen.blit(background, (0, 0))
+                            screen.blit(pause, pauseRect)
+
+                            for event in pygame.event.get():
+                                if (event.type == pygame.QUIT):
+                                    return
+                                elif (event.type == pygame.KEYDOWN  # unpause
+                                    and event.key == pygame.K_p):
+                                    pauseMenu = False
+                                # Pause Menu
+                                elif (event.type == pygame.KEYDOWN
+                                    and event.key == pygame.K_RETURN):
+                                    if showHiScores:
+                                        showHiScores = False
+                                    elif showHelp:
+                                        showHelp=False
+                                    elif selection == 1:    
+                                        pauseMenu = False
+                                        ship.alive = False
+                                    elif selection == 2:
+                                        showHiScores = True
+                                    elif selection == 3:
+                                        soundFX = not soundFX
+                                        if soundFX:
+                                            missile_sound.play()
+                                        Database.setSound(int(soundFX))
+                                    elif selection == 4 and pygame.mixer:
+                                        music = not music
+                                        if music:
+                                            pygame.mixer.music.play(loops=-1)
+                                        else:
+                                            pygame.mixer.music.stop()
+                                        Database.setSound(int(music), music=True)
+                                    elif selection == 5:
+                                        showHelp=True
+                                    elif selection == 6:
+                                        pygame.quit()
+                                        sys.exit()
+                                elif (event.type == pygame.KEYDOWN
+                                    and event.key == pygame.K_w
+                                    and selection > 1
+                                    and not showHiScores):
+                                    selection -= 1
+                                elif (event.type == pygame.KEYDOWN
+                                    and event.key == pygame.K_s
+                                    and selection < len(pauseMenuDict)
+                                    and not showHiScores):
+                                    selection += 1
                                 
 
-                    #         selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+                            # selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
+                            selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-                    #         if showHiScores:
-                    #             textOverlays = zip(highScoreTexts, highScorePos)
-                    #         else:
-                    #             textOverlays = zip([restartText, hiScoreText, helpText, fxText,
-                    #                                 musicText, quitText, selectText,
-                    #                                 fxOnText if soundFX else fxOffText,
-                    #                                 musicOnText if music else musicOffText],
-                    #                                 [restartPos, hiScorePos, helpPos, fxPos,
-                    #                                 musicPos, quitPos, selectPos,
-                    #                                 fxOnPos if soundFX else fxOffPos,
-                    #                                 musicOnPos if music else musicOffPos])
-                    #             screen.blit(pause, pauseRect)
-                    #         for txt, pos in textOverlays:
-                    #             screen.blit(txt, pos)
+                            if showHiScores:
+                                screen.blit(menu, menuRect)
+                                textOverlays = zip(highScoreTexts, highScorePos)
+                            elif showHelp:
+                                screen.blit(menu, menuRect) 
+                            else:
+                                textOverlays = zip([restartText, hiScoreText, helpText, fxText,
+                                                    musicText, quitText, selectText,
+                                                    fxOnText if soundFX else fxOffText,
+                                                    musicOnText if music else musicOffText],
+                                                    [restartPos, hiScorePos, helpPos, fxPos,
+                                                    musicPos, quitPos, selectPos,
+                                                    fxOnPos if soundFX else fxOffPos,
+                                                    musicOnPos if music else musicOffPos])
+                                # screen.blit(pause, pauseRect)
+                            for txt, pos in textOverlays:
+                                screen.blit(txt, pos)
 
-                    #         alldrawings.update()
-                    #         pygame.display.flip()
+                            alldrawings.update()
+                            pygame.display.flip()
                     
 
             # Collision Detection
@@ -816,7 +829,19 @@ class Pvp() :
             # backgroundLoc -= speed
             # if backgroundLoc - speed <= 0:
             #     backgroundLoc = 1500
-            screen, background, backgroundLoc = background_update(screen, background, backgroundLoc)
+            # screen, background, backgroundLoc = background_update(screen, background, backgroundLoc)
+
+            # moving field         
+            field1Rect.y += 2
+            field2Rect.y += 2
+            if field1Rect.y >= screen_height:
+                field1Rect.midbottom = field2Rect.midtop
+            if field2Rect.y >= screen_height:
+                field2Rect.midbottom = field1Rect.midtop
+
+            screen.blit(field1, field1Rect)
+            screen.blit(field2, field2Rect)
+
             allsprites.update()
             allsprites.draw(screen)
             alldrawings.update()
