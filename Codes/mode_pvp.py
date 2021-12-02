@@ -2,8 +2,8 @@ import pygame
 import random
 import sys
 
-from sprites import (MasterSprite, Ship2, Ship3, Alien, Missile, BombPowerup,
-                     ShieldPowerup, DoublemissilePowerup, Explosion, Siney, Spikey, Fasty,
+from sprites import (MasterSprite, Kirin2, Kirin3, Bear, Leaf, BombPowerup,
+                     ShieldPowerup, DoubleleafPowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
@@ -48,17 +48,17 @@ class Pvp() :
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)    
 
-        def kill_alien(alien, aliensLeftThisWave, score) :
-            aliensLeftThisWave -= 1
-            if alien.pType == 'green':
+        def kill_bear(bear, bearsLeftThisWave, score) :
+            bearsLeftThisWave -= 1
+            if bear.pType == 'green':
                 score += 1
-            elif alien.pType == 'orange':
+            elif bear.pType == 'orange':
                 score += 2
-            elif alien.pType == 'red':
+            elif bear.pType == 'red':
                 score += 4
-            elif alien.pType == 'yellow':
+            elif bear.pType == 'yellow':
                 score += 8
-            return aliensLeftThisWave, score
+            return bearsLeftThisWave, score
         
         def background_update(screen, background, backgroundLoc) :
             screen.blit(
@@ -92,7 +92,7 @@ class Pvp() :
 
         # def ingame_text_update() :
         #     return [font.render("Wave: " + str(wave), 1, WHITE),
-        #             font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE),
+        #             font.render("Bears Left: " + str(bearsLeftThisWave), 1, WHITE),
         #             font.render("Score: " + str(score), 1, WHITE),
         #             font.render("Score: " + str(score2), 1, WHITE),
         #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
@@ -131,14 +131,14 @@ class Pvp() :
     # Prepare game objects
         speed = 1.5
         MasterSprite.speed = speed
-        alienPeriod = 60 / speed
+        bearPeriod = 60 / speed
         clockTime = 60  # maximum FPS
         clock = pygame.time.Clock()
-        ship = Ship2()
-        ship2 = Ship3() 
+        kirin = Kirin2()
+        kirin2 = Kirin3() 
         
-        initialAlienTypes = (Siney, Spikey)
-        powerupTypes = (BombPowerup, ShieldPowerup, DoublemissilePowerup)
+        initialBearTypes = (Siney, Spikey)
+        powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup)
 
         # pause
         pause,pauseRect = load_image('pause.png')
@@ -147,13 +147,13 @@ class Pvp() :
 
         # Sprite groups
         alldrawings = pygame.sprite.Group()
-        allsprites = pygame.sprite.RenderPlain((ship,ship2))
+        allsprites = pygame.sprite.RenderPlain((kirin,kirin2))
         MasterSprite.allsprites = allsprites
-        Alien.pool = pygame.sprite.Group(
-            [alien() for alien in initialAlienTypes for _ in range(5)])
-        Alien.active = pygame.sprite.Group()
-        Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
-        Missile.active = pygame.sprite.Group()
+        Bear.pool = pygame.sprite.Group(
+            [bear() for bear in initialBearTypes for _ in range(5)])
+        Bear.active = pygame.sprite.Group()
+        Leaf.pool = pygame.sprite.Group([Leaf() for _ in range(10)]) 
+        Leaf.active = pygame.sprite.Group()
         Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
         Explosion.active = pygame.sprite.Group()
         
@@ -167,25 +167,25 @@ class Pvp() :
         # life3, life3Rect = load_image('heart3.png')
 
         # Sounds
-        missile_sound = load_sound('missile.ogg')
+        leaf_sound = load_sound('leaf.ogg')
         bomb_sound = load_sound('bomb.ogg')
-        alien_explode_sound = load_sound('alien_explode.ogg')
-        ship_explode_sound = load_sound('ship_explode.ogg')
+        bear_explode_sound = load_sound('bear_explode.ogg')
+        kirin_explode_sound = load_sound('kirin_explode.ogg')
         load_music('music_loop.ogg')
 
-        alienPeriod = clockTime // 2
+        bearPeriod = clockTime // 2
         curTime = 0
-        aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
+        bearsThisWave, bearsLeftThisWave, Bear.numOffScreen = 10, 10, 10
         wave = 1
 
-        doublemissile = False
-        doublemissile2 = False
+        doubleleaf = False
+        doubleleaf2 = False
         bombsHeld = 3
         bombsHeld2 = 3
         score = 0
         score2 = 0
 
-        missilesFired = 0
+        leafFired = 0
         powerupTime = 10 * clockTime
         powerupTimeLeft = powerupTime
         betweenWaveTime = 3 * clockTime
@@ -229,27 +229,27 @@ class Pvp() :
 
             # Reset Sprite groups
             alldrawings = pygame.sprite.Group()
-            allsprites = pygame.sprite.RenderPlain((ship,ship2))
+            allsprites = pygame.sprite.RenderPlain((kirin,kirin2))
             MasterSprite.allsprites = allsprites
-            Alien.pool = pygame.sprite.Group(
-                [alien() for alien in initialAlienTypes for _ in range(5)])
-            Alien.active = pygame.sprite.Group()
-            Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)]) 
-            Missile.active = pygame.sprite.Group()
+            Bear.pool = pygame.sprite.Group(
+                [bear() for bear in initialBearTypes for _ in range(5)])
+            Bear.active = pygame.sprite.Group()
+            Leaf.pool = pygame.sprite.Group([Leaf() for _ in range(10)]) 
+            Leaf.active = pygame.sprite.Group()
             Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
             Explosion.active = pygame.sprite.Group()
 
             # Reset game contents
             curTime = 0
-            aliensThisWave, aliensLeftThisWave, Alien.numOffScreen = 10, 10, 10
+            bearsThisWave, bearsLeftThisWave, Bear.numOffScreen = 10, 10, 10
             wave = 1
-            doublemissile = False
+            doubleleaf = False
             bombsHeld = 3
             score = 0
-            doublemissile2 = False
+            doubleleaf2 = False
             bombsHeld2 = 3
             score2 = 0
-            missilesFired = 0
+            leafFired = 0
             powerupTime = 10 * clockTime
             powerupTimeLeft = powerupTime
             betweenWaveTime = 3 * clockTime
@@ -258,14 +258,14 @@ class Pvp() :
             betweenDoubleCount = betweenDoubleTime
             betweenDoubleCount2 = betweenDoubleTime
             half_tf = True
-            ship.alive = True
-            ship2.alive = True
+            kirin.alive = True
+            kirin2.alive = True
 
             # 본게임시작
-            while ship.alive and ship2.alive :
+            while kirin.alive and kirin2.alive :
                 clock.tick(clockTime)
 
-                if aliensLeftThisWave >= 20:
+                if bearsLeftThisWave >= 20:
                     powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
@@ -277,63 +277,63 @@ class Pvp() :
                         or event.type == pygame.KEYDOWN
                             and event.key == pygame.K_ESCAPE):
                         return
-                    # Ship1 Moving
+                    # Kirin1 Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
-                        ship.horiz += direction[event.key][0] * speed
-                        ship.vert += direction[event.key][1] * speed
+                        kirin.horiz += direction[event.key][0] * speed
+                        kirin.vert += direction[event.key][1] * speed
                     elif (event.type == pygame.KEYUP
                         and event.key in direction.keys()):
-                        ship.horiz -= direction[event.key][0] * speed
-                        ship.vert -= direction[event.key][1] * speed
-                    # Missile1
+                        kirin.horiz -= direction[event.key][0] * speed
+                        kirin.vert -= direction[event.key][1] * speed
+                    # Leaf1
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_SPACE):
-                        if doublemissile :
-                            Missile.position(ship.rect.topleft)
-                            Missile.position(ship.rect.topright)
-                            missilesFired += 2
+                        if doubleleaf :
+                            Leaf.position(kirin.rect.topleft)
+                            Leaf.position(kirin.rect.topright)
+                            leafFired += 2
                         else : 
-                            Missile.position(ship.rect.midtop)
-                            missilesFired += 1
+                            Leaf.position(kirin.rect.midtop)
+                            leafFired += 1
                         if soundFX:
-                            missile_sound.play()
+                            leaf_sound.play()
                     # Bomb
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_b):
                         if bombsHeld > 0:
                             bombsHeld -= 1
-                            newBomb = ship.bomb()
+                            newBomb = kirin.bomb()
                             newBomb.add(bombs, alldrawings)
                             if soundFX:
                                 bomb_sound.play()
-                    # Ship2 Moving
+                    # Kirin2 Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction2.keys()):
-                        ship2.horiz += direction2[event.key][0] * speed
-                        ship2.vert += direction2[event.key][1] * speed
+                        kirin2.horiz += direction2[event.key][0] * speed
+                        kirin2.vert += direction2[event.key][1] * speed
                     elif (event.type == pygame.KEYUP
                         and event.key in direction2.keys()):
-                        ship2.horiz -= direction2[event.key][0] * speed
-                        ship2.vert -= direction2[event.key][1] * speed
-                    # Missile2
+                        kirin2.horiz -= direction2[event.key][0] * speed
+                        kirin2.vert -= direction2[event.key][1] * speed
+                    # Leaf2
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_SPACE):
-                        if doublemissile2 :
-                            Missile.position(ship2.rect.topleft)
-                            Missile.position(ship2.rect.topright)
-                            missilesFired += 2
+                        if doubleleaf2 :
+                            Leaf.position(kirin2.rect.topleft)
+                            Leaf.position(kirin2.rect.topright)
+                            leafFired += 2
                         else : 
-                            Missile.position(ship2.rect.midtop)
-                            missilesFired += 1
+                            Leaf.position(kirin2.rect.midtop)
+                            leafFired += 1
                         if soundFX:
-                            missile_sound.play()
+                            leaf_sound.play()
                     # Bomb
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_b):
                         if bombsHeld2 > 0:
                             bombsHeld2 -= 1
-                            newBomb = ship2.bomb()
+                            newBomb = kirin2.bomb()
                             newBomb.add(bombs2, alldrawings)
                             if soundFX:
                                 bomb_sound.play()
@@ -364,13 +364,13 @@ class Pvp() :
                     #                     showHiScores = False
                     #                 elif selection == 1:    
                     #                     pauseMenu = False
-                    #                     ship.alive = False
+                    #                     kirin.alive = False
                     #                 elif selection == 2:
                     #                     showHiScores = True
                     #                 elif selection == 3:
                     #                     soundFX = not soundFX
                     #                     if soundFX:
-                    #                         missile_sound.play()
+                    #                         leaf_sound.play()
                     #                     Database.setSound(int(soundFX))
                     #                 elif selection == 4 and pygame.mixer:
                     #                     music = not music
@@ -417,125 +417,125 @@ class Pvp() :
                     
 
             # Collision Detection
-                # Aliens
-                for alien in Alien.active:
+                # Bears
+                for bear in Bear.active:
                     for bomb in bombs:
                         if pygame.sprite.collide_circle(
-                                bomb, alien) and alien in Alien.active:
-                            if alien.pType != 'white' :
-                                alien.table()
-                                Explosion.position(alien.rect.center)
-                                aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
-                            missilesFired += 1
+                                bomb, bear) and bear in Bear.active:
+                            if bear.pType != 'white' :
+                                bear.table()
+                                Explosion.position(bear.rect.center)
+                                bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
+                            leafFired += 1
                             if soundFX:
-                                alien_explode_sound.play()
+                                bear_explode_sound.play()
                     for bomb in bombs2:
                         if pygame.sprite.collide_circle(
-                                bomb, alien) and alien in Alien.active:
-                            if alien.pType != 'white' :
-                                alien.table()
-                                Explosion.position(alien.rect.center)
-                                aliensLeftThisWave, score2 = kill_alien(alien, aliensLeftThisWave, score2)
+                                bomb, bear) and bear in Bear.active:
+                            if bear.pType != 'white' :
+                                bear.table()
+                                Explosion.position(bear.rect.center)
+                                bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
                             if soundFX:
-                                alien_explode_sound.play()
-                    for missile in Missile.active:
+                                bear_explode_sound.play()
+                    for leaf in Leaf.active:
                         if pygame.sprite.collide_rect(
-                                missile, alien) and alien in Alien.active:
-                            missile.table()
-                            if alien.pType != 'white' :
-                                alien.table()
-                                Explosion.position(alien.rect.center)
-                                if alien.rect.center[0] < 500 :
-                                    aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
+                                leaf, bear) and bear in Bear.active:
+                            leaf.table()
+                            if bear.pType != 'white' :
+                                bear.table()
+                                Explosion.position(bear.rect.center)
+                                if bear.rect.center[0] < 500 :
+                                    bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
                                 else :
-                                    aliensLeftThisWave, score2 = kill_alien(alien, aliensLeftThisWave, score2)
+                                    bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
                             if soundFX:
-                                alien_explode_sound.play()
-                    if pygame.sprite.collide_rect(alien, ship):
-                        if ship.shieldUp:
-                            alien.table()
-                            Explosion.position(alien.rect.center)
-                            aliensLeftThisWave, score = kill_alien(alien, aliensLeftThisWave, score)
-                            missilesFired += 1
-                            ship.shieldUp = False
-                        elif ship.life > 1:   # life
-                            alien.table()
-                            Explosion.position(alien.rect.center)
-                            aliensLeftThisWave -= 1
+                                bear_explode_sound.play()
+                    if pygame.sprite.collide_rect(bear, kirin):
+                        if kirin.shieldUp:
+                            bear.table()
+                            Explosion.position(bear.rect.center)
+                            bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
+                            leafFired += 1
+                            kirin.shieldUp = False
+                        elif kirin.life > 1:   # life
+                            bear.table()
+                            Explosion.position(bear.rect.center)
+                            bearsLeftThisWave -= 1
                             score += 1
-                            ship.life -= 1
+                            kirin.life -= 1
                         else:
                             restart = False
-                            ship.alive = False
-                            ship.remove(allsprites)
-                            Explosion.position(ship.rect.center)
+                            kirin.alive = False
+                            kirin.remove(allsprites)
+                            Explosion.position(kirin.rect.center)
                             if soundFX:
-                                ship_explode_sound.play()
-                    if pygame.sprite.collide_rect(alien, ship2):
-                        if ship2.shieldUp:
-                            alien.table()
-                            Explosion.position(alien.rect.center)
-                            aliensLeftThisWave, score2 = kill_alien(alien, aliensLeftThisWave, score2)
-                            missilesFired += 1
-                            ship2.shieldUp = False
-                        elif ship2.life > 1:   # life
-                            alien.table()
-                            Explosion.position(alien.rect.center)
-                            aliensLeftThisWave -= 1
+                                kirin_explode_sound.play()
+                    if pygame.sprite.collide_rect(bear, kirin2):
+                        if kirin2.shieldUp:
+                            bear.table()
+                            Explosion.position(bear.rect.center)
+                            bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
+                            leafFired += 1
+                            kirin2.shieldUp = False
+                        elif kirin2.life > 1:   # life
+                            bear.table()
+                            Explosion.position(bear.rect.center)
+                            bearsLeftThisWave -= 1
                             score2 += 1
-                            ship2.life -= 1
+                            kirin2.life -= 1
                         else:
                             restart = False
-                            ship2.alive = False
-                            ship2.remove(allsprites)
-                            Explosion.position(ship2.rect.center)
+                            kirin2.alive = False
+                            kirin2.remove(allsprites)
+                            Explosion.position(kirin2.rect.center)
                             if soundFX:
-                                ship_explode_sound.play()
+                                kirin_explode_sound.play()
 
                 # PowerUps
                 for powerup in powerups:
-                    if pygame.sprite.collide_circle(powerup, ship):
+                    if pygame.sprite.collide_circle(powerup, kirin):
                         if powerup.pType == 'bomb':
                             bombsHeld += 1
                         elif powerup.pType == 'shield':
-                            ship.shieldUp = True
-                        elif powerup.pType == 'doublemissile' :
-                            doublemissile = True
-                        # elif powerup.pType == 'friendship' :
-                        #     friendship = True 
-                        #     miniship.alive = True   
+                            kirin.shieldUp = True
+                        elif powerup.pType == 'doubleleaf' :
+                            doubleleaf = True
+                        # elif powerup.pType == 'friendkirin' :
+                        #     friendkirin = True 
+                        #     minikirin.alive = True   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
                 for powerup in powerups:
-                    if pygame.sprite.collide_circle(powerup, ship2):
+                    if pygame.sprite.collide_circle(powerup, kirin2):
                         if powerup.pType == 'bomb':
                             bombsHeld2 += 1
                         elif powerup.pType == 'shield':
-                            ship2.shieldUp = True
-                        elif powerup.pType == 'doublemissile' :
-                            doublemissile2 = True
-                        # elif powerup.pType == 'friendship' :
-                        #     friendship = True 
-                        #     miniship.alive = True   
+                            kirin2.shieldUp = True
+                        elif powerup.pType == 'doubleleaf' :
+                            doubleleaf2 = True
+                        # elif powerup.pType == 'friendkirin' :
+                        #     friendkirin = True 
+                        #     minikirin.alive = True   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
 
-            # Update Aliens
-                if curTime <= 0 and aliensLeftThisWave > 0:
-                    Alien.position()
-                    curTime = alienPeriod
+            # Update Bears
+                if curTime <= 0 and bearsLeftThisWave > 0:
+                    Bear.position()
+                    curTime = bearPeriod
                 elif curTime > 0:
                     curTime -= 1
 
             # Update text overlays
                 # if half_tf :
-                #     waveText, leftText, scoreText, scoreText2, bombText, bombText2, ship1winText, ship2winText, drawText = ingame_text_update()
+                #     waveText, leftText, scoreText, scoreText2, bombText, bombText2, kirin1winText, kirin2winText, drawText = ingame_text_update()
                 # else :
-                #     waveText, leftText, scoreText2, scoreText, bombText2, bombText, ship1winText, ship2winText, drawText = ingame_text_update()
+                #     waveText, leftText, scoreText2, scoreText, bombText2, bombText, kirin1winText, kirin2winText, drawText = ingame_text_update()
                 # font.render("Wave: " + str(wave), 1, WHITE),
-        #             font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE),
+        #             font.render("Bears Left: " + str(bearsLeftThisWave), 1, WHITE),
         #             font.render("Score: " + str(score), 1, WHITE),
         #             font.render("Score: " + str(score2), 1, WHITE),
         #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
@@ -548,23 +548,23 @@ class Pvp() :
                 
                 if half_tf :
                     waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                    leftText = font.render("Aliens: " + str(aliensLeftThisWave), 1, WHITE)
+                    leftText = font.render("Bears: " + str(bearsLeftThisWave), 1, WHITE)
                     scoreText = font.render("Score: " + str(score), 1, WHITE)
                     scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                     bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
                     bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
                     # lifeText = font.render("Life: ", 1, WHITE)
                     # lifeText2 = font.render("Life: ", 1, WHITE)
-                    ship1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
-                    ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
+                    kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
+                    kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                     drawText = font.render('DRAW!', 1, WHITE)
                 else :
                     waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                    leftText = font.render("Aliens Left: " + str(aliensLeftThisWave), 1, WHITE)
+                    leftText = font.render("Bears Left: " + str(bearsLeftThisWave), 1, WHITE)
                     scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                     bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
                     # lifeText2 = font.render("Life: ", 1, WHITE)
-                    ship2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
+                    kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                     drawText = font.render('DRAW!', 1, WHITE)
 
         
@@ -576,37 +576,37 @@ class Pvp() :
                 scorePos2 = scoreText2.get_rect(topright=screen.get_rect().midbottom)
                 # bombPos2 = bombText2.get_rect(bottomleft=screen.get_rect().midbottom)
                 # lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
-                ship1winPos = ship1winText.get_rect(center=screen.get_rect().center)
-                ship2winPos = ship2winText.get_rect(center=screen.get_rect().center)
+                kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
+                kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
                 drawPos = drawText.get_rect(center=screen.get_rect().center)
 
                 text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2] # lifeText, lifeText2]
                 # textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
                 textposition = [wavePos, leftPos, scorePos, scorePos2]
 
-                if doublemissile:
+                if doubleleaf:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
                     elif betweenDoubleCount == 0:
-                        doublemissile = False
+                        doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                if doublemissile2:
+                if doubleleaf2:
                     if betweenDoubleCount2 > 0:
                         betweenDoubleCount2 -= 1
                     elif betweenDoubleCount2 == 0:
-                        doublemissile2 = False
+                        doubleleaf2 = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                # if friendship:
+                # if friendkirin:
                 #     if betweenDoubleCount > 0:
                 #         betweenDoubleCount -= 1
                 #     elif betweenDoubleCount == 0:
-                #         friendship = False
+                #         friendkirin = False
                 #         betweenDoubleCount = betweenDoubleTime
 
             # Detertmine when to move to next wave
-                if aliensLeftThisWave <= 0:
+                if bearsLeftThisWave <= 0:
                     if betweenWaveCount > 0:
                         betweenWaveCount -= 1
                         nextWaveText = font.render(
@@ -629,19 +629,19 @@ class Pvp() :
                         if wave % 4 == 0:
                             speed += 0.5
                             MasterSprite.speed = speed
-                            ship.initializeKeys()
-                            ship2.initializeKeys()
-                            aliensThisWave = 10
-                            aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
+                            kirin.initializeKeys()
+                            kirin2.initializeKeys()
+                            bearsThisWave = 10
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         else:
-                            aliensThisWave *= 2
-                            aliensLeftThisWave = Alien.numOffScreen = aliensThisWave
+                            bearsThisWave *= 2
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         if wave == 1:
-                            Alien.pool.add([Fasty() for _ in range(5)])
+                            Bear.pool.add([Fasty() for _ in range(5)])
                         if wave == 2:
-                            Alien.pool.add([Roundy() for _ in range(5)])
+                            Bear.pool.add([Roundy() for _ in range(5)])
                         if wave == 3:
-                            Alien.pool.add([Crawly() for _ in range(5)])
+                            Bear.pool.add([Crawly() for _ in range(5)])
                         wave += 1
                         betweenWaveCount = betweenWaveTime
 
@@ -672,24 +672,24 @@ class Pvp() :
             #     life2Rect.topleft = life1Rect.topright
             #     life3Rect.topleft = life2Rect.topright
 
-            #     if ship.life >= 3:
+            #     if kirin.life >= 3:
             #         screen.blit(life3, life3Rect)
-            #     if ship.life >= 2:
+            #     if kirin.life >= 2:
             #         screen.blit(life2, life2Rect)
-            #     if ship.life >= 1:
+            #     if kirin.life >= 1:
             #         screen.blit(life1, life1Rect)
                 
-            #     if ship2.life >= 3:
+            #     if kirin2.life >= 3:
             #         screen.blit(life3, life3Rect)
-            #     if ship2.life >= 2:
+            #     if kirin2.life >= 2:
             #         screen.blit(life2, life2Rect)
-            #     if ship2.life >= 1:
+            #     if kirin2.life >= 1:
             #         screen.blit(life1, life1Rect)
 
                 pygame.display.flip()
 
 
-            # accuracy = round(score / missilesFired, 4) if missilesFired > 0 else 0.0
+            # accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
             # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
             # name = ''
             # nameBuffer = []
@@ -760,8 +760,8 @@ class Pvp() :
         #                           [gameOverPos, scorePos])
 
         # Update and draw all sprites
-            # ship1winPos = ship1winText.get_rect(center=screen.get_rect().center)
-            # ship2winPos = ship2winText.get_rect(center=screen.get_rect().center)
+            # kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
+            # kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
             # drawPos = drawText.get_rect(center=screen.get_rect().center)
 
             # screen.blit(
@@ -775,18 +775,18 @@ class Pvp() :
             allsprites.draw(screen)
             alldrawings.update()
 
-            if ship.alive and not ship2.alive :
-                screen.blit(ship1winText, ship1winPos)
-            elif ship2.alive and not ship.alive :
-                screen.blit(ship2winText, ship2winPos)
-            elif not ship.alive and not ship2.alive :
+            if kirin.alive and not kirin2.alive :
+                screen.blit(kirin1winText, kirin1winPos)
+            elif kirin2.alive and not kirin.alive :
+                screen.blit(kirin2winText, kirin2winPos)
+            elif not kirin.alive and not kirin2.alive :
                 screen.blit(drawText, drawPos)
 
-            elif ship.alive and ship2.alive :
+            elif kirin.alive and kirin2.alive :
                 if score > score2 :
-                    screen.blit(ship1winText, ship1winPos)
+                    screen.blit(kirin1winText, kirin1winPos)
                 elif score < score2 :
-                    screen.blit(ship2winText, ship2winPos)
+                    screen.blit(kirin2winText, kirin2winPos)
                 elif score == score2 :
                     screen.blit(drawText, drawPos)
 

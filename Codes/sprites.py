@@ -34,23 +34,23 @@ class Explosion(MasterSprite):
             self.add(self.pool)
 
 
-class Missile(MasterSprite):
+class Leaf(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('missile.png', -1)
+        self.image, self.rect = load_image('leaf.png', -1)
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
 
     @classmethod
     def position(cls, loc):
         if len(cls.pool) > 0:
-            missile = cls.pool.sprites()[0]
-            missile.add(cls.allsprites, cls.active)
-            missile.remove(cls.pool)
-            missile.rect.midbottom = loc
+            leaf = cls.pool.sprites()[0]
+            leaf.add(cls.allsprites, cls.active)
+            leaf.remove(cls.pool)
+            leaf.rect.midbottom = loc
     
     def table(self):
         self.add(self.pool)
@@ -64,14 +64,14 @@ class Missile(MasterSprite):
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, ship):
+    def __init__(self, kirin):
         super().__init__()
         self.image = None
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = 20
         self.radiusIncrement = 4
-        self.rect = ship.rect
+        self.rect = kirin.rect
 
     def update(self):
         self.radius += self.radiusIncrement
@@ -122,24 +122,29 @@ class ShieldPowerup(Powerup):
         super().__init__('shield')
         self.pType = 'shield'
 
-class DoublemissilePowerup(Powerup):
+class DoubleleafPowerup(Powerup):
     def __init__(self):
-        super().__init__('doublemissile')
-        self.pType = 'doublemissile'
+        super().__init__('doubleleaf')
+        self.pType = 'doubleleaf'
 
 class FriendPowerup(Powerup):
     def __init__(self):
-        super().__init__('friendship')
-        self.pType = 'friendship'
+        super().__init__('friendkirin')
+        self.pType = 'friendkirin'
 
-class Ship(MasterSprite):
+class LifePowerup(Powerup):
+    def __init__(self):
+        super().__init__('life')
+        self.pType = 'life'
+
+class Kirin(MasterSprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('ship.png', -1)
+        self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
-        self.shield, self.rect = load_image('ship_shield.png', -1)
+        self.shield, self.rect = load_image('kirin_shield.png', -1)
         # 수정 쉴드랑 조금 다른 방법이 필요함
-        # self.bomb, self.rect = load_image('ship_bomb.png', -1)
+        # self.bomb, self.rect = load_image('kirin_bomb.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
@@ -198,25 +203,24 @@ class Ship(MasterSprite):
     def bomb(self):
         return Bomb(self)
 
-class Friendship(MasterSprite):
+class Friendkirin(MasterSprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('friendship.png', -1)
+        self.image, self.rect = load_image('friendkirin.png', -1)
         self.original = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        self.alive = True
    
     def remove(self) :
         pygame.sprite.Sprite.kill(self)
 
-class Ship2(MasterSprite):
+class Kirin2(MasterSprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('ship.png', -1)
+        self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
-        self.shield, self.rect = load_image('ship_shield.png', -1)
+        self.shield, self.rect = load_image('kirin_shield.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() * (1/4) , self.area.bottom)
@@ -259,12 +263,12 @@ class Ship2(MasterSprite):
     def bomb(self):
         return Bomb(self)
 
-class Ship3(MasterSprite):
+class Kirin3(MasterSprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('ship.png', -1)
+        self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
-        self.shield, self.rect = load_image('ship_shield.png', -1)
+        self.shield, self.rect = load_image('kirin_shield.png', -1)
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() * (3/4), self.area.bottom)
@@ -307,14 +311,14 @@ class Ship3(MasterSprite):
     def bomb(self):
         return Bomb(self)
 
-class Alien(MasterSprite):
+class Bear(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
     def __init__(self, color):
         super().__init__()
         self.image, self.rect = load_image(
-            'space_invader_' + color + '.png', -1)
+            'bear_' + color + '.png', -1)
         self.initialRect = self.rect
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -324,25 +328,25 @@ class Alien(MasterSprite):
     @classmethod
     def position(cls):
         if len(cls.pool) > 0 and cls.numOffScreen > 0:
-            alien = random.choice(cls.pool.sprites())
-            if isinstance(alien, Crawly):
-                alien.rect.midbottom = (random.choice(
-                    (alien.area.left, alien.area.right)),
+            bear = random.choice(cls.pool.sprites())
+            if isinstance(bear, Crawly):
+                bear.rect.midbottom = (random.choice(
+                    (bear.area.left, bear.area.right)),
                     random.randint(
-                    (alien.area.bottom * 3) // 4,
-                    alien.area.bottom))
+                    (bear.area.bottom * 3) // 4,
+                    bear.area.bottom))
             else:
-                alien.rect.midtop = (random.randint(
-                    alien.area.left
-                    + alien.rect.width // 2,
-                    alien.area.right
-                    - alien.rect.width // 2),
-                    alien.area.top)
-            alien.initialRect = alien.rect
-            alien.loc = 0
-            alien.add(cls.allsprites, cls.active)
-            alien.remove(cls.pool)
-            Alien.numOffScreen -= 1
+                bear.rect.midtop = (random.randint(
+                    bear.area.left
+                    + bear.rect.width // 2,
+                    bear.area.right
+                    - bear.rect.width // 2),
+                    bear.area.top)
+            bear.initialRect = bear.rect
+            bear.loc = 0
+            bear.add(cls.allsprites, cls.active)
+            bear.remove(cls.pool)
+            Bear.numOffScreen -= 1
 
     def update(self):
         horiz, vert = self.moveFunc()
@@ -354,14 +358,14 @@ class Alien(MasterSprite):
         self.loc = self.loc + MasterSprite.speed
         if self.rect.top > self.area.bottom:
             self.table()
-            Alien.numOffScreen += 1
+            Bear.numOffScreen += 1
 
     def table(self):
         self.kill()
         self.add(self.pool)
 
 
-class Siney(Alien):
+class Siney(Bear):
     def __init__(self):
         super().__init__('green')
         self.amp = random.randint(self.rect.width, 3 * self.rect.width)
@@ -370,7 +374,7 @@ class Siney(Alien):
         self.pType = 'green'
 
 
-class Roundy(Alien):
+class Roundy(Bear):
     def __init__(self):
         super().__init__('red')
         self.amp = random.randint(self.rect.width, 2 * self.rect.width)
@@ -387,7 +391,7 @@ class Roundy(Alien):
         self.pType = 'red'
 
 
-class Spikey(Alien):
+class Spikey(Bear):
     def __init__(self):
         super().__init__('blue')
         self.slope = random.choice(list(x for x in range(-3, 3) if x != 0))
@@ -400,14 +404,14 @@ class Spikey(Alien):
         self.pType = 'orange'
 
 
-class Fasty(Alien):
+class Fasty(Bear):
     def __init__(self):
         super().__init__('white')
         self.moveFunc = lambda: (0, 1.5 * self.loc)
         self.pType = 'white'
 
 
-class Crawly(Alien):
+class Crawly(Bear):
     def __init__(self):
         super().__init__('yellow')
         self.moveFunc = lambda: (self.loc, 0)
@@ -420,6 +424,6 @@ class Crawly(Alien):
         if (horiz + self.initialRect.left > self.area.right
                 or horiz + self.initialRect.right < self.area.left):
             self.table()
-            Alien.numOffScreen += 1
+            Bear.numOffScreen += 1
         self.rect = self.initialRect.move((horiz, vert))
         self.loc = self.loc + MasterSprite.speed
