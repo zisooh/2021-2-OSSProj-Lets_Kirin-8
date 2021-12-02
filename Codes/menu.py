@@ -15,7 +15,7 @@ leaf_sound = load_sound('leaf.ogg')
 bomb_sound = load_sound('bomb.ogg')
 bear_explode_sound = load_sound('bear_explode.ogg')
 kirin_explode_sound = load_sound('kirin_explode.ogg')
-load_music('music_loop.ogg')
+load_music('menu_music_loop.ogg')
 
 
 class Keyboard(object):
@@ -147,7 +147,7 @@ class Menu:
         self.showSelectModes=False
         self.showHiScores = False
         self.inSelectMenu=False
-        self.soundFX = Database().getSound()
+        self.soundFX = Database.getSound()
         self.music = Database.getSound(music=True)
         #user simple db
         self.log_test=[]
@@ -339,14 +339,14 @@ class Menu:
                         self.soundFX = not self.soundFX
                         if self.soundFX:
                             leaf_sound.play()
-                        Database().setSound(int(self.soundFX))
+                        Database.setSound(int(self.soundFX))
                     elif self.selection == 4 and pygame.mixer:
                         self.music = not self.music
                         if self.music:
                             pygame.mixer.music.play(loops=-1)
                         else:
                             pygame.mixer.music.stop()
-                        Database().setSound(int(self.music), music=True)
+                        Database.setSound(int(self.music), music=True)
                     elif self.selection == 5:
                         self.showHelp=True                                        
                     elif self.selection == 6:

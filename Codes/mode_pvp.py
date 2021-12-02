@@ -200,8 +200,8 @@ class Pvp() :
 
         # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
-        soundFX = Database().getSound()
-        music = Database().getSound(music=True)
+        soundFX = Database.getSound()
+        music = Database.getSound(music=True)
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]

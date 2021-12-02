@@ -110,10 +110,10 @@ class Time():
 
     # High Score
         hiScores=Database().getTimeScores()
-        soundFX = Database().getSound()
-        music = Database().getSound(music=True)
-        # print(hiScores)
-        # print(len(hiScores))
+        soundFX = Database.getSound()
+        music = Database.getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
@@ -158,6 +158,7 @@ class Time():
         selectPos = selectText.get_rect(topright=restartPos.topleft)
         selection = 1
         showHiScores = False
+        showHelp=False
 
 
     #########################
@@ -298,14 +299,14 @@ class Time():
                                         soundFX = not soundFX
                                         if soundFX:
                                             leaf_sound.play()
-                                        Database().setSound(int(soundFX))
+                                        Database.setSound(int(soundFX))
                                     elif selection == 4 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
-                                        Database().setSound(int(music), music=True)
+                                        Database.setSound(int(music), music=True)
                                     elif selection == 5:
                                         showHelp=True
                                     elif selection == 6:
