@@ -3,7 +3,7 @@ import random
 import sys
 
 from sprites import (MasterSprite, Kirin2, Kirin3, Bear, Leaf, BombPowerup,
-                     ShieldPowerup, DoubleleafPowerup, Explosion, Siney, Spikey, Fasty,
+                     ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
@@ -119,7 +119,6 @@ class Pvp() :
         field2, field2Rect = load_image("field_pvp.png")
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
-        pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
         # Menu - pause 메뉴 Highscore & help
         menu, menuRect = load_image("menu.png")
@@ -159,9 +158,10 @@ class Pvp() :
         clock = pygame.time.Clock()
         kirin = Kirin2()
         kirin2 = Kirin3() 
-        
+        # minikirin = Friendkirin()
+
         initialbearTypes = (Siney, Spikey)
-        powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup)
+        powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup)
 
         bombs = pygame.sprite.Group()
         bombs2 = pygame.sprite.Group()
@@ -279,6 +279,7 @@ class Pvp() :
 
             # Reset game contents
             bearsThisWave, bearsLeftThisWave, Bear.numOffScreen = 10, 10, 10
+            # friendkirin = False
             doubleleaf = False
             bombsHeld = 3
             score = 0
@@ -299,8 +300,8 @@ class Pvp() :
             betweenDoubleCount2 = betweenDoubleTime
             # friendkirinTime = 8 * clockTime
             # friendkirinCount = friendkirinTime
-            # friendkirinleafTime = 0.2 * clockTime
-            # friendkirinleafCount = friendkirinleafTime
+            # friendkirinLeafTime = 0.2 * clockTime
+            # friendkirinLeafCount = friendkirinLeafTime
             
             kirin.alive = True
             kirin.life = 3
@@ -397,10 +398,6 @@ class Pvp() :
                         
                         while pauseMenu:
                             clock.tick(clockTime)
-
-                            # screen.blit(
-                            #     background, (0, 0), area=pygame.Rect(
-                            #         0, backgroundLoc, 500, 500))    ## 이 3줄이 없으면 text업데이트가 안됨. why
 
                             screen.blit(background, (0, 0))
                             screen.blit(pause, pauseRect)
@@ -566,9 +563,14 @@ class Pvp() :
                             kirin.shieldUp = True
                         elif powerup.pType == 'doubleleaf' :
                             doubleleaf = True
+                        elif powerup.pType == 'life':
+                            if kirin.life < 3:
+                                kirin.life += 1 
                         # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True 
-                        #     minikirin.alive = True   
+                        #     friendkirin = True
+                        #     MasterSprite.allsprites.add(minikirin) 
+                        #     allsprites.update()
+                        #     allsprites.draw(screen)        
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -580,9 +582,14 @@ class Pvp() :
                             kirin2.shieldUp = True
                         elif powerup.pType == 'doubleleaf' :
                             doubleleaf2 = True
+                        elif powerup.pType == 'life':
+                            if kirin2.life < 3:
+                                kirin2.life += 1 
                         # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True 
-                        #     minikirin.alive = True   
+                        #     friendkirin = True
+                        #     MasterSprite.allsprites.add(minikirin) 
+                        #     allsprites.update()
+                        #     allsprites.draw(screen)   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -663,12 +670,22 @@ class Pvp() :
                         doubleleaf2 = False
                         betweenDoubleCount = betweenDoubleTime
                 
+                # minikirin.rect.bottomright = kirin.rect.bottomleft
+                # minikirin.rect.bottomright = kirin2.rect.bottomleft
                 # if friendkirin:
-                #     if betweenDoubleCount > 0:
-                #         betweenDoubleCount -= 1
-                #     elif betweenDoubleCount == 0:
+                #     if friendkirinCount > 0:
+                #         friendkirinCount -= 1
+                #     elif friendkirinCount == 0:
                 #         friendkirin = False
-                #         betweenDoubleCount = betweenDoubleTime
+                #         minikirin.remove()
+                #         friendkirinCount = friendkirinTime
+                
+                # if friendkirin:
+                #     if friendkirinleafCount > 0:
+                #         friendkirinleafCount -= 1
+                #     elif friendkirinleafCount == 0:
+                #         friendkirinleafCount = friendkirinleafTime
+                #         Leaf.position(minikirin.rect.midtop)
 
             # Detertmine when to move to next wave
                 if bearsLeftThisWave <= 0:
