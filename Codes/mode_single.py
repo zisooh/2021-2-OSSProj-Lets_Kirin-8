@@ -26,13 +26,13 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Single():
-    def playGame():     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시 
+    def playGame(screen_width, screen_height):     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시 
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
-        screen_width = 500   # 스크린가로
-        screen_height = 500  # 스크린세로
-        screen = pygame.display.set_mode((screen_width, screen_height))
+        #screen_width = 500   # 스크린가로
+        #screen_height = 500  # 스크린세로
+        screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
@@ -232,6 +232,9 @@ class Single():
                             and event.key == pygame.K_ESCAPE):
                         pygame.quit()
                         sys.exit()
+                    elif (event.type == pygame.VIDEORESIZE):
+                        screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                        screen_width, screen_height = event.w, event.h
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
