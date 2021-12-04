@@ -231,7 +231,6 @@ class Kirin2(MasterSprite):
         self.vert = 0
         self.horiz = 0
         self.life = 3   
-        self.pType = 'kirin2'
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()
@@ -245,11 +244,11 @@ class Kirin2(MasterSprite):
 
         if not (newpos.left <= self.area.left
                 or newpos.top <= self.area.top
-                or newpos.right >= self.area.right
+                or newpos.right >= 250
                 or newpos.bottom >= self.area.bottom):
             self.rect = newpos
         elif not (newhoriz.left <= self.area.left
-                  or newhoriz.right >= self.area.right):
+                  or newhoriz.right >= 250):
             self.rect = newhoriz
         elif not (newvert.top <= self.area.top
                   or newvert.bottom >= self.area.bottom):
@@ -280,7 +279,6 @@ class Kirin3(MasterSprite):
         self.vert = 0
         self.horiz = 0
         self.life = 3   # 초기 생명 3개
-        self.pType = 'kirin3'
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()
@@ -292,12 +290,12 @@ class Kirin3(MasterSprite):
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
 
-        if not (newpos.left <= self.area.left
+        if not (newpos.left <= 250
                 or newpos.top <= self.area.top
                 or newpos.right >= self.area.right
                 or newpos.bottom >= self.area.bottom):
             self.rect = newpos
-        elif not (newhoriz.left <= self.area.left
+        elif not (newhoriz.left <= 250
                   or newhoriz.right >= self.area.right):
             self.rect = newhoriz
         elif not (newvert.top <= self.area.top

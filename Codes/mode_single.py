@@ -443,19 +443,6 @@ class Single():
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                if friendkirin:
-                    if betweenDoubleCount > 0:
-                        betweenDoubleCount -= 1
-                    elif betweenDoubleCount == 0:
-                        friendkirinship = False
-                        minikirin.alive = False
-                        minikirin.remove()
-                        betweenDoubleCount = betweenDoubleTime
-                        # allsprites = pygame.sprite.RenderPlain((kirin,))
-                        # MasterSprite.allsprites = allsprites
-                        # allsprites.draw(screen)
-                        # alldrawings.update()
-
                 # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
                 if friendkirin:

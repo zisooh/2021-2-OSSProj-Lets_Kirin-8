@@ -80,6 +80,10 @@ class Pvp() :
         life2, life2Rect = load_image('heart2.png')
         life3, life3Rect = load_image('heart3.png')
 
+        life_a, life_aRect = load_image('heart1.png')
+        life_b, life_bRect = load_image('heart2.png')
+        life_c, life_cRect = load_image('heart3.png')
+
         # Sounds
         leaf_sound = load_sound('leaf.ogg')
         bomb_sound = load_sound('bomb.ogg')
@@ -402,7 +406,6 @@ class Pvp() :
                             if bear.pType != 'white' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
-                                # 수정 필요
                                 if bear.rect.center[0] < 500 :
                                     bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
                                 else :
@@ -501,31 +504,26 @@ class Pvp() :
             # Update text overlays
                 waveText = font.render("Wave: " + str(wave), 1, WHITE)
                 leftText = font.render("bears: " + str(bearsLeftThisWave), 1, WHITE)
-                scoreText = font.render("Score: " + str(score), 1, WHITE)
-                scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
+                # scoreText = font.render("Score: " + str(score), 1, WHITE)
+                # scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                 bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
                 bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                # lifeText = font.render("Life: ", 1, WHITE)
-                # lifeText2 = font.render("Life: ", 1, WHITE)
                 kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
                 kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                 drawText = font.render('DRAW!', 1, WHITE)
         
                 wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
                 leftPos = leftText.get_rect(topleft=screen.get_rect().midtop)
-                scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
+                # scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
                 bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-                # lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
-                scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
+                # scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
                 bombPos2 = bombText2.get_rect(bottomright=screen.get_rect().bottomright)
-                # lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
                 kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
                 kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
                 drawPos = drawText.get_rect(center=screen.get_rect().center)
 
-                text = [waveText, leftText, scoreText, bombText, scoreText2, bombText2] # lifeText, lifeText2]
-                textposition = [wavePos, leftPos, scorePos, bombPos, scorePos2, bombPos2]
-                # textposition = [wavePos, leftPos, scorePos, scorePos2]
+                text = [waveText, leftText, bombText, bombText2]
+                textposition = [wavePos, leftPos, bombPos, bombPos2]
 
                 if doubleleaf:
                     if betweenDoubleCount > 0:
@@ -556,8 +554,6 @@ class Pvp() :
                             friendkirin2 = False
                         minikirin.remove()
                         friendkirinCount = friendkirinTime
-                
-                if friendkirin1 or friendkirin2:
                     if friendkirinLeafCount > 0:
                         friendkirinLeafCount -= 1
                     elif friendkirinLeafCount == 0:
@@ -625,24 +621,28 @@ class Pvp() :
                 for txt, pos in textOverlays:
                     screen.blit(txt, pos)
 
-            # # Update life
-            #     life1Rect.topleft = lifePos.topright
-            #     life2Rect.topleft = life1Rect.topright
-            #     life3Rect.topleft = life2Rect.topright
+            # Update life
+                life1Rect.topright = wavePos.topleft
+                life2Rect.topright = wavePos.topleft
+                life3Rect.topright = wavePos.topleft
 
-            #     if kirin.life >= 3:
-            #         screen.blit(life3, life3Rect)
-            #     if kirin.life >= 2:
-            #         screen.blit(life2, life2Rect)
-            #     if kirin.life >= 1:
-            #         screen.blit(life1, life1Rect)
+                life_aRect.topleft = leftPos.topright
+                life_bRect.topleft = leftPos.topright
+                life_cRect.topleft = leftPos.topright
+
+                if kirin.life == 3:
+                    screen.blit(life3, life3Rect)
+                if kirin.life == 2:
+                    screen.blit(life2, life2Rect)
+                if kirin.life == 1:
+                    screen.blit(life1, life1Rect)
                 
-            #     if kirin2.life >= 3:
-            #         screen.blit(life3, life3Rect)
-            #     if kirin2.life >= 2:
-            #         screen.blit(life2, life2Rect)
-            #     if kirin2.life >= 1:
-            #         screen.blit(life1, life1Rect)
+                if kirin2.life == 3:
+                    screen.blit(life_c, life_cRect)
+                if kirin2.life == 2:
+                    screen.blit(life_b, life_bRect)
+                if kirin2.life == 1:
+                    screen.blit(life_a, life_aRect)
 
                 pygame.display.flip()
 

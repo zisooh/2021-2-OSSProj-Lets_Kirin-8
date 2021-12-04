@@ -24,8 +24,8 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
 # Initialize everything
 pygame.mixer.pre_init(11025, -16, 2, 512)
 pygame.init()
-screen_width = 500   # 스크린가로
-screen_height = 500  # 스크린세로
+screen_width = 500   
+screen_height = 500  
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Let's Kirin!")
 pygame.mouse.set_visible(0)
@@ -48,7 +48,7 @@ main_menuRect.midtop = screen.get_rect().midtop
 menu, menuRect = load_image("menu.png")
 menuRect.midtop = screen.get_rect().midtop
 
-# Prepare game objectswwwwww
+# Prepare game objects
 clockTime = 60  # maximum FPS
 clock = pygame.time.Clock()  
 font = pygame.font.Font(None, 36)
