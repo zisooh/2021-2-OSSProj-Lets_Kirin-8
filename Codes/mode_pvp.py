@@ -2,7 +2,7 @@ import pygame
 import random
 import sys
 
-from sprites import (MasterSprite, Kirin2, Kirin3, Bear, Leaf, BombPowerup,
+from sprites import (MasterSprite, Kirin2, Kirin3, Friendkirin, Bear, Leaf, BombPowerup,
                      ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
 from database import Database
@@ -80,6 +80,10 @@ class Pvp() :
         life2, life2Rect = load_image('heart2.png')
         life3, life3Rect = load_image('heart3.png')
 
+        life_a, life_aRect = load_image('heart1.png')
+        life_b, life_bRect = load_image('heart2.png')
+        life_c, life_cRect = load_image('heart3.png')
+
         # Sounds
         leaf_sound = load_sound('leaf.ogg')
         bomb_sound = load_sound('bomb.ogg')
@@ -94,7 +98,7 @@ class Pvp() :
         clock = pygame.time.Clock()
         kirin = Kirin2()
         kirin2 = Kirin3() 
-        # minikirin = Friendkirin()
+        minikirin = Friendkirin()
 
         initialbearTypes = (Siney, Spikey)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup)
@@ -107,25 +111,25 @@ class Pvp() :
         font = pygame.font.Font(None, 36)
 
         # 데베 함수 메뉴 구현
-        hiScores = Database().getScores()
+        # hiScores = Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
-                        font.render("SCORE", 1, RED),
-                        font.render("ACCURACY", 1, RED)]
-        highScorePos = [highScoreTexts[0].get_rect(
-                        topleft=screen.get_rect().inflate(-100, -100).topleft),
-                        highScoreTexts[1].get_rect(
-                        midtop=screen.get_rect().inflate(-100, -100).midtop),
-                        highScoreTexts[2].get_rect(
-                        topright=screen.get_rect().inflate(-100, -100).topright)]
-        for hs in hiScores:
-            highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
-                                for x in range(3)])
-            highScorePos.extend([highScoreTexts[x].get_rect(
-                topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
+        # highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+        #                 font.render("SCORE", 1, RED),
+        #                 font.render("ACCURACY", 1, RED)]
+        # highScorePos = [highScoreTexts[0].get_rect(
+        #                 topleft=screen.get_rect().inflate(-100, -100).topleft),
+        #                 highScoreTexts[1].get_rect(
+        #                 midtop=screen.get_rect().inflate(-100, -100).midtop),
+        #                 highScoreTexts[2].get_rect(
+        #                 topright=screen.get_rect().inflate(-100, -100).topright)]
+        # for hs in hiScores:
+        #     highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
+        #                         for x in range(3)])
+        #     highScorePos.extend([highScoreTexts[x].get_rect(
+        #         topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
     # Temp - only load for Rect
         title, titleRect = load_image('title.png')
@@ -178,10 +182,11 @@ class Pvp() :
 
             # Reset game contents
             bearsThisWave, bearsLeftThisWave, Bear.numOffScreen = 10, 10, 10
-            # friendkirin = False
+            friendkirin1 = False
             doubleleaf = False
             bombsHeld = 3
             score = 0
+            friendkirin2 = False
             doubleleaf2 = False
             bombsHeld2 = 3
             score2 = 0
@@ -197,10 +202,10 @@ class Pvp() :
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             betweenDoubleCount2 = betweenDoubleTime
-            # friendkirinTime = 8 * clockTime
-            # friendkirinCount = friendkirinTime
-            # friendkirinLeafTime = 0.2 * clockTime
-            # friendkirinLeafCount = friendkirinLeafTime
+            friendkirinTime = 8 * clockTime
+            friendkirinCount = friendkirinTime
+            friendkirinLeafTime = 0.2 * clockTime
+            friendkirinLeafCount = friendkirinLeafTime
             
             kirin.alive = True
             kirin.life = 3
@@ -348,25 +353,22 @@ class Pvp() :
                                     and not showHiScores):
                                     selection += 1
                                 
-
-                            # selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-                            if showHiScores:
-                                screen.blit(menu, menuRect)
-                                textOverlays = zip(highScoreTexts, highScorePos)
-                            elif showHelp:
-                                screen.blit(menu, menuRect) 
-                            else:
-                                textOverlays = zip([restartText, hiScoreText, helpText, fxText,
-                                                    musicText, quitText, selectText,
-                                                    fxOnText if soundFX else fxOffText,
-                                                    musicOnText if music else musicOffText],
-                                                    [restartPos, hiScorePos, helpPos, fxPos,
-                                                    musicPos, quitPos, selectPos,
-                                                    fxOnPos if soundFX else fxOffPos,
-                                                    musicOnPos if music else musicOffPos])
-                                # screen.blit(pause, pauseRect)
+                            # if showHiScores:
+                            #     screen.blit(menu, menuRect)
+                            #     textOverlays = zip(highScoreTexts, highScorePos)
+                            # elif showHelp:
+                            #     screen.blit(menu, menuRect) 
+                            # else:
+                            #     textOverlays = zip([restartText, hiScoreText, helpText, fxText,
+                            #                         musicText, quitText, selectText,
+                            #                         fxOnText if soundFX else fxOffText,
+                            #                         musicOnText if music else musicOffText],
+                            #                         [restartPos, hiScorePos, helpPos, fxPos,
+                            #                         musicPos, quitPos, selectPos,
+                            #                         fxOnPos if soundFX else fxOffPos,
+                            #                         musicOnPos if music else musicOffPos])
                             for txt, pos in textOverlays:
                                 screen.blit(txt, pos)
 
@@ -394,6 +396,7 @@ class Pvp() :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
+                            leafFired += 1
                             if soundFX:
                                 bear_explode_sound.play()
                     for leaf in Leaf.active:
@@ -403,7 +406,6 @@ class Pvp() :
                             if bear.pType != 'white' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
-                                # 수정 필요
                                 if bear.rect.center[0] < 500 :
                                     bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
                                 else :
@@ -421,7 +423,7 @@ class Pvp() :
                         elif kirin.life > 1:   # life
                             bear.table()
                             Explosion.position(bear.rect.center)
-                            bearsLeftThisWave-= 1
+                            bearsLeftThisWave -= 1
                             score += 1
                             kirin.life -= 1
                         else:
@@ -464,11 +466,11 @@ class Pvp() :
                         elif powerup.pType == 'life':
                             if kirin.life < 3:
                                 kirin.life += 1 
-                        # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True
-                        #     MasterSprite.allsprites.add(minikirin) 
-                        #     allsprites.update()
-                        #     allsprites.draw(screen)        
+                        elif powerup.pType == 'friendkirin' :
+                            friendkirin1 = True
+                            MasterSprite.allsprites.add(minikirin) 
+                            allsprites.update()
+                            allsprites.draw(screen)        
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -483,11 +485,11 @@ class Pvp() :
                         elif powerup.pType == 'life':
                             if kirin2.life < 3:
                                 kirin2.life += 1 
-                        # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True
-                        #     MasterSprite.allsprites.add(minikirin) 
-                        #     allsprites.update()
-                        #     allsprites.draw(screen)   
+                        elif powerup.pType == 'friendkirin' :
+                            friendkirin2 = True
+                            MasterSprite.allsprites.add(minikirin) 
+                            allsprites.update()
+                            allsprites.draw(screen)   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -502,31 +504,26 @@ class Pvp() :
             # Update text overlays
                 waveText = font.render("Wave: " + str(wave), 1, WHITE)
                 leftText = font.render("bears: " + str(bearsLeftThisWave), 1, WHITE)
-                scoreText = font.render("Score: " + str(score), 1, WHITE)
-                scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
+                # scoreText = font.render("Score: " + str(score), 1, WHITE)
+                # scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
                 bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
                 bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                # lifeText = font.render("Life: ", 1, WHITE)
-                # lifeText2 = font.render("Life: ", 1, WHITE)
                 kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
                 kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
                 drawText = font.render('DRAW!', 1, WHITE)
         
                 wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
                 leftPos = leftText.get_rect(topleft=screen.get_rect().midtop)
-                scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
+                # scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
                 bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-                # lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
-                scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
+                # scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
                 bombPos2 = bombText2.get_rect(bottomright=screen.get_rect().bottomright)
-                # lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
                 kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
                 kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
                 drawPos = drawText.get_rect(center=screen.get_rect().center)
 
-                text = [waveText, leftText, scoreText, bombText, scoreText2, bombText2] # lifeText, lifeText2]
-                textposition = [wavePos, leftPos, scorePos, bombPos, scorePos2, bombPos2]
-                # textposition = [wavePos, leftPos, scorePos, scorePos2]
+                text = [waveText, leftText, bombText, bombText2]
+                textposition = [wavePos, leftPos, bombPos, bombPos2]
 
                 if doubleleaf:
                     if betweenDoubleCount > 0:
@@ -542,22 +539,26 @@ class Pvp() :
                         doubleleaf2 = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                # minikirin.rect.bottomright = kirin.rect.bottomleft
-                # minikirin.rect.bottomright = kirin2.rect.bottomleft
-                # if friendkirin:
-                #     if friendkirinCount > 0:
-                #         friendkirinCount -= 1
-                #     elif friendkirinCount == 0:
-                #         friendkirin = False
-                #         minikirin.remove()
-                #         friendkirinCount = friendkirinTime
+                if friendkirin1 :
+                    minikirin.rect.bottomright = kirin.rect.bottomleft
+                else :
+                    minikirin.rect.bottomright = kirin2.rect.bottomleft
                 
-                # if friendkirin:
-                #     if friendkirinleafCount > 0:
-                #         friendkirinleafCount -= 1
-                #     elif friendkirinleafCount == 0:
-                #         friendkirinleafCount = friendkirinleafTime
-                #         Leaf.position(minikirin.rect.midtop)
+                if friendkirin1 or friendkirin2:
+                    if friendkirinCount > 0:
+                        friendkirinCount -= 1
+                    elif friendkirinCount == 0:
+                        if friendkirin1 :
+                            friendkirin1 = False
+                        else :
+                            friendkirin2 = False
+                        minikirin.remove()
+                        friendkirinCount = friendkirinTime
+                    if friendkirinLeafCount > 0:
+                        friendkirinLeafCount -= 1
+                    elif friendkirinLeafCount == 0:
+                        friendkirinLeafCount = friendkirinLeafTime
+                        Leaf.position(minikirin.rect.midtop)
 
             # Detertmine when to move to next wave
                 if bearsLeftThisWave <= 0:
@@ -586,16 +587,16 @@ class Pvp() :
                             kirin.initializeKeys()
                             kirin2.initializeKeys()
                             bearsThisWave = 10
-                            bearsLeftThisWave = bear.numOffScreen = bearsThisWave
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         else:
                             bearsThisWave *= 2
-                            bearsLeftThisWave = bear.numOffScreen = bearsThisWave
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         if wave == 1:
-                            bear.pool.add([Fasty() for _ in range(5)])
+                            Bear.pool.add([Fasty() for _ in range(5)])
                         if wave == 2:
-                            bear.pool.add([Roundy() for _ in range(5)])
+                            Bear.pool.add([Roundy() for _ in range(5)])
                         if wave == 3:
-                            bear.pool.add([Crawly() for _ in range(5)])
+                            Bear.pool.add([Crawly() for _ in range(5)])
                         wave += 1
                         betweenWaveCount = betweenWaveTime
 
@@ -620,32 +621,36 @@ class Pvp() :
                 for txt, pos in textOverlays:
                     screen.blit(txt, pos)
 
-            # # Update life
-            #     life1Rect.topleft = lifePos.topright
-            #     life2Rect.topleft = life1Rect.topright
-            #     life3Rect.topleft = life2Rect.topright
+            # Update life
+                life1Rect.topright = wavePos.topleft
+                life2Rect.topright = wavePos.topleft
+                life3Rect.topright = wavePos.topleft
 
-            #     if kirin.life >= 3:
-            #         screen.blit(life3, life3Rect)
-            #     if kirin.life >= 2:
-            #         screen.blit(life2, life2Rect)
-            #     if kirin.life >= 1:
-            #         screen.blit(life1, life1Rect)
+                life_aRect.topleft = leftPos.topright
+                life_bRect.topleft = leftPos.topright
+                life_cRect.topleft = leftPos.topright
+
+                if kirin.life == 3:
+                    screen.blit(life3, life3Rect)
+                if kirin.life == 2:
+                    screen.blit(life2, life2Rect)
+                if kirin.life == 1:
+                    screen.blit(life1, life1Rect)
                 
-            #     if kirin2.life >= 3:
-            #         screen.blit(life3, life3Rect)
-            #     if kirin2.life >= 2:
-            #         screen.blit(life2, life2Rect)
-            #     if kirin2.life >= 1:
-            #         screen.blit(life1, life1Rect)
+                if kirin2.life == 3:
+                    screen.blit(life_c, life_cRect)
+                if kirin2.life == 2:
+                    screen.blit(life_b, life_bRect)
+                if kirin2.life == 1:
+                    screen.blit(life_a, life_aRect)
 
                 pygame.display.flip()
 
 
-            accuracy = round(score / leafsFired, 4) if leafsFired > 0 else 0.0
-            isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-            name = ''
-            nameBuffer = []
+            # accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
+            # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+            # name = ''
+            # nameBuffer = []
 
 
     #########################
@@ -654,55 +659,59 @@ class Pvp() :
 
         while True:
             clock.tick(clockTime)
-        # Event 
             for event in pygame.event.get():
-                if (event.type == pygame.QUIT
-                    or not isHiScore
-                    and event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_ESCAPE):
-                    return False
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_RETURN
-                    and not isHiScore):
-                    return True
-                elif (event.type == pygame.KEYDOWN
-                    and event.key in Keyboard.keys.keys()
-                    and len(nameBuffer) < 8):
-                    nameBuffer.append(Keyboard.keys[event.key])
-                    name = ''.join(nameBuffer)
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_BACKSPACE
-                    and len(nameBuffer) > 0):
-                    nameBuffer.pop()
-                    name = ''.join(nameBuffer)
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_RETURN
-                    and len(name) > 0):
-                    Database().setScore(hiScores,name, score, accuracy)
-                    return True  
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    sys.exit()
+        # Event 
+            # for event in pygame.event.get():
+            #     if (event.type == pygame.QUIT
+            #         or not isHiScore
+            #         and event.type == pygame.KEYDOWN
+            #             and event.key == pygame.K_ESCAPE):
+            #         return False
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_RETURN
+            #         and not isHiScore):
+            #         return True
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key in Keyboard.keys.keys()
+            #         and len(nameBuffer) < 8):
+            #         nameBuffer.append(Keyboard.keys[event.key])
+            #         name = ''.join(nameBuffer)
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_BACKSPACE
+            #         and len(nameBuffer) > 0):
+            #         nameBuffer.pop()
+            #         name = ''.join(nameBuffer)
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_RETURN
+            #         and len(name) > 0):
+            #         Database().setScore(hiScores,name, score, accuracy)
+            #         return True  
 
-            if isHiScore:
-                hiScoreText = font.render('SCORE', 1, RED)
-                hiScorePos = hiScoreText.get_rect(
-                    midbottom=screen.get_rect().center)
-                scoreText = font.render(str(score), 1, BLACK)
-                scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
-                enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
-                enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
-                nameText = font.render(name, 1, WHITE)
-                namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
-                textOverlay = zip([hiScoreText, scoreText,
-                                enterNameText, nameText],
-                                [hiScorePos, scorePos,
-                                enterNamePos, namePos])
-            else:
-                gameOverText = font.render('GAME OVER', 1, BLACK)
-                gameOverPos = gameOverText.get_rect(
-                    center=screen.get_rect().center)
-                scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
-                scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
-                textOverlay = zip([gameOverText, scoreText],
-                                [gameOverPos, scorePos])
+            # if isHiScore:
+            #     hiScoreText = font.render('SCORE', 1, RED)
+            #     hiScorePos = hiScoreText.get_rect(
+            #         midbottom=screen.get_rect().center)
+            #     scoreText = font.render(str(score), 1, BLACK)
+            #     scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
+            #     enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
+            #     enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
+            #     nameText = font.render(name, 1, WHITE)
+            #     namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
+            #     textOverlay = zip([hiScoreText, scoreText,
+            #                     enterNameText, nameText],
+            #                     [hiScorePos, scorePos,
+            #                     enterNamePos, namePos])
+            # else:
+            #     gameOverText = font.render('GAME OVER', 1, BLACK)
+            #     gameOverPos = gameOverText.get_rect(
+            #         center=screen.get_rect().center)
+            #     scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
+            #     scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
+            #     textOverlay = zip([gameOverText, scoreText],
+            #                     [gameOverPos, scorePos])
 
             # moving field         
             field1Rect.y += 2
@@ -735,8 +744,8 @@ class Pvp() :
                 elif score == score2 :
                     screen.blit(drawText, drawPos)
 
-            for txt, pos in textOverlay:
-                screen.blit(txt, pos)
+            # for txt, pos in textOverlay:
+            #     screen.blit(txt, pos)
             pygame.display.flip()
 
 

@@ -1,6 +1,6 @@
 import pygame
 import sys
-from database import Database
+from database import Database 
 from load import load_image #load_sound, load_music
 from menu import *
 from mode_single import *
@@ -24,8 +24,8 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
 # Initialize everything
 pygame.mixer.pre_init(11025, -16, 2, 512)
 pygame.init()
-screen_width = 500   # 스크린가로
-screen_height = 500  # 스크린세로
+screen_width = 500   
+screen_height = 500  
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Let's Kirin!")
 pygame.mouse.set_visible(0)
