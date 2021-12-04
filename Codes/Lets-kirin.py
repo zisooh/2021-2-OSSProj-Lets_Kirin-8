@@ -48,7 +48,7 @@ main_menuRect.midtop = screen.get_rect().midtop
 menu, menuRect = load_image("menu.png")
 menuRect.midtop = screen.get_rect().midtop
 
-# Prepare game objects
+# Prepare game objectswwwwww
 clockTime = 60  # maximum FPS
 clock = pygame.time.Clock()  
 font = pygame.font.Font(None, 36)

@@ -2,7 +2,7 @@ import pygame
 import random
 import sys
 
-from sprites import (MasterSprite, Kirin2, Kirin3, Bear, Leaf, BombPowerup,
+from sprites import (MasterSprite, Kirin2, Kirin3, Friendkirin, Bear, Leaf, BombPowerup,
                      ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup, Explosion, Siney, Spikey, Fasty,
                      Roundy, Crawly)
 from database import Database
@@ -94,7 +94,7 @@ class Pvp() :
         clock = pygame.time.Clock()
         kirin = Kirin2()
         kirin2 = Kirin3() 
-        # minikirin = Friendkirin()
+        minikirin = Friendkirin()
 
         initialbearTypes = (Siney, Spikey)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup)
@@ -178,10 +178,11 @@ class Pvp() :
 
             # Reset game contents
             bearsThisWave, bearsLeftThisWave, Bear.numOffScreen = 10, 10, 10
-            # friendkirin = False
+            friendkirin1 = False
             doubleleaf = False
             bombsHeld = 3
             score = 0
+            friendkirin2 = False
             doubleleaf2 = False
             bombsHeld2 = 3
             score2 = 0
@@ -197,10 +198,10 @@ class Pvp() :
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             betweenDoubleCount2 = betweenDoubleTime
-            # friendkirinTime = 8 * clockTime
-            # friendkirinCount = friendkirinTime
-            # friendkirinLeafTime = 0.2 * clockTime
-            # friendkirinLeafCount = friendkirinLeafTime
+            friendkirinTime = 8 * clockTime
+            friendkirinCount = friendkirinTime
+            friendkirinLeafTime = 0.2 * clockTime
+            friendkirinLeafCount = friendkirinLeafTime
             
             kirin.alive = True
             kirin.life = 3
@@ -464,11 +465,11 @@ class Pvp() :
                         elif powerup.pType == 'life':
                             if kirin.life < 3:
                                 kirin.life += 1 
-                        # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True
-                        #     MasterSprite.allsprites.add(minikirin) 
-                        #     allsprites.update()
-                        #     allsprites.draw(screen)        
+                        elif powerup.pType == 'friendkirin' :
+                            friendkirin1 = True
+                            MasterSprite.allsprites.add(minikirin) 
+                            allsprites.update()
+                            allsprites.draw(screen)        
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -483,11 +484,11 @@ class Pvp() :
                         elif powerup.pType == 'life':
                             if kirin2.life < 3:
                                 kirin2.life += 1 
-                        # elif powerup.pType == 'friendkirin' :
-                        #     friendkirin = True
-                        #     MasterSprite.allsprites.add(minikirin) 
-                        #     allsprites.update()
-                        #     allsprites.draw(screen)   
+                        elif powerup.pType == 'friendkirin' :
+                            friendkirin2 = True
+                            MasterSprite.allsprites.add(minikirin) 
+                            allsprites.update()
+                            allsprites.draw(screen)   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
                         powerup.kill()
@@ -542,22 +543,28 @@ class Pvp() :
                         doubleleaf2 = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                # minikirin.rect.bottomright = kirin.rect.bottomleft
-                # minikirin.rect.bottomright = kirin2.rect.bottomleft
-                # if friendkirin:
-                #     if friendkirinCount > 0:
-                #         friendkirinCount -= 1
-                #     elif friendkirinCount == 0:
-                #         friendkirin = False
-                #         minikirin.remove()
-                #         friendkirinCount = friendkirinTime
+                if friendkirin1 :
+                    minikirin.rect.bottomright = kirin.rect.bottomleft
+                else :
+                    minikirin.rect.bottomright = kirin2.rect.bottomleft
                 
-                # if friendkirin:
-                #     if friendkirinleafCount > 0:
-                #         friendkirinleafCount -= 1
-                #     elif friendkirinleafCount == 0:
-                #         friendkirinleafCount = friendkirinleafTime
-                #         Leaf.position(minikirin.rect.midtop)
+                if friendkirin1 or friendkirin2:
+                    if friendkirinCount > 0:
+                        friendkirinCount -= 1
+                    elif friendkirinCount == 0:
+                        if friendkirin1 :
+                            friendkirin1 = False
+                        else :
+                            friendkirin2 = False
+                        minikirin.remove()
+                        friendkirinCount = friendkirinTime
+                
+                if friendkirin1 or friendkirin2:
+                    if friendkirinLeafCount > 0:
+                        friendkirinLeafCount -= 1
+                    elif friendkirinLeafCount == 0:
+                        friendkirinLeafCount = friendkirinLeafTime
+                        Leaf.position(minikirin.rect.midtop)
 
             # Detertmine when to move to next wave
                 if bearsLeftThisWave <= 0:
@@ -642,7 +649,7 @@ class Pvp() :
                 pygame.display.flip()
 
 
-            accuracy = round(score / leafsFired, 4) if leafsFired > 0 else 0.0
+            accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
             isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
             name = ''
             nameBuffer = []
