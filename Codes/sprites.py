@@ -231,6 +231,7 @@ class Kirin2(MasterSprite):
         self.vert = 0
         self.horiz = 0
         self.life = 3   
+        self.pType = 'kirin2'
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()
@@ -279,6 +280,7 @@ class Kirin3(MasterSprite):
         self.vert = 0
         self.horiz = 0
         self.life = 3   # 초기 생명 3개
+        self.pType = 'kirin3'
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()

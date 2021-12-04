@@ -20,22 +20,11 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
-direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
-             pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
-
-direction2 = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
+direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
              pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
 
-
-# class Keyboard(object):
-#     keys = {pygame.K_a: 'A', pygame.K_b: 'B', pygame.K_c: 'C', pygame.K_d: 'D',
-#             pygame.K_e: 'E', pygame.K_f: 'F', pygame.K_g: 'G', pygame.K_h: 'H',
-#             pygame.K_i: 'I', pygame.K_j: 'J', pygame.K_k: 'K', pygame.K_l: 'L',
-#             pygame.K_m: 'M', pygame.K_n: 'N', pygame.K_o: 'O', pygame.K_p: 'P',
-#             pygame.K_q: 'Q', pygame.K_r: 'R', pygame.K_s: 'S', pygame.K_t: 'T',
-#             pygame.K_u: 'U', pygame.K_v: 'V', pygame.K_w: 'W', pygame.K_x: 'X',
-#             pygame.K_y: 'Y', pygame.K_z: 'Z'}
-
+direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
+             pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Pvp() :
     def playGame(): 
@@ -59,55 +48,11 @@ class Pvp() :
             elif bear.pType == 'yellow':
                 score += 8
             return bearsLeftThisWave, score
-        
-        # def background_update(screen, background, backgroundLoc) :
-        #     screen.blit(
-        #         background, (0, 0), area=pygame.Rect(
-        #             0, backgroundLoc, 500, 500))
-        #     backgroundLoc -= speed
-        #     if backgroundLoc - speed <= speed:
-        #         backgroundLoc = 1500
-        #     return screen, background, backgroundLoc
-
-        # # 인게임에서 배경색으로 플레이어 영역 구분
-        # def background_update_half(screen, background, backgroundLoc) :
-        #     screen.blit(
-        #         background, (0, 0), area=pygame.Rect(
-        #             0, backgroundLoc, 500, 500))
-        #     screen.fill((80, 20, 30, 125),(0, 0, screen.get_width()//2, screen.get_height()), special_flags = 1) # special_flags = 3 : 별 색깔만 바뀜
-        #     backgroundLoc -= speed
-        #     if backgroundLoc - speed <= speed:
-        #         backgroundLoc = 1500
-        #     return screen, background, backgroundLoc
-
-        # def background_update_half_two(screen, background, backgroundLoc) :
-        #     screen.blit(
-        #         background, (0, 0), area=pygame.Rect(
-        #             0, backgroundLoc, 500, 500))
-        #     screen.fill((80, 20, 30, 125),(screen.get_width()//2, 0, screen.get_width()//size.x_background_ratio, screen.get_height()), special_flags = 1)
-        #     backgroundLoc -= speed
-        #     if backgroundLoc - speed <= speed:
-        #         backgroundLoc = 1500
-        #     return screen, background, backgroundLoc
-
-        # def ingame_text_update() :
-        #     return [font.render("Wave: " + str(wave), 1, WHITE),
-        #             font.render("bears Left: " + str(bearsLeftThisWave), 1, WHITE),
-        #             font.render("Score: " + str(score), 1, WHITE),
-        #             font.render("Score: " + str(score2), 1, WHITE),
-        #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
-        #             font.render("Bombs: " + str(bombsHeld2), 1, WHITE),
-        #             # font.render("Life: ", 1, WHITE)
-        #             # font.render("Life: ", 1, WHITE)
-        #             font.render('PLAYER 1 WIN!', 1, WHITE),
-        #             font.render('PLAYER 2 WIN!', 1, WHITE),
-        #             font.render('DRAW!', 1, WHITE)]
 
     # Create the background which will scroll and loop over a set of different
         background = pygame.Surface((500, 2000))
         background = background.convert()
         background.fill((0, 0, 0))
-        # backgroundLoc = 1500
 
     # Display the background
         screen.blit(background, (0, 0))
@@ -129,20 +74,11 @@ class Pvp() :
         pauseRect.midtop = screen.get_rect().midtop
         pauseMenu = False 
 
-        # # Main_menu
-        # main_menu, main_menuRect = load_image("main_menu.png")
-        # main_menuRect.midtop = screen.get_rect().midtop
-
-        # # Menu
-        # img_menu, img_menuRect = load_image("menu.png")
-        # img_menuRect.midtop = screen.get_rect().midtop
-
-
     # Prepare game objects
         # life
-        # life1, life1Rect = load_image('heart1.png')
-        # life2, life2Rect = load_image('heart2.png')
-        # life3, life3Rect = load_image('heart3.png')
+        life1, life1Rect = load_image('heart1.png')
+        life2, life2Rect = load_image('heart2.png')
+        life3, life3Rect = load_image('heart3.png')
 
         # Sounds
         leaf_sound = load_sound('leaf.ogg')
@@ -169,43 +105,6 @@ class Pvp() :
 
         # font
         font = pygame.font.Font(None, 36)
-
-        # # Sprite groups
-        # alldrawings = pygame.sprite.Group()
-        # allsprites = pygame.sprite.RenderPlain((kirin,kirin2))
-        # MasterSprite.allsprites = allsprites
-        # bear.pool = pygame.sprite.Group(
-        #     [bear() for bear in initialbearTypes for _ in range(5)])
-        # bear.active = pygame.sprite.Group()
-        # Leaf.pool = pygame.sprite.Group([Leaf() for _ in range(10)]) 
-        # Leaf.active = pygame.sprite.Group()
-        # Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
-        # Explosion.active = pygame.sprite.Group()
-
-        # bearPeriod = clockTime // 2
-        # curTime = 0
-        # bearsThisWave, bearsLeftThisWave, bear.numOffScreen = 10, 10, 10
-        # wave = 1
-
-        # doubleleaf = False
-        # doubleleaf2 = False
-        # bombsHeld = 3
-        # bombsHeld2 = 3
-        # score = 0
-        # score2 = 0
-
-        # leafsFired = 0
-        # powerupTime = 10 * clockTime
-        # powerupTimeLeft = powerupTime
-        # betweenWaveTime = 3 * clockTime
-        # betweenWaveCount = betweenWaveTime
-        # betweenDoubleTime = 8 * clockTime
-        # betweenDoubleCount = betweenDoubleTime
-        # betweenDoubleCount2 = betweenDoubleTime
-
-        # # # ?
-        # # inMenu = True
-        half_tf = True
 
         # 데베 함수 메뉴 구현
         hiScores = Database().getScores()
@@ -310,8 +209,6 @@ class Pvp() :
             kirin2.life = 3
             kirin2.initializeKeys()
 
-            # half_tf = True
-
             # 본게임시작
             while kirin.alive and kirin2.alive :
                 clock.tick(clockTime)
@@ -340,7 +237,7 @@ class Pvp() :
                         kirin.vert -= direction[event.key][1] * speed
                     # leaf1
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_m):
+                        and event.key == pygame.K_SPACE):
                         if doubleleaf :
                             Leaf.position(kirin.rect.topleft)
                             Leaf.position(kirin.rect.topright)
@@ -370,7 +267,7 @@ class Pvp() :
                         kirin2.vert -= direction2[event.key][1] * speed
                     # leaf2
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_SPACE):
+                        and event.key == pygame.K_m):
                         if doubleleaf2 :
                             Leaf.position(kirin2.rect.topleft)
                             Leaf.position(kirin2.rect.topright)
@@ -382,7 +279,7 @@ class Pvp() :
                             leaf_sound.play()
                     # Bomb
                     elif (event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_b):
+                        and event.key == pygame.K_l):
                         if bombsHeld2 > 0:
                             bombsHeld2 -= 1
                             newBomb = kirin2.bomb()
@@ -506,6 +403,7 @@ class Pvp() :
                             if bear.pType != 'white' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
+                                # 수정 필요
                                 if bear.rect.center[0] < 500 :
                                     bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
                                 else :
@@ -561,7 +459,7 @@ class Pvp() :
                             bombsHeld += 1
                         elif powerup.pType == 'shield':
                             kirin.shieldUp = True
-                        elif powerup.pType == 'doubleleaf' :
+                        elif powerup.pType == 'doubleleaf':
                             doubleleaf = True
                         elif powerup.pType == 'life':
                             if kirin.life < 3:
@@ -602,59 +500,33 @@ class Pvp() :
                     curTime -= 1
 
             # Update text overlays
-                # if half_tf :
-                #     waveText, leftText, scoreText, scoreText2, bombText, bombText2, kirin1winText, kirin2winText, drawText = ingame_text_update()
-                # else :
-                #     waveText, leftText, scoreText2, scoreText, bombText2, bombText, kirin1winText, kirin2winText, drawText = ingame_text_update()
-                # font.render("Wave: " + str(wave), 1, WHITE),
-        #             font.render("bears Left: " + str(bearsLeftThisWave), 1, WHITE),
-        #             font.render("Score: " + str(score), 1, WHITE),
-        #             font.render("Score: " + str(score2), 1, WHITE),
-        #             font.render("Bombs: " + str(bombsHeld), 1, WHITE),
-        #             font.render("Bombs: " + str(bombsHeld2), 1, WHITE),
-        #             # font.render("Life: ", 1, WHITE)
-        #             # font.render("Life: ", 1, WHITE)
-        #             font.render('PLAYER 1 WIN!', 1, WHITE),
-        #             font.render('PLAYER 2 WIN!', 1, WHITE),
-        #             font.render('DRAW!', 1, WHITE)
-                
-                if half_tf :
-                    waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                    leftText = font.render("bears: " + str(bearsLeftThisWave), 1, WHITE)
-                    scoreText = font.render("Score: " + str(score), 1, WHITE)
-                    scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
-                    bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
-                    bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                    # lifeText = font.render("Life: ", 1, WHITE)
-                    # lifeText2 = font.render("Life: ", 1, WHITE)
-                    kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
-                    kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
-                    drawText = font.render('DRAW!', 1, WHITE)
-                else :
-                    waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                    leftText = font.render("bears Left: " + str(bearsLeftThisWave), 1, WHITE)
-                    scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
-                    bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                    # lifeText2 = font.render("Life: ", 1, WHITE)
-                    kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
-                    drawText = font.render('DRAW!', 1, WHITE)
-
+                waveText = font.render("Wave: " + str(wave), 1, WHITE)
+                leftText = font.render("bears: " + str(bearsLeftThisWave), 1, WHITE)
+                scoreText = font.render("Score: " + str(score), 1, WHITE)
+                scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
+                bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
+                bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
+                # lifeText = font.render("Life: ", 1, WHITE)
+                # lifeText2 = font.render("Life: ", 1, WHITE)
+                kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
+                kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
+                drawText = font.render('DRAW!', 1, WHITE)
         
                 wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
                 leftPos = leftText.get_rect(topleft=screen.get_rect().midtop)
-                scorePos = scoreText.get_rect(topleft=screen.get_rect().bottomleft)
-                # bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
+                scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
+                bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
                 # lifePos = lifeText.get_rect(topleft=wavePos.bottomleft)
-                scorePos2 = scoreText2.get_rect(topright=screen.get_rect().midbottom)
-                # bombPos2 = bombText2.get_rect(bottomleft=screen.get_rect().midbottom)
+                scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
+                bombPos2 = bombText2.get_rect(bottomright=screen.get_rect().bottomright)
                 # lifePos2 = lifeText2.get_rect(topleft=wavePos.midbottom)
                 kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
                 kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
                 drawPos = drawText.get_rect(center=screen.get_rect().center)
 
-                text = [waveText, leftText, scoreText, scoreText2, bombText, bombText2] # lifeText, lifeText2]
-                # textposition = [wavePos, leftPos, scorePos, bombPos, lifePos, scorePos2, bombPos2, lifePos2]
-                textposition = [wavePos, leftPos, scorePos, scorePos2]
+                text = [waveText, leftText, scoreText, bombText, scoreText2, bombText2] # lifeText, lifeText2]
+                textposition = [wavePos, leftPos, scorePos, bombPos, scorePos2, bombPos2]
+                # textposition = [wavePos, leftPos, scorePos, scorePos2]
 
                 if doubleleaf:
                     if betweenDoubleCount > 0:
@@ -729,18 +601,6 @@ class Pvp() :
 
                 textOverlays = zip(text, textposition)
 
-            # Update and draw all sprites and text
-                # screen.blit(
-                #     background, (0, 0), area=pygame.Rect(
-                #         0, backgroundLoc, 500, 500))
-                # backgroundLoc -= speed
-                # if backgroundLoc - speed <= speed:
-                #     backgroundLoc = 1500
-
-                # if half_tf:
-                #     screen, background, backgroundLoc = background_update_half(screen, background, backgroundLoc)
-                # else:
-                #     screen, background, backgroundLoc = background_update_half_two(screen, background, backgroundLoc)
             # moving field
                 field1Rect.y += 2
                 field2Rect.y += 2
@@ -752,6 +612,7 @@ class Pvp() :
                 screen.blit(field2, field2Rect)
                 pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
+            # Update and draw all sprites and text         
                 allsprites.update()
                 allsprites.draw(screen)
                 alldrawings.update()
@@ -781,10 +642,10 @@ class Pvp() :
                 pygame.display.flip()
 
 
-            # accuracy = round(score / leafsFired, 4) if leafsFired > 0 else 0.0
-            # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-            # name = ''
-            # nameBuffer = []
+            accuracy = round(score / leafsFired, 4) if leafsFired > 0 else 0.0
+            isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+            name = ''
+            nameBuffer = []
 
 
     #########################
@@ -793,76 +654,55 @@ class Pvp() :
 
         while True:
             clock.tick(clockTime)
-
+        # Event 
             for event in pygame.event.get():
-                if (event.type == pygame.QUIT):
-                    pygame.quit()
-                    sys.exit()
-                # elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN :
-                #     return scr_size, level_size, id, language
+                if (event.type == pygame.QUIT
+                    or not isHiScore
+                    and event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_ESCAPE):
+                    return False
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_RETURN
+                    and not isHiScore):
+                    return True
+                elif (event.type == pygame.KEYDOWN
+                    and event.key in Keyboard.keys.keys()
+                    and len(nameBuffer) < 8):
+                    nameBuffer.append(Keyboard.keys[event.key])
+                    name = ''.join(nameBuffer)
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_BACKSPACE
+                    and len(nameBuffer) > 0):
+                    nameBuffer.pop()
+                    name = ''.join(nameBuffer)
+                elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_RETURN
+                    and len(name) > 0):
+                    Database().setScore(hiScores,name, score, accuracy)
+                    return True  
 
-        # # Event Handling
-        #     for event in pygame.event.get():
-        #         if (event.type == pygame.QUIT
-        #             or not isHiScore
-        #             and event.type == pygame.KEYDOWN
-        #                 and event.key == pygame.K_ESCAPE):
-        #             return False
-        #         elif (event.type == pygame.KEYDOWN
-        #               and event.key == pygame.K_RETURN
-        #               and not isHiScore):
-        #             return True
-        #         elif (event.type == pygame.KEYDOWN
-        #               and event.key in Keyboard.keys.keys()
-        #               and len(nameBuffer) < 8):
-        #             nameBuffer.append(Keyboard.keys[event.key])
-        #             name = ''.join(nameBuffer)
-        #         elif (event.type == pygame.KEYDOWN
-        #               and event.key == pygame.K_BACKSPACE
-        #               and len(nameBuffer) > 0):
-        #             nameBuffer.pop()
-        #             name = ''.join(nameBuffer)
-        #         elif (event.type == pygame.KEYDOWN
-        #               and event.key == pygame.K_RETURN
-        #               and len(name) > 0):
-        #             Database().setScore(hiScores,name, score, accuracy)
-        #             return True
-
-        #     if isHiScore:
-        #         hiScoreText = font.render('HIGH SCORE!', 1, RED)
-        #         hiScorePos = hiScoreText.get_rect(
-        #             midbottom=screen.get_rect().center)
-        #         scoreText = font.render(str(score), 1, BLACK)
-        #         scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
-        #         enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
-        #         enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
-        #         nameText = font.render(name, 1, BLACK)
-        #         namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
-        #         textOverlay = zip([hiScoreText, scoreText,
-        #                            enterNameText, nameText],
-        #                           [hiScorePos, scorePos,
-        #                            enterNamePos, namePos])
-        #     else:
-        #         gameOverText = font.render('GAME OVER', 1, BLACK)
-        #         gameOverPos = gameOverText.get_rect(
-        #             center=screen.get_rect().center)
-        #         scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
-        #         scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
-        #         textOverlay = zip([gameOverText, scoreText],
-        #                           [gameOverPos, scorePos])
-
-        # Update and draw all sprites
-            # kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
-            # kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
-            # drawPos = drawText.get_rect(center=screen.get_rect().center)
-
-            # screen.blit(
-            #     background, (0, 0), area=pygame.Rect(
-            #         0, backgroundLoc, 500, 500))
-            # backgroundLoc -= speed
-            # if backgroundLoc - speed <= 0:
-            #     backgroundLoc = 1500
-            # screen, background, backgroundLoc = background_update(screen, background, backgroundLoc)
+            if isHiScore:
+                hiScoreText = font.render('SCORE', 1, RED)
+                hiScorePos = hiScoreText.get_rect(
+                    midbottom=screen.get_rect().center)
+                scoreText = font.render(str(score), 1, BLACK)
+                scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
+                enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
+                enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
+                nameText = font.render(name, 1, WHITE)
+                namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
+                textOverlay = zip([hiScoreText, scoreText,
+                                enterNameText, nameText],
+                                [hiScorePos, scorePos,
+                                enterNamePos, namePos])
+            else:
+                gameOverText = font.render('GAME OVER', 1, BLACK)
+                gameOverPos = gameOverText.get_rect(
+                    center=screen.get_rect().center)
+                scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
+                scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
+                textOverlay = zip([gameOverText, scoreText],
+                                [gameOverPos, scorePos])
 
             # moving field         
             field1Rect.y += 2
@@ -895,8 +735,8 @@ class Pvp() :
                 elif score == score2 :
                     screen.blit(drawText, drawPos)
 
-            # for txt, pos in textOverlay:
-            #     screen.blit(txt, pos)
+            for txt, pos in textOverlay:
+                screen.blit(txt, pos)
             pygame.display.flip()
 
 
