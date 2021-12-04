@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+from pygame.locals import *
 
 from sprites import (MasterSprite, 
                      Kirin, Friendkirin, Bear, Leaf, Explosion,
@@ -26,13 +27,14 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Single():
-    def playGame(screen_width, screen_height):     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시 
+    def playGame(screen_size):     # 창크기조절: 메인에서 기준size argument 받아오기
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
         #screen_width = 500   # 스크린가로
         #screen_height = 500  # 스크린세로
-        screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+        ratio = screen_size / 500
+        screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
@@ -50,7 +52,7 @@ class Single():
             return bearsLeftThisWave, score
 
     # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((500, 2000))
+        background = pygame.Surface((2000,2000))
         background = background.convert()
         background.fill((0, 0, 0))
 
@@ -219,6 +221,8 @@ class Single():
             while kirin.alive:
                 clock.tick(clockTime)
 
+                kirin.life = 10000 # 게임 중 창크기조절 테스트
+
             # Drop Items
                 powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
@@ -232,9 +236,11 @@ class Single():
                             and event.key == pygame.K_ESCAPE):
                         pygame.quit()
                         sys.exit()
+                    # Resize windowSize
                     elif (event.type == pygame.VIDEORESIZE):
-                        screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-                        screen_width, screen_height = event.w, event.h
+                        screen_size = min(event.w, event.h)
+                        screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                        ratio = screen_size / 500
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -519,9 +525,9 @@ class Single():
             # moving field
                 field1Rect.y += 2
                 field2Rect.y += 2
-                if field1Rect.y >= screen_height:
+                if field1Rect.y >= screen_size:
                     field1Rect.midbottom = field2Rect.midtop
-                if field2Rect.y >= screen_height:
+                if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
                 screen.blit(field1, field1Rect)
                 screen.blit(field2, field2Rect)
