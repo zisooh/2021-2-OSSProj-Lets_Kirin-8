@@ -107,25 +107,25 @@ class Pvp() :
         font = pygame.font.Font(None, 36)
 
         # 데베 함수 메뉴 구현
-        hiScores = Database().getScores()
+        # hiScores = Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
-                        font.render("SCORE", 1, RED),
-                        font.render("ACCURACY", 1, RED)]
-        highScorePos = [highScoreTexts[0].get_rect(
-                        topleft=screen.get_rect().inflate(-100, -100).topleft),
-                        highScoreTexts[1].get_rect(
-                        midtop=screen.get_rect().inflate(-100, -100).midtop),
-                        highScoreTexts[2].get_rect(
-                        topright=screen.get_rect().inflate(-100, -100).topright)]
-        for hs in hiScores:
-            highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
-                                for x in range(3)])
-            highScorePos.extend([highScoreTexts[x].get_rect(
-                topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
+        # highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+        #                 font.render("SCORE", 1, RED),
+        #                 font.render("ACCURACY", 1, RED)]
+        # highScorePos = [highScoreTexts[0].get_rect(
+        #                 topleft=screen.get_rect().inflate(-100, -100).topleft),
+        #                 highScoreTexts[1].get_rect(
+        #                 midtop=screen.get_rect().inflate(-100, -100).midtop),
+        #                 highScoreTexts[2].get_rect(
+        #                 topright=screen.get_rect().inflate(-100, -100).topright)]
+        # for hs in hiScores:
+        #     highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
+        #                         for x in range(3)])
+        #     highScorePos.extend([highScoreTexts[x].get_rect(
+        #         topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
     # Temp - only load for Rect
         title, titleRect = load_image('title.png')
@@ -349,25 +349,22 @@ class Pvp() :
                                     and not showHiScores):
                                     selection += 1
                                 
-
-                            # selectPos = selectText.get_rect(topright=menuDict[selection].topleft)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-                            if showHiScores:
-                                screen.blit(menu, menuRect)
-                                textOverlays = zip(highScoreTexts, highScorePos)
-                            elif showHelp:
-                                screen.blit(menu, menuRect) 
-                            else:
-                                textOverlays = zip([restartText, hiScoreText, helpText, fxText,
-                                                    musicText, quitText, selectText,
-                                                    fxOnText if soundFX else fxOffText,
-                                                    musicOnText if music else musicOffText],
-                                                    [restartPos, hiScorePos, helpPos, fxPos,
-                                                    musicPos, quitPos, selectPos,
-                                                    fxOnPos if soundFX else fxOffPos,
-                                                    musicOnPos if music else musicOffPos])
-                                # screen.blit(pause, pauseRect)
+                            # if showHiScores:
+                            #     screen.blit(menu, menuRect)
+                            #     textOverlays = zip(highScoreTexts, highScorePos)
+                            # elif showHelp:
+                            #     screen.blit(menu, menuRect) 
+                            # else:
+                            #     textOverlays = zip([restartText, hiScoreText, helpText, fxText,
+                            #                         musicText, quitText, selectText,
+                            #                         fxOnText if soundFX else fxOffText,
+                            #                         musicOnText if music else musicOffText],
+                            #                         [restartPos, hiScorePos, helpPos, fxPos,
+                            #                         musicPos, quitPos, selectPos,
+                            #                         fxOnPos if soundFX else fxOffPos,
+                            #                         musicOnPos if music else musicOffPos])
                             for txt, pos in textOverlays:
                                 screen.blit(txt, pos)
 
@@ -395,6 +392,7 @@ class Pvp() :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
+                            leafFired += 1
                             if soundFX:
                                 bear_explode_sound.play()
                     for leaf in Leaf.active:
@@ -422,7 +420,7 @@ class Pvp() :
                         elif kirin.life > 1:   # life
                             bear.table()
                             Explosion.position(bear.rect.center)
-                            bearsLeftThisWave-= 1
+                            bearsLeftThisWave -= 1
                             score += 1
                             kirin.life -= 1
                         else:
@@ -593,16 +591,16 @@ class Pvp() :
                             kirin.initializeKeys()
                             kirin2.initializeKeys()
                             bearsThisWave = 10
-                            bearsLeftThisWave = bear.numOffScreen = bearsThisWave
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         else:
                             bearsThisWave *= 2
-                            bearsLeftThisWave = bear.numOffScreen = bearsThisWave
+                            bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         if wave == 1:
-                            bear.pool.add([Fasty() for _ in range(5)])
+                            Bear.pool.add([Fasty() for _ in range(5)])
                         if wave == 2:
-                            bear.pool.add([Roundy() for _ in range(5)])
+                            Bear.pool.add([Roundy() for _ in range(5)])
                         if wave == 3:
-                            bear.pool.add([Crawly() for _ in range(5)])
+                            Bear.pool.add([Crawly() for _ in range(5)])
                         wave += 1
                         betweenWaveCount = betweenWaveTime
 
@@ -649,10 +647,10 @@ class Pvp() :
                 pygame.display.flip()
 
 
-            accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
-            isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-            name = ''
-            nameBuffer = []
+            # accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
+            # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
+            # name = ''
+            # nameBuffer = []
 
 
     #########################
@@ -661,55 +659,59 @@ class Pvp() :
 
         while True:
             clock.tick(clockTime)
-        # Event 
             for event in pygame.event.get():
-                if (event.type == pygame.QUIT
-                    or not isHiScore
-                    and event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_ESCAPE):
-                    return False
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_RETURN
-                    and not isHiScore):
-                    return True
-                elif (event.type == pygame.KEYDOWN
-                    and event.key in Keyboard.keys.keys()
-                    and len(nameBuffer) < 8):
-                    nameBuffer.append(Keyboard.keys[event.key])
-                    name = ''.join(nameBuffer)
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_BACKSPACE
-                    and len(nameBuffer) > 0):
-                    nameBuffer.pop()
-                    name = ''.join(nameBuffer)
-                elif (event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_RETURN
-                    and len(name) > 0):
-                    Database().setScore(hiScores,name, score, accuracy)
-                    return True  
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    sys.exit()
+        # Event 
+            # for event in pygame.event.get():
+            #     if (event.type == pygame.QUIT
+            #         or not isHiScore
+            #         and event.type == pygame.KEYDOWN
+            #             and event.key == pygame.K_ESCAPE):
+            #         return False
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_RETURN
+            #         and not isHiScore):
+            #         return True
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key in Keyboard.keys.keys()
+            #         and len(nameBuffer) < 8):
+            #         nameBuffer.append(Keyboard.keys[event.key])
+            #         name = ''.join(nameBuffer)
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_BACKSPACE
+            #         and len(nameBuffer) > 0):
+            #         nameBuffer.pop()
+            #         name = ''.join(nameBuffer)
+            #     elif (event.type == pygame.KEYDOWN
+            #         and event.key == pygame.K_RETURN
+            #         and len(name) > 0):
+            #         Database().setScore(hiScores,name, score, accuracy)
+            #         return True  
 
-            if isHiScore:
-                hiScoreText = font.render('SCORE', 1, RED)
-                hiScorePos = hiScoreText.get_rect(
-                    midbottom=screen.get_rect().center)
-                scoreText = font.render(str(score), 1, BLACK)
-                scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
-                enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
-                enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
-                nameText = font.render(name, 1, WHITE)
-                namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
-                textOverlay = zip([hiScoreText, scoreText,
-                                enterNameText, nameText],
-                                [hiScorePos, scorePos,
-                                enterNamePos, namePos])
-            else:
-                gameOverText = font.render('GAME OVER', 1, BLACK)
-                gameOverPos = gameOverText.get_rect(
-                    center=screen.get_rect().center)
-                scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
-                scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
-                textOverlay = zip([gameOverText, scoreText],
-                                [gameOverPos, scorePos])
+            # if isHiScore:
+            #     hiScoreText = font.render('SCORE', 1, RED)
+            #     hiScorePos = hiScoreText.get_rect(
+            #         midbottom=screen.get_rect().center)
+            #     scoreText = font.render(str(score), 1, BLACK)
+            #     scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
+            #     enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
+            #     enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
+            #     nameText = font.render(name, 1, WHITE)
+            #     namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
+            #     textOverlay = zip([hiScoreText, scoreText,
+            #                     enterNameText, nameText],
+            #                     [hiScorePos, scorePos,
+            #                     enterNamePos, namePos])
+            # else:
+            #     gameOverText = font.render('GAME OVER', 1, BLACK)
+            #     gameOverPos = gameOverText.get_rect(
+            #         center=screen.get_rect().center)
+            #     scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
+            #     scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
+            #     textOverlay = zip([gameOverText, scoreText],
+            #                     [gameOverPos, scorePos])
 
             # moving field         
             field1Rect.y += 2
@@ -742,8 +744,8 @@ class Pvp() :
                 elif score == score2 :
                     screen.blit(drawText, drawPos)
 
-            for txt, pos in textOverlay:
-                screen.blit(txt, pos)
+            # for txt, pos in textOverlay:
+            #     screen.blit(txt, pos)
             pygame.display.flip()
 
 

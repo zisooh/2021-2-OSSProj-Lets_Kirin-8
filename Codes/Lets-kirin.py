@@ -1,6 +1,6 @@
 import pygame
 import sys
-from database import Database
+from database import Database 
 from load import load_image #load_sound, load_music
 from menu import *
 from mode_single import *
