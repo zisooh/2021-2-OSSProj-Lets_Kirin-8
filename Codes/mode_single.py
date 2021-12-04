@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import time
 
 from sprites import (MasterSprite, 
                      Kirin, Friendkirin, Bear, Leaf, Explosion,
@@ -26,13 +27,13 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Single():
-    def playGame():     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시 
+    def playGame(screen_size):     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시 
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
-        screen_width = 500   # 스크린가로
-        screen_height = 500  # 스크린세로
-        screen = pygame.display.set_mode((screen_width, screen_height))
+        #screen_width = 500   # 스크린가로
+        #screen_height = 500  # 스크린세로
+        screen = pygame.display.set_mode((screen_size, screen_size), pygame.RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
@@ -219,6 +220,7 @@ class Single():
             while kirin.alive:
                 clock.tick(clockTime)
 
+                kirin.life = 10000 # 창크기 조절 테스트용 - 불사조
             # Drop Items
                 powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
@@ -232,6 +234,14 @@ class Single():
                             and event.key == pygame.K_ESCAPE):
                         pygame.quit()
                         sys.exit()
+                    # Resize windowSize
+                    elif (event.type == pygame.VIDEORESIZE):
+                        screen_size = min(event.w, event.h)
+                        if screen_size < 300 :
+                            screen_size = 300
+                        screen = pygame.display.set_mode((screen_size, screen_size), pygame.RESIZABLE)
+                        time.sleep(0.1) # 과도한 리사이즈(초당 60번)방지
+                        #screen_width, screen_height = event.w, event.h
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -441,24 +451,11 @@ class Single():
                     elif betweenDoubleCount == 0:
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
-                
-                if friendkirin:
-                    if betweenDoubleCount > 0:
-                        betweenDoubleCount -= 1
-                    elif betweenDoubleCount == 0:
-                        friendkirinship = False
-                        minikirin.alive = False
-                        minikirin.remove()
-                        betweenDoubleCount = betweenDoubleTime
-                        # allsprites = pygame.sprite.RenderPlain((kirin,))
-                        # MasterSprite.allsprites = allsprites
-                        # allsprites.draw(screen)
-                        # alldrawings.update()
 
                 # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
                 if friendkirin:
-                    #friendkirin
+                    # friendkirin
                     if friendkirinCount > 0:
                         friendkirinCount -= 1
                     elif friendkirinCount == 0:
@@ -516,9 +513,9 @@ class Single():
             # moving field
                 field1Rect.y += 2
                 field2Rect.y += 2
-                if field1Rect.y >= screen_height:
+                if field1Rect.y >= screen_size:
                     field1Rect.midbottom = field2Rect.midtop
-                if field2Rect.y >= screen_height:
+                if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
                 screen.blit(field1, field1Rect)
                 screen.blit(field2, field2Rect)
@@ -616,9 +613,9 @@ class Single():
         # moving field         
             field1Rect.y += 2
             field2Rect.y += 2
-            if field1Rect.y >= screen_height:
+            if field1Rect.y >= screen_size:
                 field1Rect.midbottom = field2Rect.midtop
-            if field2Rect.y >= screen_height:
+            if field2Rect.y >= screen_size:
                 field2Rect.midbottom = field1Rect.midtop
 
             screen.blit(field1, field1Rect)
