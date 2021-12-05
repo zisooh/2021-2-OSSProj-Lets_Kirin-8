@@ -244,11 +244,11 @@ class Kirin2(MasterSprite):
 
         if not (newpos.left <= self.area.left
                 or newpos.top <= self.area.top
-                or newpos.right >= 250
+                or newpos.right >= (self.area.width / 2)
                 or newpos.bottom >= self.area.bottom):
             self.rect = newpos
         elif not (newhoriz.left <= self.area.left
-                  or newhoriz.right >= 250):
+                  or newhoriz.right >= (self.area.width / 2)):
             self.rect = newhoriz
         elif not (newvert.top <= self.area.top
                   or newvert.bottom >= self.area.bottom):
@@ -290,12 +290,12 @@ class Kirin3(MasterSprite):
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
 
-        if not (newpos.left <= 250
+        if not (newpos.left <= (self.area.width / 2)
                 or newpos.top <= self.area.top
                 or newpos.right >= self.area.right
                 or newpos.bottom >= self.area.bottom):
             self.rect = newpos
-        elif not (newhoriz.left <= 250
+        elif not (newhoriz.left <= (self.area.width / 2)
                   or newhoriz.right >= self.area.right):
             self.rect = newhoriz
         elif not (newvert.top <= self.area.top
