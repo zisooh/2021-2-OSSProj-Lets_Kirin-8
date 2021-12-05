@@ -31,14 +31,12 @@ class Time():
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
-        #screen_width = 500   # 스크린가로 V
-        #screen_height = 500  # 스크린세로 V
         ratio = (screen_size / 500)
         screen = pygame.display.set_mode((screen_size, screen_size))
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
-    # 좋은 위치를 못 찾은 함수
+    # Score Function
         def kill_bear(bear, score) : # 남은 곰 개수 줄이는 역할 제거
             if bear.pType == 'green':
                 score += 1
@@ -86,7 +84,7 @@ class Time():
         bomb_sound = load_sound('bomb.ogg')
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
-        load_music('music_loop.ogg')
+        load_music('menu_music_loop.ogg')
 
         # font
         font = pygame.font.Font(None, 36)
@@ -112,10 +110,10 @@ class Time():
 
     # High Score
         hiScores=Database().getTimeScores()
-        soundFX = Database().getSound()
-        music = Database().getSound(music=True)
-        # print(hiScores)
-        # print(len(hiScores))
+        soundFX = Database.getSound()
+        music = Database.getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
@@ -160,6 +158,7 @@ class Time():
         selectPos = selectText.get_rect(topright=restartPos.topleft)
         selection = 1
         showHiScores = False
+        showHelp=False
 
 
     #########################
@@ -216,12 +215,12 @@ class Time():
             kirin.initializeKeys()
 
 
-        # 본게임시작
+        # Start Game
             while kirin.alive:
                 clock.tick(clockTime)
 
             # Test Resize windowSize
-                kirin.life = 10000 # 게임 중 창크기조절 테스트
+            #    kirin.life = 10000 # 게임 중 창크기조절 테스트
 
             # Drop Items
                 powerupTimeLeft -= 1
@@ -317,14 +316,14 @@ class Time():
                                         soundFX = not soundFX
                                         if soundFX:
                                             leaf_sound.play()
-                                        Database().setSound(int(soundFX))
+                                        Database.setSound(int(soundFX))
                                     elif selection == 4 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
-                                        Database().setSound(int(music), music=True)
+                                        Database.setSound(int(music), music=True)
                                     elif selection == 5:
                                         showHelp=True
                                     elif selection == 6:
@@ -522,8 +521,8 @@ class Time():
                         field2Rect.midbottom = field1Rect.midtop
                     
                     field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-                    screen.blit(pygame.transform.scale(field1, field_size), (0,0))
-                    screen.blit(pygame.transform.scale(field2, field_size), (0,0))
+                    screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
+                    screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
 
             # Update and draw all sprites and text                    
                 allsprites.update()
@@ -533,17 +532,17 @@ class Time():
                     screen.blit(txt, pos)
 
             # Update life
-                life1Rect.topleft = wavePos.bottomleft #lifePos.topright
-                life2Rect.topleft = wavePos.bottomleft #lifePos.topright
-                life3Rect.topleft = wavePos.bottomleft #lifePos.topright
+                life1Rect.topleft = wavePos.bottomleft
+                life2Rect.topleft = wavePos.bottomleft
+                life3Rect.topleft = wavePos.bottomleft
 
                 life_size = (life1.get_width() * ratio, life1.get_height() * ratio)
                 if kirin.life == 3:
-                    screen.blit(pygame.transform.scale(life3, life_size), wavePos.bottomleft)
+                    screen.blit(pygame.transform.scale(life3, life_size), life3Rect)
                 elif kirin.life == 2:
-                    screen.blit(pygame.transform.scale(life2, life_size), wavePos.bottomleft)
+                    screen.blit(pygame.transform.scale(life2, life_size), life2Rect)
                 elif kirin.life == 1:
-                    screen.blit(pygame.transform.scale(life1, life_size), wavePos.bottomleft)
+                    screen.blit(pygame.transform.scale(life1, life_size), life1Rect)
 
                 pygame.display.flip()
 
@@ -631,8 +630,8 @@ class Time():
                 field2Rect.midbottom = field1Rect.midtop
             
             field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-            screen.blit(pygame.transform.scale(field1, field_size), (0,0))
-            screen.blit(pygame.transform.scale(field2, field_size), (0,0))
+            screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
+            screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
 
         # Update and draw all sprites
             allsprites.update()
@@ -642,3 +641,6 @@ class Time():
                 screen.blit(txt, pos)
 
             pygame.display.flip()
+
+        # code is unreachable...?
+        #return screen_size  # for delivering screen_size after game

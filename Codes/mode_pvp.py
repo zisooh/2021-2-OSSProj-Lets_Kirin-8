@@ -1,10 +1,12 @@
 import pygame
 import random
 import sys
+from pygame.locals import *
 
-from sprites import (MasterSprite, Kirin2, Kirin3, Friendkirin, Bear, Leaf, BombPowerup,
-                     ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup, Explosion, Siney, Spikey, Fasty,
-                     Roundy, Crawly)
+from sprites import (MasterSprite, 
+                     Kirin2, Kirin3, Friendkirin, Bear, Leaf, Explosion, 
+                     BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup,
+                     Siney, Spikey, Fasty, Roundy, Crawly)
 from database import Database
 from load import load_image, load_sound, load_music
 from menu import *
@@ -27,16 +29,16 @@ direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Pvp() :
-    def playGame(): 
-        # Initialize everything
+    def playGame(screen_size): 
+    # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
-        screen_width = 500   # 스크린가로
-        screen_height = 500  # 스크린세로
-        screen = pygame.display.set_mode((screen_width, screen_height))
+        ratio = (screen_size / 500)
+        screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)    
 
+    # Score Function
         def kill_bear(bear, bearsLeftThisWave, score) :
             bearsLeftThisWave -= 1
             if bear.pType == 'green':
@@ -50,18 +52,19 @@ class Pvp() :
             return bearsLeftThisWave, score
 
     # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((500, 2000))
+        background = pygame.Surface((2000, 2000))
         background = background.convert()
         background.fill((0, 0, 0))
 
     # Display the background
         screen.blit(background, (0, 0))
+        # screen.midtop = pygame.draw.rect(screen, BLUE, screen.midtop, 2)
         pygame.display.flip()
     
     # Prepare background image
         # Game field
-        field1, field1Rect = load_image("field_pvp.png")
-        field2, field2Rect = load_image("field_pvp.png")
+        field1, field1Rect = load_image("field.png") # 1:1비율 하려면 이 이미지 사용
+        field2, field2Rect = load_image("field.png")
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
 
@@ -89,13 +92,20 @@ class Pvp() :
         bomb_sound = load_sound('bomb.ogg')
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
-        load_music('music_loop.ogg')
+        load_music('menu_music_loop.ogg')
 
-        speed = 1.5
-        MasterSprite.speed = speed
-        bearPeriod = 60 / speed
+        # font
+        font = pygame.font.Font(None, round(36*ratio))
+
+        # clock - 60 FPS game
         clockTime = 60  # maximum FPS
         clock = pygame.time.Clock()
+
+        # speed
+        speed = 1.5
+        MasterSprite.speed = speed
+        
+        # object
         kirin = Kirin2()
         kirin2 = Kirin3() 
         minikirin = Friendkirin()
@@ -107,10 +117,8 @@ class Pvp() :
         bombs2 = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-        # font
-        font = pygame.font.Font(None, 36)
-
-        # 데베 함수 메뉴 구현
+        
+    # High Score
         # hiScores = Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
@@ -161,6 +169,7 @@ class Pvp() :
         selection = 1
         showHiScores = False 
 
+
     #########################
     #    Start Pvp Loop    #
     #########################
@@ -193,12 +202,18 @@ class Pvp() :
             leafFired = 0
             wave = 1
 
+            # speed
+            speed = 1.5 * ratio
+            MasterSprite.speed = speed
+
+            # Reset all time
             bearPeriod = clockTime // 2
             curTime = 0
             powerupTime = 8 * clockTime
             powerupTimeLeft = powerupTime
             betweenWaveTime = 3 * clockTime
             betweenWaveCount = betweenWaveTime
+            
             betweenDoubleTime = 8 * clockTime
             betweenDoubleCount = betweenDoubleTime
             betweenDoubleCount2 = betweenDoubleTime
@@ -214,12 +229,12 @@ class Pvp() :
             kirin2.life = 3
             kirin2.initializeKeys()
 
-            # 본게임시작
+            # Start Game
             while kirin.alive and kirin2.alive :
                 clock.tick(clockTime)
 
-                if bearsLeftThisWave >= 0:
-                    powerupTimeLeft -= 1
+            # Drop Items
+                powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
                     random.choice(powerupTypes)().add(powerups, allsprites)
@@ -231,6 +246,12 @@ class Pvp() :
                             and event.key == pygame.K_ESCAPE):
                         pygame.quit()
                         sys.exit()
+                    # Resize windowSize
+                    elif (event.type == pygame.VIDEORESIZE):
+                        screen_size = min(event.w, event.h)
+                        screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                        ratio = (screen_size / 500)
+                        font = pygame.font.Font(None, round(36*ratio))
                     # kirin1 Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -525,6 +546,8 @@ class Pvp() :
                 text = [waveText, leftText, bombText, bombText2]
                 textposition = [wavePos, leftPos, bombPos, bombPos2]
 
+            # Update using items
+                # item - doubleleaf
                 if doubleleaf:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
@@ -532,6 +555,7 @@ class Pvp() :
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
+                # item - doubleleaf2
                 if doubleleaf2:
                     if betweenDoubleCount2 > 0:
                         betweenDoubleCount2 -= 1
@@ -539,6 +563,7 @@ class Pvp() :
                         doubleleaf2 = False
                         betweenDoubleCount = betweenDoubleTime
                 
+                # item - friendkirin
                 if friendkirin1 :
                     minikirin.rect.bottomright = kirin.rect.bottomleft
                 else :
@@ -603,14 +628,16 @@ class Pvp() :
                 textOverlays = zip(text, textposition)
 
             # moving field
-                field1Rect.y += 2
-                field2Rect.y += 2
-                if field1Rect.y >= screen_height:
+                field1Rect.y += int(2 * ratio)
+                field2Rect.y += int(2 * ratio)
+                if field1Rect.y >= screen_size:
                     field1Rect.midbottom = field2Rect.midtop
-                if field2Rect.y >= screen_height:
+                if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
-                screen.blit(field1, field1Rect)
-                screen.blit(field2, field2Rect)
+                
+                field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+                screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
+                screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
                 pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
             # Update and draw all sprites and text         
@@ -630,19 +657,34 @@ class Pvp() :
                 life_bRect.topleft = leftPos.topright
                 life_cRect.topleft = leftPos.topright
 
+                life_size = (life1.get_width() * ratio, life1.get_height() * ratio)
                 if kirin.life == 3:
-                    screen.blit(life3, life3Rect)
-                if kirin.life == 2:
-                    screen.blit(life2, life2Rect)
-                if kirin.life == 1:
-                    screen.blit(life1, life1Rect)
+                    screen.blit(pygame.transform.scale(life3, life_size), life3Rect)
+                elif kirin.life == 2:
+                    screen.blit(pygame.transform.scale(life2, life_size), life2Rect)
+                elif kirin.life == 1:
+                    screen.blit(pygame.transform.scale(life1, life_size), life1Rect)
                 
                 if kirin2.life == 3:
-                    screen.blit(life_c, life_cRect)
-                if kirin2.life == 2:
-                    screen.blit(life_b, life_bRect)
-                if kirin2.life == 1:
-                    screen.blit(life_a, life_aRect)
+                    screen.blit(pygame.transform.scale(life_c, life_size), life_cRect)
+                elif kirin2.life == 2:
+                    screen.blit(pygame.transform.scale(life_b, life_size), life_bRect)
+                elif kirin2.life == 1:
+                    screen.blit(pygame.transform.scale(life_a, life_size), life_aRect)
+
+                #if kirin.life == 3:
+                #    screen.blit(life3, life3Rect)
+                #if kirin.life == 2:
+                #    screen.blit(life2, life2Rect)
+                #if kirin.life == 1:
+                #    screen.blit(life1, life1Rect)
+
+                #if kirin2.life == 3:
+                #    screen.blit(life_c, life_cRect)
+                #if kirin2.life == 2:
+                #    screen.blit(life_b, life_bRect)
+                #if kirin2.life == 1:
+                #    screen.blit(life_a, life_aRect)
 
                 pygame.display.flip()
 
@@ -659,11 +701,18 @@ class Pvp() :
 
         while True:
             clock.tick(clockTime)
+
+        # Event Handling
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT):
                     pygame.quit()
                     sys.exit()
-        # Event 
+            # Resize windowSize
+                elif (event.type == pygame.VIDEORESIZE):
+                    screen_size = min(event.w, event.h)
+                    screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                    ratio = (screen_size / 500)
+                    font = pygame.font.Font(None, round(36*ratio))       
             # for event in pygame.event.get():
             #     if (event.type == pygame.QUIT
             #         or not isHiScore
@@ -713,18 +762,20 @@ class Pvp() :
             #     textOverlay = zip([gameOverText, scoreText],
             #                     [gameOverPos, scorePos])
 
-            # moving field         
-            field1Rect.y += 2
-            field2Rect.y += 2
-            if field1Rect.y >= screen_height:
+       # moving field         
+            field1Rect.y += int(2 * ratio)
+            field2Rect.y += int(2 * ratio)
+            if field1Rect.y >= screen_size:
                 field1Rect.midbottom = field2Rect.midtop
-            if field2Rect.y >= screen_height:
+            if field2Rect.y >= screen_size:
                 field2Rect.midbottom = field1Rect.midtop
-
-            screen.blit(field1, field1Rect)
-            screen.blit(field2, field2Rect)
+            
+            field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+            screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
+            screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
             pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
+        # Update and draw all sprites
             allsprites.update()
             allsprites.draw(screen)
             alldrawings.update()
@@ -748,7 +799,10 @@ class Pvp() :
             #     screen.blit(txt, pos)
             pygame.display.flip()
 
+        # code is unreachable...?
+        #return screen_size  # for delivering screen_size after game
 
-if __name__ == '__main__':
-    while(main()):
-        pass
+# 이거 이제 필요없음
+#if __name__ == '__main__':
+#    while(main()):
+#        pass

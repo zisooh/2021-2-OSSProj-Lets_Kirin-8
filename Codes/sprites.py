@@ -173,7 +173,8 @@ class Kirin(MasterSprite):
         if keyState[pygame.K_d]:
             self.horiz += 2 * MasterSprite.speed
 
-    def update(self):
+    def update(self): # argument - screen_size
+        #self.screen_size = screen_size
         newpos = self.rect.move((self.horiz, self.vert))
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
