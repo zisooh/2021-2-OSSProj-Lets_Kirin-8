@@ -242,6 +242,7 @@ class Single():
                         screen_size = min(event.w, event.h)
                         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                         ratio = (screen_size / 500)
+                        font = pygame.font.Font(None, round(36*ratio))
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -580,6 +581,7 @@ class Single():
                     screen_size = min(event.w, event.h)
                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     ratio = (screen_size / 500)
+                    font = pygame.font.Font(None, round(36*ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and not isHiScore):

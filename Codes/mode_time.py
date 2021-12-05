@@ -89,7 +89,7 @@ class Time():
         load_music('music_loop.ogg')
 
         # font
-        font = pygame.font.Font(None, 36) # round(36*ratio) 적용예정
+        font = pygame.font.Font(None, 36)
         beforeWaveCountFont = pygame.font.Font(None, 60)
         leftCountFont = pygame.font.Font(None, 60)
 
@@ -241,6 +241,9 @@ class Time():
                         screen_size = min(event.w, event.h)
                         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                         ratio = (screen_size / 500)
+                        font = pygame.font.Font(None, round(36*ratio))
+                        beforeWaveCountFont = pygame.font.Font(None, round(60*ratio))
+                        leftCountFont = pygame.font.Font(None, round(60*ratio))
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -571,6 +574,7 @@ class Time():
                     screen_size = min(event.w, event.h)
                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     ratio = (screen_size / 500)
+                    font = pygame.font.Font(None, round(36*ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and not isHiScore):
