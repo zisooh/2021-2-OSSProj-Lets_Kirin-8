@@ -7,8 +7,6 @@
 
 Shooting Game based on pygame   
 
-[BaseCode](https://github.com/jpritcha3-14/shooting-game.git)   
-
 #### **[8조 렛츠기린]**
 **Team Leader** : 동국대학교 전자전기공학부 [정태호](https://github.com/Taeho25)   
 **Team Member** : 동국대학교 산업시스템공학과 [문지윤](https://github.com/MoonJiyoon)   
@@ -28,8 +26,6 @@ git clone https://github.com/CSID-DGU/2021-2-OSSProj-Lets_Kirin-8.git
 cd 2021-2-OSSProj-Lets_Kirin-8
 python3 Lets-kirin.py
 ```
-## Let's Kirin
-![LetsKirin_title](https://user-images.githubusercontent.com/84272893/144378915-6b2f2136-13e8-4eb4-bd9c-7cc38992a513.jpg)   
 
 ## How To Play
 ![image](https://user-images.githubusercontent.com/84272893/144609693-fbf4915c-3b3a-431d-a413-4f08bfaeb560.png)   
