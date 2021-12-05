@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pygame.locals import *
 from database import Database
 from load import load_image #load_sound, load_music
 from menu import *
@@ -25,12 +26,12 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
 pygame.mixer.pre_init(11025, -16, 2, 512)
 pygame.init()
 screen_size = 500 # 스크린 가로, 스크린 세로
-screen = pygame.display.set_mode((screen_size, screen_size), pygame.RESIZABLE)
+screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
 pygame.display.set_caption("Let's Kirin!")
 pygame.mouse.set_visible(0)
 
 # Create the background which will scroll and loop over a set of different
-background = pygame.Surface((500, 2000))
+background = pygame.Surface((2000, 2000))
 background = background.convert()
 background.fill((0, 0, 0))
 
@@ -131,11 +132,11 @@ showHiScores = False
 # signup_page = enter ID, enter PWD, BACK
 inInitMenu=True
 while inInitMenu:
-    userSelection=Menu().init_page()
+    userSelection, screen_size=Menu(screen_size).init_page()
     flag=True
     while flag:   
         if userSelection==1 or userSelection==2: #로그인/회원가입
-            pageResult=Menu().login_sign_page(userSelection)
+            pageResult, screen_size=Menu(screen_size).login_sign_page(userSelection)
             if pageResult==BACK: #back
                 flag=False  
             else: 
@@ -157,11 +158,11 @@ while windowShow:
 
     inMainMenu=True
     while inMainMenu:
-        userSelection=Menu().inMenu_page()
+        userSelection, screen_size=Menu(screen_size).inMenu_page()
         flag=True
         while flag:
             if userSelection == 1:
-                pageResult=Menu().select_game_page()
+                pageResult, screen_size=Menu(screen_size).select_game_page()
                 if pageResult == BACK: #back
                     flag = False
                 elif (pageResult == 'SingleMode' or 
@@ -170,7 +171,7 @@ while windowShow:
                     flag = False
                     inMainMenu = False 
             elif userSelection == 2:
-                pageResult = Menu().score_page()
+                pageResult, screen_size = Menu(screen_size).score_page()
                 if pageResult == BACK:
                     flag = False
             elif userSelection == 6:
