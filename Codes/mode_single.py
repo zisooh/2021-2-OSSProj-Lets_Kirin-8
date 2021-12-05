@@ -90,7 +90,7 @@ class Single():
         load_music('music_loop.ogg')
 
         # font
-        font = pygame.font.Font(None, 36)
+        font = pygame.font.Font(None, 36) # round(36*ratio) 적용예정
 
         # clock - 60 FPS game
         clockTime = 60  # maximum FPS
@@ -101,7 +101,7 @@ class Single():
         MasterSprite.speed = speed
         
         # object
-        kirin = Kirin(screen, ratio)
+        kirin = Kirin(screen_size) # 객체 크기 조절 테스트
         minikirin = Friendkirin()
         initialBearTypes = (Siney, Spikey)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, 
@@ -221,11 +221,9 @@ class Single():
             while kirin.alive:
                 clock.tick(clockTime)
 
-            # About Resize windowSize
+            # Test Resize windowSize
                 kirin.life = 10000 # 게임 중 창크기조절 테스트
                 
-
-
             # Drop Items
                 powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
@@ -285,7 +283,8 @@ class Single():
                             clock.tick(clockTime)
 
                             screen.blit(background, (0, 0))
-                            screen.blit(pause, pauseRect)
+                            pause_size = (pause.get_width() * ratio, pause.get_height() * ratio)
+                            screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
                             for event in pygame.event.get():
                                 if (event.type == pygame.QUIT
@@ -293,6 +292,11 @@ class Single():
                                         and event.key == pygame.K_ESCAPE):
                                     pygame.quit()
                                     sys.exit()
+                                # Resize windowSize
+                                elif (event.type == pygame.VIDEORESIZE):
+                                    screen_size = min(event.w, event.h)
+                                    screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                                    ratio = (screen_size / 500)
                                 elif (event.type == pygame.KEYDOWN  # unpause
                                     and event.key == pygame.K_p):
                                     pauseMenu = False
@@ -339,10 +343,13 @@ class Single():
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
-                                screen.blit(menu, menuRect)
+                                menu_size = (menu.get_width() * ratio, menu.get_height() * ratio)
+                                screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
-                                screen.blit(menu, menuRect) 
+                                # To.지윤 - help 이미지 변경시 이미지 load/이미지.midtop = screen.midtop/아래 두줄 변수변경작업 필요
+                                menu_size = (menu.get_width() * ratio, menu.get_height() * ratio)
+                                screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
@@ -512,7 +519,7 @@ class Single():
 
                 textOverlays = zip(text, textposition)
 
-            # moving field - Resize windowSize test01
+            # moving field - Resize windowSize
                 field1Rect.y += int(2 * ratio)
                 field2Rect.y += int(2 * ratio)
                 if field1Rect.y >= screen_size:
@@ -520,10 +527,9 @@ class Single():
                 if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
                 
-                field1_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-                field2_size = (field2.get_width() * ratio, field1.get_height() * ratio)
-                screen.blit(pygame.transform.scale(field1, field1_size), field1Rect)
-                screen.blit(pygame.transform.scale(field2, field2_size), field2Rect)
+                field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+                screen.blit(pygame.transform.scale(field1, field_size), (0,0))
+                screen.blit(pygame.transform.scale(field2, field_size), (0,0))
 
             # Update and draw all sprites and text                                   
                 allsprites.update()
@@ -537,12 +543,13 @@ class Single():
                 life2Rect.topleft = wavePos.bottomleft
                 life3Rect.topleft = wavePos.bottomleft
 
+                life_size = (life1.get_width() * ratio, life1.get_height() * ratio)
                 if kirin.life == 3:
-                    screen.blit(life3, life3Rect)
+                    screen.blit(pygame.transform.scale(life3, life_size), wavePos.bottomleft)
                 elif kirin.life == 2:
-                    screen.blit(life2, life2Rect)
+                    screen.blit(pygame.transform.scale(life2, life_size), wavePos.bottomleft)
                 elif kirin.life == 1:
-                    screen.blit(life1, life1Rect)
+                    screen.blit(pygame.transform.scale(life1, life_size), wavePos.bottomleft)
 
                 pygame.display.flip()
 
@@ -568,6 +575,11 @@ class Single():
                     and event.type == pygame.KEYDOWN
                         and event.key == pygame.K_ESCAPE):
                     return False
+            # Resize windowSize
+                elif (event.type == pygame.VIDEORESIZE):
+                    screen_size = min(event.w, event.h)
+                    screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                    ratio = (screen_size / 500)
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN
                     and not isHiScore):
@@ -616,15 +628,16 @@ class Single():
                                 [gameOverPos, scorePos])
 
         # moving field         
-            field1Rect.y += 2
-            field2Rect.y += 2
-            if field1Rect.y >= screen_height:
+            field1Rect.y += int(2 * ratio)
+            field2Rect.y += int(2 * ratio)
+            if field1Rect.y >= screen_size:
                 field1Rect.midbottom = field2Rect.midtop
-            if field2Rect.y >= screen_height:
+            if field2Rect.y >= screen_size:
                 field2Rect.midbottom = field1Rect.midtop
-
-            screen.blit(field1, field1Rect)
-            screen.blit(field2, field2Rect)
+            
+            field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+            screen.blit(pygame.transform.scale(field1, field_size), (0,0))
+            screen.blit(pygame.transform.scale(field2, field_size), (0,0))
 
         # Update and draw all sprites
             allsprites.update()

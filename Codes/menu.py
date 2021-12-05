@@ -183,6 +183,7 @@ class Menu:
                     self.screen_size = min(event.w, event.h)
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
+                    self.font = pygame.font.Font(None, round(36*self.ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
                     if self.showlogin:
@@ -240,6 +241,7 @@ class Menu:
                     self.screen_size = min(event.w, event.h)
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
+                    self.font = pygame.font.Font(None, round(36*self.ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
                     if (self.selection==1
@@ -344,6 +346,7 @@ class Menu:
                     self.screen_size = min(event.w, event.h)
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
+                    self.font = pygame.font.Font(None, round(36*self.ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
                     if self.showSelectModes:
@@ -453,6 +456,7 @@ class Menu:
                     self.screen_size = min(event.w, event.h)
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
+                    self.font = pygame.font.Font(None, round(36*self.ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
                     if showSingleMode:
@@ -530,6 +534,7 @@ class Menu:
                     self.screen_size = min(event.w, event.h)
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
+                    self.font = pygame.font.Font(None, round(36*self.ratio))
                 elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_RETURN):
                     if showSingleScores:

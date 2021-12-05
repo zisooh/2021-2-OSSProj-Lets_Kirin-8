@@ -188,7 +188,7 @@ while windowShow:
         Single.playGame(screen_size)    # 메뉴에서 설정한 윈도우 창크기 받아오기
     elif pageResult == 'TimeMode':
         print('Time mode play')
-        Time.playGame()
+        Time.playGame(screen_size)
     elif pageResult == 'PvpMode':
         print('Pvp mode play')
         Pvp.playGame()    

@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from pygame.locals import *
 from load import load_image
 
 
@@ -138,14 +139,16 @@ class LifePowerup(Powerup):
         self.pType = 'life'
 
 class Kirin(MasterSprite):
-    def __init__(self, screen, ratio):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
         # 수정 쉴드랑 조금 다른 방법이 필요함
         # self.bomb, self.rect = load_image('kirin_bomb.png', -1)
-        self.screen = pygame.display.get_surface()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
         self.radius = max(self.rect.width, self.rect.height)
