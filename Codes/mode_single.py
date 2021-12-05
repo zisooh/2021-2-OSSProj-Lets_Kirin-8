@@ -58,6 +58,7 @@ class Single():
 
     # Display the background
         screen.blit(background, (0, 0))
+        # screen.midtop = pygame.draw.rect(screen, BLUE, screen.midtop, 2)
         pygame.display.flip()
 
     # Prepare background image
