@@ -171,7 +171,7 @@ class Pvp() :
         bomb_sound = load_sound('bomb.ogg')
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
-        load_music('music_loop.ogg')
+        load_music('menu_music_loop.ogg')
 
         bearPeriod = clockTime // 2
         curTime = 0
@@ -200,8 +200,8 @@ class Pvp() :
 
         # 데베 함수 메뉴 구현
         hiScores=Database().getScores()
-        soundFX = Database().getSound()
-        music = Database().getSound(music=True)
+        soundFX = Database.getSound()
+        music = Database.getSound(music=True)
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]

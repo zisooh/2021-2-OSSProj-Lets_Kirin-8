@@ -85,7 +85,7 @@ class Single():
         bomb_sound = load_sound('bomb.ogg')
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
-        load_music('music_loop.ogg')
+        load_music('menu_music_loop.ogg')
 
         # font
         font = pygame.font.Font(None, 36)
@@ -95,8 +95,8 @@ class Single():
         clock = pygame.time.Clock()
         
         # speed
-            speed = 1.5
-            MasterSprite.speed = speed
+        speed = 1.5
+        MasterSprite.speed = speed
         
         # object
         kirin = Kirin()
@@ -114,8 +114,6 @@ class Single():
         music = Database().getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        # print(hiScores)
-        # print(len(hiScores))
         highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
@@ -159,7 +157,8 @@ class Single():
         selectText = font.render('*', 1, BLACK)
         selectPos = selectText.get_rect(topright=restartPos.topleft)
         selection = 1
-        showHiScores = False    
+        showHiScores = False
+        showHelp=False 
 
 
     #########################
@@ -327,9 +326,13 @@ class Single():
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
-                                screen.blit(menu, menuRect)
+                                img_menu, img_menuRect = load_image("menu.png")
+                                img_menuRect.midtop = screen.get_rect().midtop
+                                screen.blit(img_menu, img_menuRect)
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
+                                menu, menuRect = load_image("pause.png") #Help 이미지는 예시로
+                                menuRect.midtop = screen.get_rect().midtop
                                 screen.blit(menu, menuRect) 
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
@@ -442,15 +445,15 @@ class Single():
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
                 
-                if friendship:
+                if friendkirin:
                     if betweenDoubleCount > 0:
                         betweenDoubleCount -= 1
                     elif betweenDoubleCount == 0:
-                        friendship = False
-                        miniship.alive = False
-                        miniship.remove()
+                        friendkirinship = False
+                        minikirin.alive = False
+                        minikirin.remove()
                         betweenDoubleCount = betweenDoubleTime
-                        # allsprites = pygame.sprite.RenderPlain((ship,))
+                        # allsprites = pygame.sprite.RenderPlain((kirin,))
                         # MasterSprite.allsprites = allsprites
                         # allsprites.draw(screen)
                         # alldrawings.update()
