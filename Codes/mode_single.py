@@ -33,7 +33,7 @@ class Single():
         pygame.init()
         #screen_width = 500   # 스크린가로
         #screen_height = 500  # 스크린세로
-        ratio = screen_size / 500
+        ratio = (screen_size / 500)
         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
@@ -101,7 +101,7 @@ class Single():
         MasterSprite.speed = speed
         
         # object
-        kirin = Kirin()
+        kirin = Kirin(screen, ratio)
         minikirin = Friendkirin()
         initialBearTypes = (Siney, Spikey)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, 
@@ -221,7 +221,10 @@ class Single():
             while kirin.alive:
                 clock.tick(clockTime)
 
+            # About Resize windowSize
                 kirin.life = 10000 # 게임 중 창크기조절 테스트
+                
+
 
             # Drop Items
                 powerupTimeLeft -= 1
@@ -240,7 +243,7 @@ class Single():
                     elif (event.type == pygame.VIDEORESIZE):
                         screen_size = min(event.w, event.h)
                         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
-                        ratio = screen_size / 500
+                        ratio = (screen_size / 500)
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -450,19 +453,6 @@ class Single():
                     elif betweenDoubleCount == 0:
                         doubleleaf = False
                         betweenDoubleCount = betweenDoubleTime
-                
-                if friendkirin:
-                    if betweenDoubleCount > 0:
-                        betweenDoubleCount -= 1
-                    elif betweenDoubleCount == 0:
-                        friendkirinship = False
-                        minikirin.alive = False
-                        minikirin.remove()
-                        betweenDoubleCount = betweenDoubleTime
-                        # allsprites = pygame.sprite.RenderPlain((kirin,))
-                        # MasterSprite.allsprites = allsprites
-                        # allsprites.draw(screen)
-                        # alldrawings.update()
 
                 # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
@@ -522,15 +512,18 @@ class Single():
 
                 textOverlays = zip(text, textposition)
 
-            # moving field
-                field1Rect.y += 2
-                field2Rect.y += 2
+            # moving field - Resize windowSize test01
+                field1Rect.y += int(2 * ratio)
+                field2Rect.y += int(2 * ratio)
                 if field1Rect.y >= screen_size:
                     field1Rect.midbottom = field2Rect.midtop
                 if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
-                screen.blit(field1, field1Rect)
-                screen.blit(field2, field2Rect)
+                
+                field1_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+                field2_size = (field2.get_width() * ratio, field1.get_height() * ratio)
+                screen.blit(pygame.transform.scale(field1, field1_size), field1Rect)
+                screen.blit(pygame.transform.scale(field2, field2_size), field2Rect)
 
             # Update and draw all sprites and text                                   
                 allsprites.update()

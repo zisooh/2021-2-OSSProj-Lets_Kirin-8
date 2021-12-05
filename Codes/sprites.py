@@ -138,7 +138,7 @@ class LifePowerup(Powerup):
         self.pType = 'life'
 
 class Kirin(MasterSprite):
-    def __init__(self):
+    def __init__(self, screen, ratio):
         super().__init__()
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
