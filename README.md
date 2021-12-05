@@ -33,7 +33,11 @@ python3 Lets-kirin.py
 
 ## How To Play
 ![image](https://user-images.githubusercontent.com/84272893/144609693-fbf4915c-3b3a-431d-a413-4f08bfaeb560.png)   
- 
+
+<img width="370" alt="1" src="https://user-images.githubusercontent.com/84272893/144746500-9ff2267c-089e-4c40-bfbb-dd584697b709.png">
+<img width="370" alt="2" src="https://user-images.githubusercontent.com/84272893/144746520-c7953954-ae90-474b-af5f-33f9652426bd.png">
+
+
  ***이미지 추가 예정***
  
 ## 추가 사항
