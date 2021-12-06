@@ -78,6 +78,7 @@ class Menu:
                                 for x in range(3)])
             self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
                 topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
+        
         #For init_page setting
         self.loginText = self.font.render('LOG IN', 1, BLACK)
         self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
@@ -85,6 +86,7 @@ class Menu:
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
         self.quitText=self.font.render('QUIT',1,BLACK)
         self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
+        
         #For login_page setting
         self.id=''
         self.idBuffer = []
@@ -99,6 +101,7 @@ class Menu:
         self.pwdText = 0
         self.pwdPos =0
         self.secretPwd=0
+
         #For inMenu_page setting
         self.startText = self.font.render('SELECT MODE', 1, BLACK)
         self.startPos = self.startText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
@@ -123,7 +126,7 @@ class Menu:
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
 
-        # Select Mode 안 글씨
+        # Select Mode page setting
         self.singleText = self.font.render('SINGLE MODE', 1, BLACK)
         self.singlePos = self.singleText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
         self.timeText = self.font.render('TIME MODE', 1, BLACK)
@@ -181,6 +184,8 @@ class Menu:
             # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -236,9 +241,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-                # Resize windowSize
+            # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -344,6 +351,8 @@ class Menu:
             # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -451,9 +460,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-                 # Resize windowSize
+            # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -532,6 +543,8 @@ class Menu:
             # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
