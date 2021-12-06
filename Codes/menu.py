@@ -181,7 +181,7 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
                     if self.screen_size <= 300:
@@ -241,7 +241,7 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
                     if self.screen_size <= 300:
@@ -348,7 +348,7 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
                     if self.screen_size <= 300:
@@ -460,7 +460,7 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
                     if self.screen_size <= 300:
@@ -540,7 +540,7 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
                     if self.screen_size <= 300:
