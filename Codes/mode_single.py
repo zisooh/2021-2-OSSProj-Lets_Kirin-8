@@ -133,7 +133,7 @@ class Single():
 
     # Temp - only load for Rect
         title, titleRect = load_image('title.png')
-        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop 
+        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
     
     # pause menu text  
         restartText = font.render('RESTART GAME', 1, BLACK)
@@ -298,8 +298,11 @@ class Single():
                                 # Resize windowSize
                                 elif (event.type == pygame.VIDEORESIZE):
                                     screen_size = min(event.w, event.h)
+                                    if screen_size <= 300:
+                                        screen_size = 300
                                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                                     ratio = (screen_size / 500)
+                                    font = pygame.font.Font(None, round(36*ratio))
                                 elif (event.type == pygame.KEYDOWN  # unpause
                                     and event.key == pygame.K_p):
                                     pauseMenu = False
