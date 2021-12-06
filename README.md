@@ -90,7 +90,7 @@ python3 Lets-kirin.py
   - 객체별 아이템, 목숨, 스코어 등을 분리하여 적용하였습니다.
 
 ## Credits
-* Music: https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
+* Music: https://pixabay.com/ko/music/
 * Sound FX: https://github.com/jpritcha3-14/shooting-game.git   
 
 ## Reference
