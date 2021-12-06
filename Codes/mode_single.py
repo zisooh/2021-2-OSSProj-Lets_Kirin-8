@@ -465,7 +465,7 @@ class Single():
                 # item - friendkirin
                 minikirin.rect.bottomright = kirin.rect.bottomleft
                 if friendkirin:
-                    #friendkirin
+                    # friendkirin
                     if friendkirinCount > 0:
                         friendkirinCount -= 1
                     elif friendkirinCount == 0:
@@ -529,8 +529,8 @@ class Single():
                     field2Rect.midbottom = field1Rect.midtop
                 
                 field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-                screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
-                screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
+                screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
+                screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
             # Update and draw all sprites and text                                   
                 allsprites.update()
@@ -637,8 +637,8 @@ class Single():
                 field2Rect.midbottom = field1Rect.midtop
             
             field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-            screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
-            screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
+            screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
+            screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
         # Update and draw all sprites
             allsprites.update()
