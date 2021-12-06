@@ -636,8 +636,8 @@ class Pvp() :
                     field2Rect.midbottom = field1Rect.midtop
                 
                 field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-                screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
-                screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
+                screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
+                screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
                 pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
             # Update and draw all sprites and text         
@@ -771,8 +771,8 @@ class Pvp() :
                 field2Rect.midbottom = field1Rect.midtop
             
             field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
-            screen.blit(pygame.transform.scale(field1, field_size), field1Rect)
-            screen.blit(pygame.transform.scale(field2, field_size), field2Rect)
+            screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
+            screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
             pygame.draw.rect(screen, BLACK, [250,0,3,500])
 
         # Update and draw all sprites
