@@ -635,7 +635,7 @@ class Pvp() :
                 if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
                 
-                field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+                field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
                 screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
                 screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
                 pygame.draw.rect(screen, BLACK, [250,0,3,500])
@@ -657,7 +657,7 @@ class Pvp() :
                 life_bRect.topleft = leftPos.topright
                 life_cRect.topleft = leftPos.topright
 
-                life_size = (life1.get_width() * ratio, life1.get_height() * ratio)
+                life_size = (round(life1.get_width() * ratio), round(life1.get_height() * ratio))
                 if kirin.life == 3:
                     screen.blit(pygame.transform.scale(life3, life_size), life3Rect)
                 elif kirin.life == 2:
@@ -770,7 +770,7 @@ class Pvp() :
             if field2Rect.y >= screen_size:
                 field2Rect.midbottom = field1Rect.midtop
             
-            field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+            field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
             screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
             screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
             pygame.draw.rect(screen, BLACK, [250,0,3,500])

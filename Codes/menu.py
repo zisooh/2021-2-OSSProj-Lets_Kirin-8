@@ -169,7 +169,7 @@ class Menu:
             
             main_menu, main_menuRect = load_image("main_menu.png")
             main_menuRect.midtop = self.screen.get_rect().midtop
-            main_menu_size = (main_menu.get_width() * self.ratio, main_menu.get_height() * self.ratio)
+            main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
 
             for event in pygame.event.get():
@@ -227,7 +227,7 @@ class Menu:
 
             main_menu, main_menuRect = load_image("main_menu.png")
             main_menuRect.midtop = self.screen.get_rect().midtop
-            main_menu_size = (main_menu.get_width() * self.ratio, main_menu.get_height() * self.ratio)
+            main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
 
             for event in pygame.event.get():
@@ -332,7 +332,7 @@ class Menu:
             self.flag=True
             main_menu, main_menuRect = load_image("main_menu.png")
             main_menuRect.midtop = self.screen.get_rect().midtop
-            main_menu_size = (main_menu.get_width() * self.ratio, main_menu.get_height() * self.ratio)
+            main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
  
             for event in pygame.event.get():
@@ -399,7 +399,7 @@ class Menu:
                 menu, menuRect = load_image("pause.png") #Help 이미지는 예시로
                 menuRect.midtop = self.screen.get_rect().midtop
                 self.screen.blit(menu, menuRect) 
-                menu_size = (menu.get_width() * self.ratio, menu.get_height() * self.ratio)
+                menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                 self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
 
             elif self.showSelectModes:
@@ -442,7 +442,7 @@ class Menu:
         while inSelectMenu:
             self.clock.tick(self.clockTime)
             self.screen.blit(self.background, (0, 0))
-            main_menu_size = (main_menu.get_width() * self.ratio, main_menu.get_height() * self.ratio)
+            main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
 
             for event in pygame.event.get():
@@ -521,7 +521,7 @@ class Menu:
         while inScoreMenu:
             self.clock.tick(self.clockTime)
             self.screen.blit(self.background, (0, 0))
-            main_menu_size = (main_menu.get_width() * self.ratio, main_menu.get_height() * self.ratio)
+            main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT
@@ -565,14 +565,14 @@ class Menu:
                 self.screen.blit(self.background, (0, 0))
                 menu, menuRect = load_image("menu.png")
                 menuRect.midtop = self.screen.get_rect().midtop
-                menu_size = (menu.get_width() * self.ratio, menu.get_height() * self.ratio)
+                menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                 self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                 textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif showTimeScores:
                 self.screen.blit(self.background, (0, 0))
                 menu, menuRect = load_image("menu.png")
                 menuRect.midtop = self.screen.get_rect().midtop
-                menu_size = (menu.get_width() * self.ratio, menu.get_height() * self.ratio)
+                menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                 self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                 textOverlays = zip(self.timeHighScoreTexts, self.timeHighScorePos)
             else:

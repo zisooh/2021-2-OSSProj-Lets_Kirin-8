@@ -284,7 +284,7 @@ class Single():
                             clock.tick(clockTime)
 
                             screen.blit(background, (0, 0))
-                            pause_size = (pause.get_width() * ratio, pause.get_height() * ratio)
+                            pause_size = (round(pause.get_width() * ratio), round(pause.get_height() * ratio))
                             screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
                             for event in pygame.event.get():
@@ -344,12 +344,12 @@ class Single():
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
                             if showHiScores:
-                                menu_size = (menu.get_width() * ratio, menu.get_height() * ratio)
+                                menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                 screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
                                 # To.지윤 - help 이미지 변경시 이미지 load/이미지.midtop = screen.midtop/아래 두줄 변수변경작업 필요
-                                menu_size = (menu.get_width() * ratio, menu.get_height() * ratio)
+                                menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                 screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
@@ -528,7 +528,7 @@ class Single():
                 if field2Rect.y >= screen_size:
                     field2Rect.midbottom = field1Rect.midtop
                 
-                field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+                field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
                 screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
                 screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
@@ -544,7 +544,7 @@ class Single():
                 life2Rect.topleft = wavePos.bottomleft
                 life3Rect.topleft = wavePos.bottomleft
 
-                life_size = (life1.get_width() * ratio, life1.get_height() * ratio)
+                life_size = (round(life1.get_width() * ratio), round(life1.get_height() * ratio))
                 if kirin.life == 3:
                     screen.blit(pygame.transform.scale(life3, life_size), life3Rect)
                 elif kirin.life == 2:
@@ -636,7 +636,7 @@ class Single():
             if field2Rect.y >= screen_size:
                 field2Rect.midbottom = field1Rect.midtop
             
-            field_size = (field1.get_width() * ratio, field1.get_height() * ratio)
+            field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
             screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
             screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
