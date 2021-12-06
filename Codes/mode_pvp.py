@@ -249,6 +249,8 @@ class Pvp() :
                     # Resize windowSize
                     elif (event.type == pygame.VIDEORESIZE):
                         screen_size = min(event.w, event.h)
+                        if screen_size <= 300:
+                            screen_size = 300
                         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                         ratio = (screen_size / 500)
                         font = pygame.font.Font(None, round(36*ratio))
@@ -710,6 +712,8 @@ class Pvp() :
             # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     screen_size = min(event.w, event.h)
+                    if screen_size <= 300:
+                        screen_size = 300
                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     ratio = (screen_size / 500)
                     font = pygame.font.Font(None, round(36*ratio))       
