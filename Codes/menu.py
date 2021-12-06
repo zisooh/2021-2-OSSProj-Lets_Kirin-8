@@ -2,8 +2,6 @@ import pygame
 import sys
 from pygame.locals import *
 from load import load_image, load_sound, load_music
-#from collections import deque
-#import random
 from database import Database
 
 BLACK = (0, 0, 0)
@@ -38,19 +36,12 @@ class Menu:
         self.speed = 1.5
         self.clockTime = 60  # maximum FPS
         self.clock = pygame.time.Clock()
-
         # screen_size(스크린가로,세로), ratio(기준크기500과의 비율), screen(resizable가능)
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.font = pygame.font.Font(None, round(36*self.ratio))
-        # 아래 title 두줄 없어도 되는데 loginPo가 얘 기준으로 잡고있음
-        self.title, self.titleRect = load_image('title.png')
-        self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
-        # self.titleRect.midtop = self.screen.get_rect().midtop
-        # #데베 호출
-        # menu, menuRect = load_image("menu.png")
-        # menuRect.midtop = screen.get_rect().midtop
+        # For hiscore setting 
         self.hiScores=Database().getScores()
         self.timeHiScores=Database().getTimeScores()
         self.highScoreTexts = [self.font.render("NAME", 1, RED), #폰트 렌터
@@ -82,11 +73,7 @@ class Menu:
             self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
                 topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
         #For init_page setting
-        self.title, self.titleRect = load_image('title.png')
-        self.titleRect.midtop = self.screen.get_rect().inflate(0, -200).midtop
-        
         self.loginText = self.font.render('LOG IN', 1, BLACK)
-        # self.loginPos = self.loginText.get_rect(midtop=self.titleRect.inflate(0, 100).midbottom)
         self.loginPos = self.loginText.get_rect(midbottom=self.screen.get_rect().center)
         self.signText=self.font.render('SIGN UP',1,BLACK)
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
@@ -126,11 +113,9 @@ class Menu:
         self.helpText=self.font.render('HELP',1,BLACK)
         self.helpPos=self.helpText.get_rect(topleft=self.musicPos.bottomleft)
         self.quitText = self.font.render('QUIT', 1, BLACK)
-        # self.quitPos = self.quitText.get_rect(topleft=self.helpPos.bottomleft)
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
-
-        # Select Mode 안 글씨
+        #For Select Mode setting
         self.singleText = self.font.render('SINGLE MODE', 1, BLACK)
         self.singlePos = self.singleText.get_rect(midtop=self.screen.get_rect().center)
         self.timeText = self.font.render('TIME MODE', 1, BLACK)
@@ -141,14 +126,12 @@ class Menu:
         self.backPos=self.backText.get_rect(topleft=self.pvpPos.bottomleft)
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos =self.selectText.get_rect(topright=self.singlePos.topleft)
-        self.selectModeDict = {1:self.singlePos,2:self.timePos,3:self.pvpPos,4:self.backPos}
-        self.menuDict = {1: self.startPos, 2: self.hiScorePos, 3:self.fxPos, 4: self.musicPos, 5:self.helpPos,6: self.quitPos}
-        self.selectScoresDict = {1:self.singlePos,2:self.timePos,3:self.backPos}
         #For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLACK)
         self.selextPos=''
-        
-        # self.selectPos = self.selectText.get_rect(topright=self.loginPos.topleft)
+        self.selectModeDict = {1:self.singlePos,2:self.timePos,3:self.pvpPos,4:self.backPos}
+        self.menuDict = {1: self.startPos, 2: self.hiScorePos, 3:self.fxPos, 4: self.musicPos, 5:self.helpPos,6: self.quitPos}
+        self.selectScoresDict = {1:self.singlePos,2:self.timePos,3:self.backPos}
         self.menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
         self.loginDict={}
         self.selection = 1
@@ -163,10 +146,6 @@ class Menu:
         self.inSelectMenu=False
         self.soundFX = Database.getSound()
         self.music = Database.getSound(music=True)
-        # self.selectPos2 = self.selectText.get_rect(topright=self.selectModeDict[self.selection].topleft)
-        #user simple db
-        self.log_test=[]
-        self.userSelection=0
 
     def init_page(self):        
         while self.ininitalMenu:
@@ -180,8 +159,6 @@ class Menu:
             main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
 
-            # menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
-            # selection=1
             for event in pygame.event.get():
                 if (event.type == pygame.QUIT
                     or event.type == pygame.KEYDOWN
@@ -233,7 +210,6 @@ class Menu:
             pygame.display.flip()
     
     def login_sign_page(self,userSelection):
-        print(userSelection)
         self.showlogin=True
         self.ininitalMenu=False
         while self.showlogin:
@@ -438,20 +414,21 @@ class Menu:
 
 
             if self.showHelp:
-                if cnt%2!=0:
+                if cnt%3==1:
                     self.screen.blit(self.background, (0, 0))
                     menu, menuRect = load_image("help1.png") #Help 이미지는 예시로
                     menuRect.midtop = self.screen.get_rect().midtop
                     self.screen.blit(menu, menuRect) 
                     menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                     self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
-                elif cnt%2==0:
+                elif cnt%3==2:
                     self.screen.blit(self.background, (0, 0))
                     menu, menuRect = load_image("help2.png") #Help 이미지는 예시로
                     menuRect.midtop = self.screen.get_rect().midtop
                     self.screen.blit(menu, menuRect) 
                     menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                     self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
+                    
 
             elif self.showSelectModes:
                 self.textOverlays = zip([self.singleText,self.timeText,self.pvpText],[self.singlePos,self.timePos,self.pvpPos])

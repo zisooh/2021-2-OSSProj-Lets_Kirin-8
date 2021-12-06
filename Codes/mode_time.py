@@ -128,10 +128,6 @@ class Time():
                                 for x in range(3)])
             highScorePos.extend([highScoreTexts[x].get_rect(
                 topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
-
-    # Temp - only load for Rect
-        title, titleRect = load_image('title.png')
-        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop 
     
     # pause menu text  
         restartText = font.render('RESTART GAME', 1, BLACK)
@@ -277,7 +273,8 @@ class Time():
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
                         pauseMenu = True
-                        
+                        cnt=0
+
                         while pauseMenu:
                             clock.tick(clockTime)
 
@@ -305,7 +302,11 @@ class Time():
                                     if showHiScores:
                                         showHiScores = False
                                     elif showHelp:
-                                        showHelp=False
+                                        cnt+=1
+                                        if cnt%3!=0:
+                                            showHelp=True
+                                        else:
+                                            showHelp=False
                                     elif selection == 1:    
                                         pauseMenu = False
                                         kirin.alive = False
@@ -324,6 +325,7 @@ class Time():
                                             pygame.mixer.music.stop()
                                         Database.setSound(int(music), music=True)
                                     elif selection == 5:
+                                        cnt+=1
                                         showHelp=True
                                     elif selection == 6:
                                         pygame.quit()
@@ -384,9 +386,20 @@ class Time():
                                 screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
-                                # To.지윤 - help 이미지 변경시 이미지 load/이미지.midtop = screen.midtop/아래 두줄 변수변경작업 필요
-                                menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
-                                screen.blit(pygame.transform.scale(menu, menu_size), (0,0)) 
+                                if cnt%3==1:
+                                    screen.blit(background, (0, 0))
+                                    menu, menuRect = load_image("help1.png")
+                                    menuRect.midtop = screen.get_rect().midtop
+                                    screen.blit(menu, menuRect) 
+                                    menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
+                                    screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
+                                elif cnt%3==2:
+                                    screen.blit(background, (0, 0))
+                                    menu, menuRect = load_image("help2.png") 
+                                    menuRect.midtop = screen.get_rect().midtop
+                                    screen.blit(menu, menuRect) 
+                                    menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
+                                    screen.blit(pygame.transform.scale(menu, menu_size), (0,0))     
                             else:
                                 textOverlays = zip([restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
