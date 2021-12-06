@@ -73,8 +73,10 @@ class Menu:
             self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
                 topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
         #For init_page setting
+        self.blankText=self.font.render('       ',1,BLACK)
+        self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
         self.loginText = self.font.render('LOG IN', 1, BLACK)
-        self.loginPos = self.loginText.get_rect(midbottom=self.screen.get_rect().center)
+        self.loginPos = self.loginText.get_rect(topleft=self.blankPos.bottomleft)
         self.signText=self.font.render('SIGN UP',1,BLACK)
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
         self.quitText=self.font.render('QUIT',1,BLACK)
@@ -95,7 +97,7 @@ class Menu:
         self.secretPwd=0
         #For inMenu_page setting
         self.startText = self.font.render('SELECT MODE', 1, BLACK)
-        self.startPos = self.startText.get_rect(midtop=self.screen.get_rect().center)
+        self.startPos = self.startText.get_rect(topleft=self.blankPos.bottomleft)
         self.hiScoreText = self.font.render('HIGH SCORE', 1, BLACK)
         self.hiScorePos = self.hiScoreText.get_rect(topleft=self.startPos.bottomleft)
         self.fxText = self.font.render('SOUND FX ', 1, BLACK)
@@ -193,17 +195,18 @@ class Menu:
                     and self.selection < len(menuDict)
                     and not self.showlogin):
                     self.selection += 1
-
+            self.blankText=self.font.render('       ',1,BLACK)
+            self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
             self.loginText = self.font.render('LOG IN', 1, BLACK)
-            self.loginPos = self.loginText.get_rect(midtop=self.screen.get_rect().center)
+            self.loginPos = self.loginText.get_rect(topleft=self.blankPos.bottomleft)
             self.signText=self.font.render('SIGN UP',1,BLACK)
             self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
             self.quitText=self.font.render('QUIT',1,BLACK)
             self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
             menuDict = {1: self.loginPos, 2: self.signPos,3:self.quitPos}
             self.selectPos = self.selectText.get_rect(topright=menuDict[self.selection].topleft)
-            self.textOverlays = zip([self.loginText, self.signText,self.quitText,self.selectText],
-                                [self.loginPos, self.signPos,self.quitPos,self.selectPos])
+            self.textOverlays = zip([self.blankText,self.loginText, self.signText,self.quitText,self.selectText],
+                                [self.blankPos,self.loginPos, self.signPos,self.quitPos,self.selectPos])
 
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
@@ -296,8 +299,10 @@ class Menu:
                     and self.selection < len(self.loginDict)):
                     self.selection += 1
 
+            self.blankText=self.font.render('     ',1,BLACK)
+            self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
             self.enterIdText=self.font.render('ID  ',1,BLACK)
-            self.enterIdPos=self.enterIdText.get_rect(midtop=self.screen.get_rect().center)
+            self.enterIdPos=self.enterIdText.get_rect(topleft=self.blankPos.bottomleft)
             self.idText = self.font.render(self.id, 1, WHITE)
             self.idPos = self.idText.get_rect(topleft=self.enterIdPos.bottomleft)
             self.enterPwdText=self.font.render('PWD',1,BLACK)
@@ -310,8 +315,8 @@ class Menu:
             self.selectText = self.font.render('*', 1, BLACK)
             self.loginDict={1:self.idPos,2:self.pwdPos,3:self.backPos}
             self.selectPos = self.selectText.get_rect(topright=self.loginDict[self.selection].topleft)
-            self.textOverlays = zip([self.enterIdText, self.idText,self.enterPwdText,self.pwdText,self.selectText,self.backText],
-                                [self.enterIdPos, self.idPos,self.enterPwdPos,self.pwdPos,self.selectPos,self.backPos])
+            self.textOverlays = zip([self.blankText,self.enterIdText, self.idText,self.enterPwdText,self.pwdText,self.selectText,self.backText],
+                                [self.blankPos,self.enterIdPos, self.idPos,self.enterPwdPos,self.pwdPos,self.selectPos,self.backPos])
 
             for txt, pos in self.textOverlays:
                 self.screen.blit(txt, pos)
@@ -352,9 +357,6 @@ class Menu:
                         else:
                             self.showHelp=False
                     elif self.selection == 1:
-                        self.showSelectModes=True 
-                        self.inMenu = False
-                        self.inSelectMenu=True
                         return 1, self.screen_size
                     elif self.selection == 2:
                         return 2, self.screen_size
@@ -388,8 +390,11 @@ class Menu:
                     and not self.showHiScores
                     and not self.showSelectModes):
                     self.selection += 1
+            
+            self.blankText=self.font.render('           ',1,BLACK)
+            self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
             self.startText = self.font.render('SELECT MODE', 1, BLACK)
-            self.startPos = self.startText.get_rect(midtop=self.screen.get_rect().center)
+            self.startPos = self.startText.get_rect(topleft=self.blankPos.bottomleft)
             self.hiScoreText = self.font.render('HIGH SCORE', 1, BLACK)
             self.hiScorePos = self.hiScoreText.get_rect(topleft=self.startPos.bottomleft)
             self.fxText = self.font.render('SOUND FX ', 1, BLACK)
@@ -428,16 +433,12 @@ class Menu:
                     self.screen.blit(menu, menuRect) 
                     menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                     self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
-                    
-
-            elif self.showSelectModes:
-                self.textOverlays = zip([self.singleText,self.timeText,self.pvpText],[self.singlePos,self.timePos,self.pvpPos])
             else:
-                self.textOverlays = zip([self.startText, self.hiScoreText, self.helpText, self.fxText,
+                self.textOverlays = zip([self.blankText,self.startText, self.hiScoreText, self.helpText, self.fxText,
                                     self.musicText, self.quitText, self.selectText,
                                     self.fxOnText if self.soundFX else self.fxOffText,
                                     self.musicOnText if self.music else self.musicOffText],
-                                [self.startPos, self.hiScorePos, self.helpPos, self.fxPos,
+                                [self.blankPos,self.startPos, self.hiScorePos, self.helpPos, self.fxPos,
                                     self.musicPos, self.quitPos, self.selectPos,
                                     self.fxOnPos if self.soundFX else self.fxOffPos,
                                     self.musicOnPos if self.music else self.musicOffPos])
@@ -510,11 +511,14 @@ class Menu:
                     and not showTimeMode
                     and not showPvpMode):
                     self.selection += 1
-            self.singleText = self.font.render('SINGLE MODE', 1, BLACK)
-            self.singlePos = self.singleText.get_rect(midtop=self.screen.get_rect().center)
-            self.timeText = self.font.render('TIME MODE', 1, BLACK)
+            
+            self.blankText=self.font.render('       ',1,BLACK)
+            self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
+            self.singleText = self.font.render('SINGLE', 1, BLACK)
+            self.singlePos = self.singleText.get_rect(topleft=self.blankPos.bottomleft)
+            self.timeText = self.font.render('TIME', 1, BLACK)
             self.timePos = self.timeText.get_rect(topleft=self.singlePos.bottomleft)
-            self.pvpText = self.font.render('PVP MODE ', 1, BLACK)
+            self.pvpText = self.font.render('PVP', 1, BLACK)
             self.pvpPos = self.pvpText.get_rect(topleft=self.timePos.bottomleft)
             self.backText=self.font.render('BACK',1,BLACK)
             self.backPos=self.backText.get_rect(topleft=self.pvpPos.bottomleft)
@@ -524,7 +528,8 @@ class Menu:
             self.selectText = self.font.render('*', 1, BLACK)
             self.selectPos = self.selectText.get_rect(topright=self.selectModeDict[self.selection].topleft)
 
-            textOverlays = zip([self.singleText,self.timeText,self.pvpText,self.selectText,self.backText],[self.singlePos,self.timePos,self.pvpPos,self.selectPos,self.backPos])
+            textOverlays = zip([self.blankText,self.singleText,self.timeText,self.pvpText,self.selectText,self.backText],
+            [self.blankPos,self.singlePos,self.timePos,self.pvpPos,self.selectPos,self.backPos])
             for txt, pos in textOverlays:
                 self.screen.blit(txt, pos)
             
@@ -537,10 +542,7 @@ class Menu:
         inScoreMenu=True
         showSingleScores =False
         showTimeScores=False
-        # self.selectPos2 = self.selectText.get_rect(topright=self.selectModeDict[self.selection].topleft)
-        # selectScoresDict = {1:singlePos,2:timePos,3:backPos}
-        # selection = 1
-        # self.selectPos = self.selectText.get_rect(topright=self.selectScoresDict[self.selection].topleft)
+
         while inScoreMenu:
             self.clock.tick(self.clockTime)
             self.screen.blit(self.background, (0, 0))
@@ -581,10 +583,12 @@ class Menu:
                     and self.selection < len(self.selectScoresDict)
                     and not showSingleScores
                     and not showTimeScores):
-                    self.selection += 1       
+                    self.selection += 1 
 
+            self.blankText=self.font.render('      ',1,BLACK)
+            self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
             self.singleText=self.font.render('SINGLE  ',1,BLACK)
-            self.singlePos=self.singleText.get_rect(midtop=self.screen.get_rect().center)
+            self.singlePos=self.singleText.get_rect(topleft=self.blankPos.bottomleft)
             self.timeText = self.font.render('TIME', 1, BLACK)
             self.timePos = self.timeText.get_rect(topleft=self.singlePos.bottomleft)
             self.backText = self.font.render('BACK', 1, BLACK)
@@ -638,8 +642,8 @@ class Menu:
                 self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                 textOverlays = zip(self.timeHighScoreTexts, self.timeHighScorePos)
             else:
-                textOverlays = zip([self.singleText, self.timeText,self.backText,self.selectText],
-                                [self.singlePos, self.timePos,self.backPos, self.selectPos])
+                textOverlays = zip([self.blankText,self.singleText, self.timeText,self.backText,self.selectText],
+                                [self.blankPos,self.singlePos, self.timePos,self.backPos, self.selectPos])
             for txt, pos in textOverlays:
                 self.screen.blit(txt, pos)
             pygame.display.flip()

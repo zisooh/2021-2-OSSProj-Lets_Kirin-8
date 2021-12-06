@@ -133,8 +133,10 @@ class Single():
 
     
     # pause menu text  
+        blankText=font.render('            ',1,BLACK)
+        blankPos=blankText.get_rect(topright=screen.get_rect().center)
         restartText = font.render('RESTART GAME', 1, BLACK)
-        restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
+        restartPos = restartText.get_rect(topleft=blankPos.bottomleft)   
         hiScoreText = font.render('HIGH SCORES', 1, BLACK)
         hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
         fxText = font.render('SOUND FX ', 1, BLACK)
@@ -342,8 +344,10 @@ class Single():
                                     and not showHiScores):
                                     selection += 1
                                 
+                            blankText=font.render('            ',1,BLACK)
+                            blankPos=blankText.get_rect(topright=screen.get_rect().center)
                             restartText = font.render('RESTART GAME', 1, BLACK)
-                            restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
+                            restartPos = restartText.get_rect(topleft=blankPos.bottomleft)   
                             hiScoreText = font.render('HIGH SCORES', 1, BLACK)
                             hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
                             fxText = font.render('SOUND FX ', 1, BLACK)
@@ -402,11 +406,11 @@ class Single():
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                  
                             else:
-                                textOverlays = zip([restartText, hiScoreText, helpText, fxText,
+                                textOverlays = zip([blankText,restartText, hiScoreText, helpText, fxText,
                                                     musicText, quitText, selectText,
                                                     fxOnText if soundFX else fxOffText,
                                                     musicOnText if music else musicOffText],
-                                                    [restartPos, hiScorePos, helpPos, fxPos,
+                                                    [blankPos,restartPos, hiScorePos, helpPos, fxPos,
                                                     musicPos, quitPos, selectPos,
                                                     fxOnPos if soundFX else fxOffPos,
                                                     musicOnPos if music else musicOffPos])

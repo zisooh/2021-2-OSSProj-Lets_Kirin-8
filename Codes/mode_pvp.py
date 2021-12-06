@@ -140,8 +140,10 @@ class Pvp() :
         #         topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
     # pause menu text
+        blankText=font.render('            ',1,BLACK)
+        blankPos=blankText.get_rect(topright=screen.get_rect().center)
         restartText = font.render('RESTART GAME', 1, BLACK)
-        restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
+        restartPos = restartText.get_rect(topleft=blankPos.bottomleft)  
         fxText = font.render('SOUND FX ', 1, BLACK)
         fxPos = fxText.get_rect(topleft=restartPos.bottomleft)
         fxOnText = font.render('ON', 1, RED)
@@ -377,8 +379,10 @@ class Pvp() :
                                     selection += 1
 
                             # pause menu text
+                            blankText=font.render('            ',1,BLACK)
+                            blankPos=blankText.get_rect(topright=screen.get_rect().center)
                             restartText = font.render('RESTART GAME', 1, BLACK)
-                            restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
+                            restartPos = restartText.get_rect(topleft=blankPos.bottomleft)  
                             fxText = font.render('SOUND FX ', 1, BLACK)
                             fxPos = fxText.get_rect(topleft=restartPos.bottomleft)
                             fxOnText = font.render('ON', 1, RED)
@@ -416,11 +420,11 @@ class Pvp() :
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                             
                             else:
-                                textOverlays = zip([restartText, helpText, fxText,
+                                textOverlays = zip([blankText,restartText, helpText, fxText,
                                                     musicText, quitText, selectText,
                                                     fxOnText if soundFX else fxOffText,
                                                     musicOnText if music else musicOffText],
-                                                    [restartPos, helpPos, fxPos,
+                                                    [blankPos,restartPos, helpPos, fxPos,
                                                     musicPos, quitPos, selectPos,
                                                     fxOnPos if soundFX else fxOffPos,
                                                     musicOnPos if music else musicOffPos])
