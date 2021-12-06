@@ -15,10 +15,6 @@ if not pygame.font:
 
 BACK = 0
 
-# BLACK = (0, 0, 0)
-# RED = (255, 0, 0)
-# WHITE = (255, 255, 255)
-
 direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
@@ -30,14 +26,13 @@ screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF
 pygame.display.set_caption("Let's Kirin!")
 pygame.mouse.set_visible(0)
 
-# 데베 함수 메뉴 구현
-hiScores=Database().getScores()
+# Music Setting
 soundFX = Database.getSound()
 music = Database.getSound(music=True)
 if music and pygame.mixer:
     pygame.mixer.music.play(loops=-1)
 
-# selection = 1
+
 showSelectModes=False
 showHiScores = False
 
