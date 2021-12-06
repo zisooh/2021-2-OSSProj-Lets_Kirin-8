@@ -7,10 +7,13 @@
 
 Shooting Game based on pygame   
 
-#### **[8조 렛츠기린]**
+#### **[8조 렛츠기린]** 
 **Team Leader** : 동국대학교 전자전기공학부 [정태호](https://github.com/Taeho25)   
 **Team Member** : 동국대학교 산업시스템공학과 [문지윤](https://github.com/MoonJiyoon)   
 **Team Member** : 동국대학교 산업시스템공학과 [하지수](https://github.com/zisooh)    
+
+![kirin](https://user-images.githubusercontent.com/84272893/144908804-c15fee78-2bba-498f-994a-776e28aa0e89.png)
+![kirin_helper](https://user-images.githubusercontent.com/84272893/144908908-dd80ce02-4c48-4fec-a617-4f51d236bf6c.png)
 
 ## How To Run
 1. python, pygame, pymysql 설치
@@ -48,8 +51,32 @@ python3 Lets-kirin.py
   - Help 화면입니다. 싱글/타임 모드 조작법과 게임의 간단한 설명을 제공합니다.
   
 ## In Game
+### 불량 곰 (장애물)
+![bear_panda](https://user-images.githubusercontent.com/84272893/144909059-1cc9036e-752a-4f41-8c74-f2afad46e88b.png)
+![bear_sunglasses](https://user-images.githubusercontent.com/84272893/144909062-cc1c9a83-9d2a-45e8-91a5-002081dc7a05.png)
+![bear_brown](https://user-images.githubusercontent.com/84272893/144909067-450251ed-997a-4cb9-9b9c-0c87e7756eea.png)
+![bear_green](https://user-images.githubusercontent.com/84272893/144909069-06a01513-7402-4166-8f30-9cb8d99eb020.png)
+![stone](https://user-images.githubusercontent.com/84272893/144909135-310e1594-222d-4eec-bb28-1fa94ddd7238.png)
+### 아이템
+![item_helper](https://user-images.githubusercontent.com/84272893/144909245-ced402bb-fa72-45cc-8aa8-e8d2e48fe7d9.png)
+![kirin_helper](https://user-images.githubusercontent.com/84272893/144909249-bdd11a9a-9bed-4978-914b-b1707473f0c0.png)
+![item_peep](https://user-images.githubusercontent.com/84272893/144909425-462c8002-57e9-4a07-bc9a-b66b3c7e4761.png)
+![kirin_peep](https://user-images.githubusercontent.com/84272893/144909430-0a0dd934-2205-467c-bc46-cfae1e11434f.png) 
+![item_shield](https://user-images.githubusercontent.com/84272893/144909479-7a96dd59-a88b-40f1-bf29-a02e1ef91850.png)
+![kirin_shield](https://user-images.githubusercontent.com/84272893/144909480-4d7250ff-91db-45fb-9901-1a9b7d5b64c7.png)
+![heart2](https://user-images.githubusercontent.com/84272893/144909525-562793f7-4cd9-4e40-8b37-473b83e9a0e1.png)
+![heart3](https://user-images.githubusercontent.com/84272893/144909528-341d3277-2f29-4fad-abf9-1e005790c3e8.png)
+![item_heart](https://user-images.githubusercontent.com/84272893/144909529-e6c02a64-b773-4a0d-9d16-d2b783772a7c.png)
+![item_double](https://user-images.githubusercontent.com/84272893/144909701-9b24ab60-27bb-4b80-aad2-f8718a2f4465.png)
+
+
+
+
 ### 1. Single Mode  
   - 렛츠기린 게임의 베이스가 되는 게임입니다.   
+  - ***이미지 추가예정***
+
+
 
 ### 2. Time Mode
   - 제한시간 30초 동안 획득한 점수로 순위를 매기는 타임리미티드 모드입니다.  
