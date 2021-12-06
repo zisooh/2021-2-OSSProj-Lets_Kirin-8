@@ -135,7 +135,7 @@ class Time():
     
     # pause menu text  
         restartText = font.render('RESTART GAME', 1, BLACK)
-        restartPos = restartText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)  
+        restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
         hiScoreText = font.render('HIGH SCORES', 1, BLACK)
         hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
         fxText = font.render('SOUND FX ', 1, BLACK)
@@ -277,8 +277,6 @@ class Time():
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
                         pauseMenu = True
-                        pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
-                                    4: musicPos, 5: helpPos, 6: quitPos}
                         
                         while pauseMenu:
                             clock.tick(clockTime)
@@ -298,6 +296,7 @@ class Time():
                                     screen_size = min(event.w, event.h)
                                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                                     ratio = (screen_size / 500)
+                                    font = pygame.font.Font(None, round(36*ratio))
                                 elif (event.type == pygame.KEYDOWN  # unpause
                                     and event.key == pygame.K_p):
                                     pauseMenu = False
@@ -339,9 +338,46 @@ class Time():
                                     and selection < len(pauseMenuDict)
                                     and not showHiScores):
                                     selection += 1
-                                
-
+                            
+                            restartText = font.render('RESTART GAME', 1, BLACK)
+                            restartPos = restartText.get_rect(midbottom=screen.get_rect().center)  
+                            hiScoreText = font.render('HIGH SCORES', 1, BLACK)
+                            hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
+                            fxText = font.render('SOUND FX ', 1, BLACK)
+                            fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
+                            fxOnText = font.render('ON', 1, RED)
+                            fxOffText = font.render('OFF', 1, RED)
+                            fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
+                            fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
+                            musicText = font.render('MUSIC', 1, BLACK)
+                            musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
+                            musicOnText = font.render('ON', 1, RED)
+                            musicOffText = font.render('OFF', 1, RED)
+                            musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
+                            musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+                            helpText=font.render('HELP',1,BLACK)
+                            helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
+                            quitText = font.render('QUIT', 1, BLACK)
+                            quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
+                            pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
+                                    4: musicPos, 5: helpPos, 6: quitPos}
+                            selectText = font.render('*', 1, BLACK)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
+
+                            highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+                                            font.render("SCORE", 1, RED),
+                                            font.render("ACCURACY", 1, RED)]
+                            highScorePos = [highScoreTexts[0].get_rect(
+                                            topleft=screen.get_rect().inflate(-100, -100).topleft),
+                                            highScoreTexts[1].get_rect(
+                                            midtop=screen.get_rect().inflate(-100, -100).midtop),
+                                            highScoreTexts[2].get_rect(
+                                            topright=screen.get_rect().inflate(-100, -100).topright)]
+                            for hs in hiScores:
+                                highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
+                                                    for x in range(3)])
+                                highScorePos.extend([highScoreTexts[x].get_rect(
+                                    topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
                             if showHiScores:
                                 menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))

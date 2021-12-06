@@ -15,10 +15,6 @@ if not pygame.font:
 
 BACK = 0
 
-# BLACK = (0, 0, 0)
-# RED = (255, 0, 0)
-# WHITE = (255, 255, 255)
-
 direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
