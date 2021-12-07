@@ -2,7 +2,6 @@ import pygame
 import sys
 from pygame.locals import *
 from database import Database
-from load import load_image #load_sound, load_music    
 from menu import *
 from mode_single import *
 from mode_time import  *
@@ -21,7 +20,7 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
 # Initialize everything
 pygame.mixer.pre_init(11025, -16, 2, 512)
 pygame.init()
-screen_size = 500 # 스크린 가로, 스크린 세로
+screen_size = 500 # screen_size = screen_width = screen_height
 screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
 pygame.display.set_caption("Let's Kirin!")
 pygame.mouse.set_visible(0)
@@ -51,15 +50,14 @@ while inInitMenu:
     userSelection, screen_size=Menu(screen_size).init_page()
     flag=True
     while flag:   
-        if userSelection==1 or userSelection==2: #로그인/회원가입
+        if userSelection==1 or userSelection==2: # log in/sign up
             pageResult, screen_size=Menu(screen_size).login_sign_page(userSelection)
-            if pageResult==BACK: #back
+            if pageResult==BACK: # back
                 flag=False  
             else: 
-                # print(pageResult)
                 flag=False
                 inInitMenu=False          
-        elif userSelection==3: #끝내기
+        elif userSelection==3: # Quit
             pygame.quit()
             sys.exit()
 
@@ -79,7 +77,7 @@ while windowShow:
         while flag:
             if userSelection == 1:
                 pageResult, screen_size=Menu(screen_size).select_game_page()
-                if pageResult == BACK: #back
+                if pageResult == BACK: # back
                     flag = False
                 elif (pageResult == 'SingleMode' or 
                     pageResult == 'TimeMode' or
@@ -101,13 +99,12 @@ while windowShow:
 
     if pageResult == 'SingleMode':
         print('Play Single mode')
-        Single.playGame(screen_size)    # 메뉴에서 설정한 윈도우 창크기 받아오기
+        Single.playGame(screen_size)
     elif pageResult == 'TimeMode':
         print('Play Time mode')
         Time.playGame(screen_size)
     elif pageResult == 'PvpMode':
         print('Play Pvp mode')
         Pvp.playGame(screen_size)
-    #screen_size = Pvp.playGame(screen_size) 형태로 screen_size를 받아오는게 안됨    
     
-    print("Game End")   
+    print("Game End")

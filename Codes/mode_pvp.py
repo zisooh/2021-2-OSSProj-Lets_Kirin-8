@@ -50,24 +50,15 @@ class Pvp() :
             elif bear.pType == 'yellow':
                 score += 8
             return bearsLeftThisWave, score
-
-    # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((2000, 2000))
-        background = background.convert()
-        background.fill((0, 0, 0))
-
-    # Display the background
-        screen.blit(background, (0, 0))
-        pygame.display.flip()
     
     # Prepare background image
         # Game field
-        field1, field1Rect = load_image("field.png") # 1:1비율 하려면 이 이미지 사용
+        field1, field1Rect = load_image("field.png")
         field2, field2Rect = load_image("field.png")
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
 
-        # Menu - pause 메뉴 Highscore & help
+        # Menu - pause menu Highscore & help
         menu, menuRect = load_image("menu.png")
         menuRect.midtop = screen.get_rect().midtop
 
@@ -208,7 +199,7 @@ class Pvp() :
             kirin2.life = 3
             kirin2.initializeKeys()
 
-            # Start Game
+        # Start Game
             while kirin.alive and kirin2.alive :
                 clock.tick(clockTime)
 
@@ -302,7 +293,6 @@ class Pvp() :
                         while pauseMenu:
                             clock.tick(clockTime)
 
-                            screen.blit(background, (0, 0))
                             pause_size = (round(pause.get_width() * ratio), round(pause.get_height() * ratio))
                             screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
@@ -315,13 +305,14 @@ class Pvp() :
                                 # Resize windowSize
                                 elif (event.type == pygame.VIDEORESIZE):
                                     screen_size = min(event.w, event.h)
+                                    if screen_size <= 300:
+                                        screen_size = 300
                                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                                     ratio = (screen_size / 500)
                                     font = pygame.font.Font(None, round(36*ratio))
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_p): 
                                     pauseMenu = False
-                                # Pause Menu
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_RETURN):
                                     if showHelp:
@@ -390,17 +381,13 @@ class Pvp() :
 
                             if showHelp:
                                 if cnt%3==1:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help1.png") 
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                                 elif cnt%3==2:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help2.png") 
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                             
                             else:
@@ -412,7 +399,6 @@ class Pvp() :
                                                     musicPos, quitPos, selectPos,
                                                     fxOnPos if soundFX else fxOffPos,
                                                     musicOnPos if music else musicOffPos])
-
 
                             for txt, pos in textOverlays:
                                 screen.blit(txt, pos)
@@ -740,7 +726,4 @@ class Pvp() :
             elif not kirin.alive and not kirin2.alive :
                 screen.blit(drawText, drawPos)
 
-            pygame.display.flip()
-
-        
-
+            pygame.display.flip(

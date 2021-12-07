@@ -49,15 +49,6 @@ class Single():
                 score += 8
             return bearsLeftThisWave, score
 
-    # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((2000,2000))
-        background = background.convert()
-        background.fill((0, 0, 0))
-
-    # Display the background
-        screen.blit(background, (0, 0))
-        pygame.display.flip()
-
     # Prepare background image
         # Game field
         field1, field1Rect = load_image("field.png")
@@ -65,7 +56,7 @@ class Single():
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
 
-        # Menu - pause 메뉴 Highscore & help
+        # Menu - pause menu Highscore & help
         menu, menuRect = load_image("menu.png")
         menuRect.midtop = screen.get_rect().midtop
 
@@ -99,7 +90,7 @@ class Single():
         MasterSprite.speed = speed
         
         # object
-        kirin = Kirin(screen_size) # 객체 크기 조절 테스트
+        kirin = Kirin(screen_size)
         minikirin = Friendkirin(screen_size)
         
         initialBearTypes = (Siney, Spikey)
@@ -116,7 +107,7 @@ class Single():
         music = Database().getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+        highScoreTexts = [font.render("NAME", 1, RED),
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
         highScorePos = [highScoreTexts[0].get_rect(
@@ -130,7 +121,6 @@ class Single():
                                 for x in range(3)])
             highScorePos.extend([highScoreTexts[x].get_rect(
                 topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
-
     
     # pause menu text  
         blankText=font.render('            ',1,BLACK)
@@ -218,9 +208,6 @@ class Single():
         # Start Game
             while kirin.alive:
                 clock.tick(clockTime)
-
-            # Test Resize windowSize
-            #    kirin.life = 10000 # 게임 중 창크기조절 테스트
                 
             # Drop Items
                 powerupTimeLeft -= 1
@@ -243,7 +230,6 @@ class Single():
                         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                         ratio = (screen_size / 500)
                         font = pygame.font.Font(None, round(36*ratio))
-                        #Kirin.update(screen_size) # 객체 updat함수 통해서 screen_size를 전달하면 됨
                     # Kirin Moving
                     elif (event.type == pygame.KEYDOWN
                         and event.key in direction.keys()):
@@ -283,7 +269,6 @@ class Single():
                         while pauseMenu:
                             clock.tick(clockTime)
 
-                            screen.blit(background, (0, 0))
                             pause_size = (round(pause.get_width() * ratio), round(pause.get_height() * ratio))
                             screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
@@ -296,6 +281,8 @@ class Single():
                                 # Resize windowSize
                                 elif (event.type == pygame.VIDEORESIZE):
                                     screen_size = min(event.w, event.h)
+                                    if screen_size <= 300:
+                                        screen_size = 300
                                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                                     ratio = (screen_size / 500)
                                     font = pygame.font.Font(None, round(36*ratio))
@@ -373,7 +360,7 @@ class Single():
                             selectText = font.render('*', 1, BLACK)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-                            highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+                            highScoreTexts = [font.render("NAME", 1, RED),
                                             font.render("SCORE", 1, RED),
                                             font.render("ACCURACY", 1, RED)]
                             highScorePos = [highScoreTexts[0].get_rect(
@@ -394,17 +381,13 @@ class Single():
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
                                 if cnt%3==1:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help1.png")
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                                 elif cnt%3==2:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help2.png") 
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                                  
                             else:

@@ -27,24 +27,19 @@ class Keyboard(object):
             pygame.K_y: 'Y', pygame.K_z: 'Z'}
 
 class Menu:
-    def __init__(self, screen_size):
-        #Game initial setting -> To be modified
-        self.background = pygame.Surface((2000, 2000))
-        self.background = self.background.convert()
-        self.background.fill((0, 0, 0))
-        self.backgroundLoc = 1500       
+    def __init__(self, screen_size):   
         self.speed = 1.5
         self.clockTime = 60  # maximum FPS
         self.clock = pygame.time.Clock()
-        # screen_size(스크린가로,세로), ratio(기준크기500과의 비율), screen(resizable가능)
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.font = pygame.font.Font(None, round(36*self.ratio))
+        
         # For hiscore setting 
         self.hiScores=Database().getScores()
         self.timeHiScores=Database().getTimeScores()
-        self.highScoreTexts = [self.font.render("NAME", 1, RED), #폰트 렌터
+        self.highScoreTexts = [self.font.render("NAME", 1, RED),
                         self.font.render("SCORE", 1, RED),
                         self.font.render("ACCURACY", 1, RED)]
         self.highScorePos = [self.highScoreTexts[0].get_rect(
@@ -53,7 +48,7 @@ class Menu:
                         midtop=self.screen.get_rect().inflate(-100, -100).midtop),
                         self.highScoreTexts[2].get_rect(
                         topright=self.screen.get_rect().inflate(-100, -100).topright)]
-        self.timeHighScoreTexts= [self.font.render("NAME", 1, RED), #폰트 렌터
+        self.timeHighScoreTexts= [self.font.render("NAME", 1, RED),
                         self.font.render("SCORE", 1, RED),
                         self.font.render("ACCURACY", 1, RED)]
         self.timeHighScorePos = [self.timeHighScoreTexts[0].get_rect(
@@ -72,7 +67,8 @@ class Menu:
                                 for x in range(3)])
             self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
                 topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
-        #For init_page setting
+        
+        # For init_page setting
         self.blankText=self.font.render('       ',1,BLACK)
         self.blankPos=self.blankText.get_rect(topright=self.screen.get_rect().center)
         self.loginText = self.font.render('LOG IN', 1, BLACK)
@@ -81,7 +77,8 @@ class Menu:
         self.signPos=self.signText.get_rect(topleft=self.loginPos.bottomleft)
         self.quitText=self.font.render('QUIT',1,BLACK)
         self.quitPos=self.quitText.get_rect(topleft=self.signPos.bottomleft)
-        #For login_page setting
+        
+        # For login_page setting
         self.id=''
         self.idBuffer = []
         self.pwd=''
@@ -95,7 +92,8 @@ class Menu:
         self.pwdText = 0
         self.pwdPos =0
         self.secretPwd=0
-        #For inMenu_page setting
+
+        # For inMenu_page setting
         self.startText = self.font.render('SELECT MODE', 1, BLACK)
         self.startPos = self.startText.get_rect(topleft=self.blankPos.bottomleft)
         self.hiScoreText = self.font.render('HIGH SCORE', 1, BLACK)
@@ -117,7 +115,8 @@ class Menu:
         self.quitText = self.font.render('QUIT', 1, BLACK)
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos = self.selectText.get_rect(topright=self.startPos.topleft)
-        #For Select Mode setting
+
+        # For Select Mode setting
         self.singleText = self.font.render('SINGLE MODE', 1, BLACK)
         self.singlePos = self.singleText.get_rect(midtop=self.screen.get_rect().center)
         self.timeText = self.font.render('TIME MODE', 1, BLACK)
@@ -128,7 +127,8 @@ class Menu:
         self.backPos=self.backText.get_rect(topleft=self.pvpPos.bottomleft)
         self.selectText = self.font.render('*', 1, BLACK)
         self.selectPos =self.selectText.get_rect(topright=self.singlePos.topleft)
-        #For selection '*' setting        
+        
+        # For selection '*' setting        
         self.selectText = self.font.render('*', 1, BLACK)
         self.selextPos=''
         self.selectModeDict = {1:self.singlePos,2:self.timePos,3:self.pvpPos,4:self.backPos}
@@ -149,12 +149,10 @@ class Menu:
         self.soundFX = Database.getSound()
         self.music = Database.getSound(music=True)
 
+
     def init_page(self):        
         while self.ininitalMenu:
             self.clock.tick(self.clockTime) 
-            self.screen.blit(
-                self.background, (0, 0), area=pygame.Rect(
-                    0, self.backgroundLoc, 500, 500))
             
             main_menu, main_menuRect = load_image("main_menu.png")
             main_menuRect.midtop = self.screen.get_rect().midtop
@@ -167,11 +165,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
-                    if screen_size <= 300:
-                        screen_size = 300
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -214,14 +212,12 @@ class Menu:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
     
+
     def login_sign_page(self,userSelection):
         self.showlogin=True
         self.ininitalMenu=False
         while self.showlogin:
             self.clock.tick(self.clockTime) 
-            self.screen.blit(
-                self.background, (0, 0), area=pygame.Rect(
-                    0, self.backgroundLoc, 500, 500))
 
             main_menu, main_menuRect = load_image("main_menu.png")
             main_menuRect.midtop = self.screen.get_rect().midtop
@@ -236,7 +232,9 @@ class Menu:
                     sys.exit()
                 # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
-                    self.i877i87i87i8i8 = min(event.w, event.h)
+                    self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -244,7 +242,7 @@ class Menu:
                     and event.key == pygame.K_RETURN):
                     if (self.selection==1
                     or self.selection==2) :
-                        if userSelection==1: #로그인 요청일때
+                        if userSelection==1: # login
                             if Database().id_not_exists(self.id):
                                 print("아이디 없음")
                             else: 
@@ -253,7 +251,7 @@ class Menu:
                                     return self.id, self.screen_size
                                 else:
                                     print("비번 확인")
-                        elif userSelection==2: #회원가입 요청일때
+                        elif userSelection==2: # signup
                             if Database().id_not_exists(self.id):
                                 print("아이디 없음")
                                 if self.pwd!='':
@@ -324,6 +322,7 @@ class Menu:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
     
+
     def inMenu_page(self):
         self.inMenu = True
         cnt=0
@@ -342,9 +341,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -422,17 +423,13 @@ class Menu:
 
             if self.showHelp:
                 if cnt%3==1:
-                    self.screen.blit(self.background, (0, 0))
-                    menu, menuRect = load_image("help1.png") #Help 이미지는 예시로
+                    menu, menuRect = load_image("help1.png")
                     menuRect.midtop = self.screen.get_rect().midtop
-                    self.screen.blit(menu, menuRect) 
                     menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                     self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                 elif cnt%3==2:
-                    self.screen.blit(self.background, (0, 0))
-                    menu, menuRect = load_image("help2.png") #Help 이미지는 예시로
+                    menu, menuRect = load_image("help2.png")
                     menuRect.midtop = self.screen.get_rect().midtop
-                    self.screen.blit(menu, menuRect) 
                     menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                     self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
             else:
@@ -448,9 +445,8 @@ class Menu:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
 
+
     def select_game_page(self):
-        # Select Mode 안 글씨
-        # self.loginPos = self.loginText.get_rect(midbottom=self.screen.get_rect().center)
         main_menu, main_menuRect = load_image("main_menu.png")
         main_menuRect.midtop = self.screen.get_rect().midtop
         inSelectMenu=True
@@ -460,7 +456,6 @@ class Menu:
         
         while inSelectMenu:
             self.clock.tick(self.clockTime)
-            self.screen.blit(self.background, (0, 0))
             main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
 
@@ -470,9 +465,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-                 # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -526,7 +523,6 @@ class Menu:
             self.backPos=self.backText.get_rect(topleft=self.pvpPos.bottomleft)
             
             self.selectModeDict = {1:self.singlePos,2:self.timePos,3:self.pvpPos,4:self.backPos}
-            # selectModeDict = {1:self.singlePos,2:self.timePos,3:self.pvpPos,4:self.backPos}
             self.selectText = self.font.render('*', 1, BLACK)
             self.selectPos = self.selectText.get_rect(topright=self.selectModeDict[self.selection].topleft)
 
@@ -537,6 +533,7 @@ class Menu:
             
             pygame.display.flip()
     
+
     def score_page(self):
         main_menu, main_menuRect = load_image("main_menu.png")
         main_menuRect.midtop = self.screen.get_rect().midtop
@@ -547,7 +544,6 @@ class Menu:
 
         while inScoreMenu:
             self.clock.tick(self.clockTime)
-            self.screen.blit(self.background, (0, 0))
             main_menu_size = (round(main_menu.get_width() * self.ratio), round(main_menu.get_height() * self.ratio))
             self.screen.blit(pygame.transform.scale(main_menu, main_menu_size), (0,0))
             for event in pygame.event.get():
@@ -556,9 +552,11 @@ class Menu:
                     and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
-            # Resize windowSize
+                # Resize windowSize
                 elif (event.type == pygame.VIDEORESIZE):
                     self.screen_size = min(event.w, event.h)
+                    if self.screen_size <= 300:
+                        self.screen_size = 300
                     self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     self.ratio = (self.screen_size / 500)
                     self.font = pygame.font.Font(None, round(36*self.ratio))
@@ -628,16 +626,13 @@ class Menu:
                 self.timeHighScorePos.extend([self.timeHighScoreTexts[x].get_rect(
                     topleft=self.timeHighScorePos[x].bottomleft) for x in range(-3, 0)])
 
-
             if showSingleScores:
-                self.screen.blit(self.background, (0, 0))
                 menu, menuRect = load_image("menu.png")
                 menuRect.midtop = self.screen.get_rect().midtop
                 menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
                 self.screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                 textOverlays = zip(self.highScoreTexts, self.highScorePos)
             elif showTimeScores:
-                self.screen.blit(self.background, (0, 0))
                 menu, menuRect = load_image("menu.png")
                 menuRect.midtop = self.screen.get_rect().midtop
                 menu_size = (round(menu.get_width() * self.ratio), round(menu.get_height() * self.ratio))
@@ -649,12 +644,3 @@ class Menu:
             for txt, pos in textOverlays:
                 self.screen.blit(txt, pos)
             pygame.display.flip()
-    
-
-
-    
-    
-        
-
-    
- 

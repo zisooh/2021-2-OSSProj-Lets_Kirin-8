@@ -27,7 +27,7 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Time():
-    def playGame(screen_size):     # 창크기조절: 메인에서 기준size argument 받아오기 / 적용 : V 표시
+    def playGame(screen_size):
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
@@ -37,7 +37,7 @@ class Time():
         pygame.mouse.set_visible(0)
 
     # Score Function
-        def kill_bear(bear, score) : # 남은 곰 개수 줄이는 역할 제거
+        def kill_bear(bear, score):
             if bear.pType == 'green':
                 score += 1
             elif bear.pType == 'orange':
@@ -47,15 +47,6 @@ class Time():
             elif bear.pType == 'yellow':
                 score += 8
             return score
-
-       # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((2000, 2000))
-        background = background.convert()
-        background.fill((0, 0, 0))
-
-    # Display the background
-        screen.blit(background, (0, 0))
-        pygame.display.flip()
 
     # Prepare background image
         # Game field
@@ -114,7 +105,7 @@ class Time():
         music = Database.getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
+        highScoreTexts = [font.render("NAME", 1, RED),
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
         highScorePos = [highScoreTexts[0].get_rect(
@@ -196,9 +187,9 @@ class Time():
             curTime = 0
             powerupTime = 4 * clockTime
             powerupTimeLeft = powerupTime
-            beforeWaveTime = 4 * clockTime      # 게임시작 전 3, 2, 1...
+            beforeWaveTime = 4 * clockTime      # 3, 2, 1... before game start
             beforeWaveCount = beforeWaveTime
-            leftTime = 60 * clockTime           # 타임모드 카운트다운
+            leftTime = 60 * clockTime           # 60, 59, 58... game count down
             leftCount = leftTime
             
             betweenDoubleTime = 8 * clockTime
@@ -216,9 +207,6 @@ class Time():
         # Start Game
             while kirin.alive:
                 clock.tick(clockTime)
-
-            # Test Resize windowSize
-            #    kirin.life = 10000 # 게임 중 창크기조절 테스트
 
             # Drop Items
                 powerupTimeLeft -= 1
@@ -280,7 +268,6 @@ class Time():
                         while pauseMenu:
                             clock.tick(clockTime)
 
-                            screen.blit(background, (0, 0))
                             pause_size = (round(pause.get_width() * ratio), round(pause.get_height() * ratio))
                             screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
@@ -393,17 +380,13 @@ class Time():
                                 textOverlays = zip(highScoreTexts, highScorePos)
                             elif showHelp:
                                 if cnt%3==1:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help1.png")
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
                                 elif cnt%3==2:
-                                    screen.blit(background, (0, 0))
                                     menu, menuRect = load_image("help2.png") 
                                     menuRect.midtop = screen.get_rect().midtop
-                                    screen.blit(menu, menuRect) 
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))     
                             else:
@@ -698,6 +681,3 @@ class Time():
                 screen.blit(txt, pos)
 
             pygame.display.flip()
-
-        # code is unreachable...?
-        #return screen_size  # for delivering screen_size after game
