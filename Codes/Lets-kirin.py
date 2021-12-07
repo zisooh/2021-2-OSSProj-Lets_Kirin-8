@@ -72,7 +72,7 @@ while windowShow:
 
     inMainMenu=True
     while inMainMenu:
-        userSelection, screen_size=Menu(screen_size).inMenu_page()
+        userSelection, screen_size=Menu(screen_size).inMenu_page() 
         flag=True
         while flag:
             if userSelection == 1:

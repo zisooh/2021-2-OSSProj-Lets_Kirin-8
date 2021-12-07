@@ -154,12 +154,10 @@ class Kirin(MasterSprite):
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
-
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
-
         self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
@@ -181,7 +179,7 @@ class Kirin(MasterSprite):
         if keyState[pygame.K_d]:
             self.horiz += 2 * MasterSprite.speed
 
-    def update(self, screen_size): # argument - screen_size
+    def update(self, screen_size): 
         self.screen_size = screen_size
         newpos = self.rect.move((self.horiz, self.vert))
         newhoriz = self.rect.move((self.horiz, 0))
@@ -326,10 +324,10 @@ class Bear(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
-    def __init__(self, color, screen_size):
+    def __init__(self, trait, screen_size):
         super().__init__()
         self.image, self.rect = load_image(
-            'bear_' + color + '.png', -1)
+            'bear_' + trait + '.png', -1)
         self.initialRect = self.rect
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
@@ -342,7 +340,7 @@ class Bear(MasterSprite):
     def position(cls):
         if len(cls.pool) > 0 and cls.numOffScreen > 0:
             bear = random.choice(cls.pool.sprites())
-            if isinstance(bear, Crawly):
+            if isinstance(bear, Panda):
                 bear.rect.midbottom = (random.choice(
                     (bear.area.left, bear.area.right)),
                     random.randint(
@@ -364,10 +362,10 @@ class Bear(MasterSprite):
     def update(self, screen_size):
         self.screen_size = screen_size
         horiz, vert = self.moveFunc()
-        if horiz + self.initialRect.x > 500:
-            horiz -= 500 + self.rect.width
+        if horiz + self.initialRect.x > self.screen_size:
+            horiz -= self.screen_size + self.rect.width
         elif horiz + self.initialRect.x < 0 - self.rect.width:
-            horiz += 500 + self.rect.width
+            horiz += self.screen_size + self.rect.width
         self.rect = self.initialRect.move((horiz, self.loc + vert))
         self.loc = self.loc + MasterSprite.speed
         if self.rect.top > self.area.bottom:
@@ -379,7 +377,7 @@ class Bear(MasterSprite):
         self.add(self.pool)
 
 
-class Siney(Bear):
+class Green(Bear):
     def __init__(self, screen_size):
         super().__init__('green',screen_size)
         self.amp = random.randint(self.rect.width, 3 * self.rect.width)
@@ -388,9 +386,9 @@ class Siney(Bear):
         self.pType = 'green'
 
 
-class Roundy(Bear):
+class Sunglasses(Bear):
     def __init__(self, screen_size):
-        super().__init__('red',screen_size)
+        super().__init__('sunglasses',screen_size)
         self.amp = random.randint(self.rect.width, 2 * self.rect.width)
         self.freq = 1 / (20)
         self.moveFunc = lambda: (
@@ -402,12 +400,12 @@ class Roundy(Bear):
             math.cos(
                 self.loc *
                 self.freq))
-        self.pType = 'red'
+        self.pType = 'sunglasses'
 
 
-class Spikey(Bear):
+class Brown(Bear):
     def __init__(self, screen_size):
-        super().__init__('blue',screen_size)
+        super().__init__('brown',screen_size)
         self.slope = random.choice(list(x for x in range(-3, 3) if x != 0))
         self.period = random.choice(list(4 * x for x in range(10, 41)))
         self.moveFunc = lambda: (self.slope * (self.loc % self.period)
@@ -415,21 +413,21 @@ class Spikey(Bear):
                                  else self.slope * self.period // 2
                                  - self.slope * ((self.loc % self.period)
                                  - self.period // 2), 0)
-        self.pType = 'orange'
+        self.pType = 'brown'
 
 
-class Fasty(Bear):
+class Stone(Bear):
     def __init__(self, screen_size):
-        super().__init__('white',screen_size)
+        super().__init__('stone',screen_size)
         self.moveFunc = lambda: (0, 1.5 * self.loc)
-        self.pType = 'white'
+        self.pType = 'stone'
 
 
-class Crawly(Bear):
+class Panda(Bear):
     def __init__(self, screen_size):
-        super().__init__('yellow',screen_size)
+        super().__init__('panda',screen_size)
         self.moveFunc = lambda: (self.loc, 0)
-        self.pType = 'yellow'
+        self.pType = 'panda'
 
     def update(self):
         horiz, vert = self.moveFunc()

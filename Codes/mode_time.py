@@ -6,7 +6,7 @@ from pygame.locals import *
 from sprites import (MasterSprite, 
                      Kirin, Friendkirin, Bear, Leaf, Explosion, 
                      BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup,
-                     Siney, Spikey, Fasty, Roundy, Crawly)
+                     Green, Brown, Stone, Sunglasses, Panda)
 from database import Database
 from load import load_image, load_sound, load_music
 from menu import *
@@ -85,21 +85,21 @@ class Time():
         # object
         kirin = Kirin(screen_size)
         minikirin = Friendkirin(screen_size)
-        initialBearTypes = (Siney, Spikey, Fasty, Roundy, Crawly)
+        initialBearTypes = (Green, Brown, Stone, Sunglasses, Panda)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, 
                         FriendPowerup, LifePowerup)
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
         # Score Function
-        def kill_bear(bear, score):
+        def kill_bear(bear, score) :
             if bear.pType == 'green':
                 score += 1
-            elif bear.pType == 'orange':
+            elif bear.pType == 'brown':
                 score += 2
-            elif bear.pType == 'red':
+            elif bear.pType == 'sunglasses':
                 score += 4
-            elif bear.pType == 'yellow':
+            elif bear.pType == 'panda':
                 score += 8
             return score
 
@@ -411,7 +411,7 @@ class Time():
                     for bomb in bombs:
                         if pygame.sprite.collide_circle(
                                 bomb, bear) and bear in Bear.active:
-                            if bear.pType != 'white' :
+                            if bear.pType != 'stone' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 score = kill_bear(bear, score)
@@ -422,7 +422,7 @@ class Time():
                         if pygame.sprite.collide_rect(
                                 leaf, bear) and bear in Bear.active:
                             leaf.table()
-                            if bear.pType != 'white' :
+                            if bear.pType != 'stone' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 score = kill_bear(bear, score)
