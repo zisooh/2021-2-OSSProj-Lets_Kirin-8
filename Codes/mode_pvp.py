@@ -518,7 +518,7 @@ class Pvp() :
                         elif powerup.pType == 'friendkirin' :
                             friendkirin2 = True
                             MasterSprite.allsprites.add(minikirin) 
-                            allsprites.update()
+                            allsprites.update(screen_size)
                             allsprites.draw(screen)   
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:

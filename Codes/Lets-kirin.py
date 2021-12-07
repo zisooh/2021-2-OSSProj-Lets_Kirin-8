@@ -1,4 +1,4 @@
-import pygame
+import pygame  
 import sys
 from pygame.locals import *
 from database import Database
@@ -97,7 +97,7 @@ while windowShow:
 #    Start Game Loop    #
 #########################
 
-    if pageResult == 'SingleMode':
+    if pageResult == 'SingleMode': 
         print('Play Single mode')
         Single.playGame(screen_size)
     elif pageResult == 'TimeMode':
