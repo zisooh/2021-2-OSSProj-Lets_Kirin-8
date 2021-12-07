@@ -31,7 +31,12 @@ python3 Lets-kirin.py
 ```
 
 ## Game Controls
-![image](https://user-images.githubusercontent.com/84272893/144609693-fbf4915c-3b3a-431d-a413-4f08bfaeb560.png)   
+### Default
+![image](https://user-images.githubusercontent.com/84272893/145046440-29f65cdb-71e3-476c-a603-09ffea61743b.png)   
+
+### For PVP
+![image](https://user-images.githubusercontent.com/84272893/145046468-2f9f5504-dcd0-403c-8103-bfcc184dc397.png)
+
 
 ## Menu 
 ### 1. 로그인 / 회원가입   
@@ -87,7 +92,10 @@ python3 Lets-kirin.py
 ### 3. PVP Mode
   - 오래 살아남는 플레이어가 승리하는 PVP 모드입니다.
   - 화면 분할에 따른 객체의 이동 범위 제한하였습니다.
-  - 객체별 아이템, 목숨, 스코어 등을 분리하여 적용하였습니다.
+  - 객체별 아이템, 목숨, 스코어 등을 분리하여 적용하였습니다.    
+![help3](https://user-images.githubusercontent.com/84272893/145046777-63b2e1f6-ed3e-4b47-8fbb-083510938984.png)    
+  - PVP 모드의 HELP 화면입니다.   
+
 
 ## Credits
 * Music: https://pixabay.com/ko/music/
