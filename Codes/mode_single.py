@@ -688,6 +688,3 @@ class Single():
                 screen.blit(txt, pos)
 
             pygame.display.flip()
-
-        # code is unreachable...?
-        #return screen_size  # for delivering screen_size after game 
