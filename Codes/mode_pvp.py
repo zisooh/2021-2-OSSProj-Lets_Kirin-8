@@ -50,25 +50,15 @@ class Pvp() :
             elif bear.pType == 'yellow':
                 score += 8
             return bearsLeftThisWave, score
-
-    # Create the background which will scroll and loop over a set of different
-        background = pygame.Surface((2000, 2000))
-        background = background.convert()
-        background.fill((0, 0, 0))
-
-    # Display the background
-        screen.blit(background, (0, 0))
-        # screen.midtop = pygame.draw.rect(screen, BLUE, screen.midtop, 2)
-        pygame.display.flip()
     
     # Prepare background image
         # Game field
-        field1, field1Rect = load_image("field.png") # 1:1비율 하려면 이 이미지 사용
+        field1, field1Rect = load_image("field.png")
         field2, field2Rect = load_image("field.png")
         field1Rect.midtop = screen.get_rect().midtop
         field2Rect.midbottom = field1Rect.midtop
 
-        # Menu - pause 메뉴 Highscore & help
+        # Menu - pause menu Highscore & help
         menu, menuRect = load_image("menu.png")
         menuRect.midtop = screen.get_rect().midtop
 
@@ -106,9 +96,9 @@ class Pvp() :
         MasterSprite.speed = speed
         
         # object
-        kirin = Kirin2()
-        kirin2 = Kirin3() 
-        minikirin = Friendkirin()
+        kirin = Kirin2(screen_size)
+        kirin2 = Kirin3(screen_size) 
+        minikirin = Friendkirin(screen_size)
 
         initialbearTypes = (Siney, Spikey)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup)
@@ -117,39 +107,18 @@ class Pvp() :
         bombs2 = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-        
-    # High Score
-        # hiScores = Database().getScores()
         soundFX = Database().getSound()
         music = Database().getSound(music=True)
         if music and pygame.mixer: 
             pygame.mixer.music.play(loops=-1)
-        # highScoreTexts = [font.render("NAME", 1, RED), #폰트 렌터
-        #                 font.render("SCORE", 1, RED),
-        #                 font.render("ACCURACY", 1, RED)]
-        # highScorePos = [highScoreTexts[0].get_rect(
-        #                 topleft=screen.get_rect().inflate(-100, -100).topleft),
-        #                 highScoreTexts[1].get_rect(
-        #                 midtop=screen.get_rect().inflate(-100, -100).midtop),
-        #                 highScoreTexts[2].get_rect(
-        #                 topright=screen.get_rect().inflate(-100, -100).topright)]
-        # for hs in hiScores:
-        #     highScoreTexts.extend([font.render(str(hs[x]), 1, BLACK)
-        #                         for x in range(3)])
-        #     highScorePos.extend([highScoreTexts[x].get_rect(
-        #         topleft=highScorePos[x].bottomleft) for x in range(-3, 0)])
 
-    # Temp - only load for Rect
-        title, titleRect = load_image('title.png')
-        titleRect.midtop = screen.get_rect().inflate(0, -200).midtop
-    
     # pause menu text
+        blankText=font.render('            ',1,BLACK)
+        blankPos=blankText.get_rect(topright=screen.get_rect().center)
         restartText = font.render('RESTART GAME', 1, BLACK)
-        restartPos = restartText.get_rect(midtop=titleRect.inflate(0, 100).midbottom)  
-        hiScoreText = font.render('HIGH SCORES', 1, BLACK)
-        hiScorePos = hiScoreText.get_rect(topleft=restartPos.bottomleft)
+        restartPos = restartText.get_rect(topleft=blankPos.bottomleft)  
         fxText = font.render('SOUND FX ', 1, BLACK)
-        fxPos = fxText.get_rect(topleft=hiScorePos.bottomleft)
+        fxPos = fxText.get_rect(topleft=restartPos.bottomleft)
         fxOnText = font.render('ON', 1, RED)
         fxOffText = font.render('OFF', 1, RED)
         fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
@@ -168,6 +137,7 @@ class Pvp() :
         selectPos = selectText.get_rect(topright=restartPos.topleft)
         selection = 1
         showHiScores = False 
+        showHelp=False
 
 
     #########################
@@ -182,11 +152,11 @@ class Pvp() :
             allsprites = pygame.sprite.RenderPlain((kirin,kirin2))
             MasterSprite.allsprites = allsprites
             Bear.pool = pygame.sprite.Group(
-                [bear() for bear in initialbearTypes for _ in range(5)])
+                [bear(screen_size) for bear in initialbearTypes for _ in range(5)])
             Bear.active = pygame.sprite.Group()
-            Leaf.pool = pygame.sprite.Group([Leaf() for _ in range(10)]) 
+            Leaf.pool = pygame.sprite.Group([Leaf(screen_size) for _ in range(10)]) 
             Leaf.active = pygame.sprite.Group()
-            Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
+            Explosion.pool = pygame.sprite.Group([Explosion(screen_size) for _ in range(10)])
             Explosion.active = pygame.sprite.Group()
 
             # Reset game contents
@@ -229,7 +199,7 @@ class Pvp() :
             kirin2.life = 3
             kirin2.initializeKeys()
 
-            # Start Game
+        # Start Game
             while kirin.alive and kirin2.alive :
                 clock.tick(clockTime)
 
@@ -237,7 +207,7 @@ class Pvp() :
                 powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
-                    random.choice(powerupTypes)().add(powerups, allsprites)
+                    random.choice(powerupTypes)(screen_size).add(powerups, allsprites)
 
             # Event Handling
                 for event in pygame.event.get():
@@ -318,14 +288,13 @@ class Pvp() :
                     elif (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_p):
                         pauseMenu = True
-                        pauseMenuDict = {1: restartPos, 2: hiScorePos, 3: fxPos, 
-                                    4: musicPos, 5: helpPos, 6: quitPos}
+                        cnt=0
                         
                         while pauseMenu:
                             clock.tick(clockTime)
 
-                            screen.blit(background, (0, 0))
-                            screen.blit(pause, pauseRect)
+                            pause_size = (round(pause.get_width() * ratio), round(pause.get_height() * ratio))
+                            screen.blit(pygame.transform.scale(pause, pause_size), (0,0))
 
                             for event in pygame.event.get():
                                 if (event.type == pygame.QUIT
@@ -333,65 +302,104 @@ class Pvp() :
                                         and event.key == pygame.K_ESCAPE):
                                     pygame.quit()
                                     sys.exit()
+                                # Resize windowSize
+                                elif (event.type == pygame.VIDEORESIZE):
+                                    screen_size = min(event.w, event.h)
+                                    if screen_size <= 300:
+                                        screen_size = 300
+                                    screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+                                    ratio = (screen_size / 500)
+                                    font = pygame.font.Font(None, round(36*ratio))
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_p): 
                                     pauseMenu = False
-                                # Pause Menu
                                 elif (event.type == pygame.KEYDOWN
                                     and event.key == pygame.K_RETURN):
-                                    if showHiScores:
-                                        showHiScores = False
-                                    elif showHelp:
-                                        showHelp=False
+                                    if showHelp:
+                                        cnt+=1
+                                        if cnt%3!=0:
+                                            showHelp=True
+                                        else:
+                                            showHelp=False
                                     elif selection == 1:    
                                         pauseMenu = False
                                         kirin.alive = False
                                     elif selection == 2:
-                                        showHiScores = True
-                                    elif selection == 3:
                                         soundFX = not soundFX
                                         if soundFX:
                                             leaf_sound.play()
                                         Database.setSound(int(soundFX))
-                                    elif selection == 4 and pygame.mixer:
+                                    elif selection == 3 and pygame.mixer:
                                         music = not music
                                         if music:
                                             pygame.mixer.music.play(loops=-1)
                                         else:
                                             pygame.mixer.music.stop()
                                         Database.setSound(int(music), music=True)
-                                    elif selection == 5:
+                                    elif selection == 4:
+                                        cnt+=1
                                         showHelp=True
-                                    elif selection == 6:
+                                    elif selection == 5:
                                         pygame.quit()
                                         sys.exit()
                                 elif (event.type == pygame.KEYDOWN
-                                    and event.key == pygame.K_w
+                                    and event.key == pygame.K_UP
                                     and selection > 1
                                     and not showHiScores):
                                     selection -= 1
                                 elif (event.type == pygame.KEYDOWN
-                                    and event.key == pygame.K_s
+                                    and event.key == pygame.K_DOWN
                                     and selection < len(pauseMenuDict)
                                     and not showHiScores):
                                     selection += 1
-                                
+
+                            # pause menu text
+                            blankText=font.render('            ',1,BLACK)
+                            blankPos=blankText.get_rect(topright=screen.get_rect().center)
+                            restartText = font.render('RESTART GAME', 1, BLACK)
+                            restartPos = restartText.get_rect(topleft=blankPos.bottomleft)  
+                            fxText = font.render('SOUND FX ', 1, BLACK)
+                            fxPos = fxText.get_rect(topleft=restartPos.bottomleft)
+                            fxOnText = font.render('ON', 1, RED)
+                            fxOffText = font.render('OFF', 1, RED)
+                            fxOnPos = fxOnText.get_rect(topleft=fxPos.topright)
+                            fxOffPos = fxOffText.get_rect(topleft=fxPos.topright)
+                            musicText = font.render('MUSIC', 1, BLACK)
+                            musicPos = fxText.get_rect(topleft=fxPos.bottomleft)
+                            musicOnText = font.render('ON', 1, RED)
+                            musicOffText = font.render('OFF', 1, RED)
+                            musicOnPos = musicOnText.get_rect(topleft=musicPos.topright)
+                            musicOffPos = musicOffText.get_rect(topleft=musicPos.topright)
+                            helpText=font.render('HELP',1,BLACK)
+                            helpPos=helpText.get_rect(topleft=musicPos.bottomleft)
+                            quitText = font.render('QUIT', 1, BLACK)
+                            quitPos = quitText.get_rect(topleft=helpPos.bottomleft)
+
+                            pauseMenuDict = {1: restartPos, 2: fxPos, 3: musicPos, 4: helpPos, 5: quitPos}
+                            selectText = font.render('*', 1, BLACK)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-                            # if showHiScores:
-                            #     screen.blit(menu, menuRect)
-                            #     textOverlays = zip(highScoreTexts, highScorePos)
-                            # elif showHelp:
-                            #     screen.blit(menu, menuRect) 
-                            # else:
-                            #     textOverlays = zip([restartText, hiScoreText, helpText, fxText,
-                            #                         musicText, quitText, selectText,
-                            #                         fxOnText if soundFX else fxOffText,
-                            #                         musicOnText if music else musicOffText],
-                            #                         [restartPos, hiScorePos, helpPos, fxPos,
-                            #                         musicPos, quitPos, selectPos,
-                            #                         fxOnPos if soundFX else fxOffPos,
-                            #                         musicOnPos if music else musicOffPos])
+                            if showHelp:
+                                if cnt%3==1:
+                                    menu, menuRect = load_image("help1.png") 
+                                    menuRect.midtop = screen.get_rect().midtop
+                                    menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
+                                    screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
+                                elif cnt%3==2:
+                                    menu, menuRect = load_image("help2.png") 
+                                    menuRect.midtop = screen.get_rect().midtop
+                                    menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
+                                    screen.blit(pygame.transform.scale(menu, menu_size), (0,0))                             
+                            else:
+                                textOverlays = zip([blankText,restartText, helpText, fxText,
+                                                    musicText, quitText, selectText,
+                                                    fxOnText if soundFX else fxOffText,
+                                                    musicOnText if music else musicOffText],
+                                                    [blankPos,restartPos, helpPos, fxPos,
+                                                    musicPos, quitPos, selectPos,
+                                                    fxOnPos if soundFX else fxOffPos,
+                                                    musicOnPos if music else musicOffPos])
+
                             for txt, pos in textOverlays:
                                 screen.blit(txt, pos)
 
@@ -492,7 +500,7 @@ class Pvp() :
                         elif powerup.pType == 'friendkirin' :
                             friendkirin1 = True
                             MasterSprite.allsprites.add(minikirin) 
-                            allsprites.update()
+                            allsprites.update(screen_size)
                             allsprites.draw(screen)        
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
@@ -525,21 +533,17 @@ class Pvp() :
                     curTime -= 1
 
             # Update text overlays
-                waveText = font.render("Wave: " + str(wave), 1, WHITE)
-                leftText = font.render("bears: " + str(bearsLeftThisWave), 1, WHITE)
-                # scoreText = font.render("Score: " + str(score), 1, WHITE)
-                # scoreText2 = font.render("Score: " + str(score2), 1, WHITE)
-                bombText = font.render("Bombs: " + str(bombsHeld), 1, WHITE)
-                bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, WHITE)
-                kirin1winText = font.render('PLAYER 1 WIN!', 1, WHITE)
-                kirin2winText = font.render('PLAYER 2 WIN!', 1, WHITE)
-                drawText = font.render('DRAW!', 1, WHITE)
+                waveText = font.render("Wave: " + str(wave), 1, BLACK)
+                leftText = font.render("bears: " + str(bearsLeftThisWave), 1, BLACK)
+                bombText = font.render("Bombs: " + str(bombsHeld), 1, BLACK)
+                bombText2 = font.render("Bombs: " + str(bombsHeld2), 1, BLACK)
+                kirin1winText = font.render('PLAYER 1 WIN!', 1, BLACK)
+                kirin2winText = font.render('PLAYER 2 WIN!', 1, BLACK)
+                drawText = font.render('DRAW!', 1, BLACK)
         
                 wavePos = waveText.get_rect(topright=screen.get_rect().midtop)
                 leftPos = leftText.get_rect(topleft=screen.get_rect().midtop)
-                # scorePos = scoreText.get_rect(topleft=screen.get_rect().topleft)
                 bombPos = bombText.get_rect(bottomleft=screen.get_rect().bottomleft)
-                # scorePos2 = scoreText2.get_rect(topright=screen.get_rect().topright)
                 bombPos2 = bombText2.get_rect(bottomright=screen.get_rect().bottomright)
                 kirin1winPos = kirin1winText.get_rect(center=screen.get_rect().center)
                 kirin2winPos = kirin2winText.get_rect(center=screen.get_rect().center)
@@ -619,11 +623,11 @@ class Pvp() :
                             bearsThisWave *= 2
                             bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         if wave == 1:
-                            Bear.pool.add([Fasty() for _ in range(5)])
+                            Bear.pool.add([Fasty(screen_size) for _ in range(5)])
                         if wave == 2:
-                            Bear.pool.add([Roundy() for _ in range(5)])
+                            Bear.pool.add([Roundy(screen_size) for _ in range(5)])
                         if wave == 3:
-                            Bear.pool.add([Crawly() for _ in range(5)])
+                            Bear.pool.add([Crawly(screen_size) for _ in range(5)])
                         wave += 1
                         betweenWaveCount = betweenWaveTime
 
@@ -640,10 +644,10 @@ class Pvp() :
                 field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
                 screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
                 screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
-                pygame.draw.rect(screen, BLACK, [250,0,3,500])
+                pygame.draw.rect(screen, BLACK, [250*ratio,0,3,500*ratio])
 
             # Update and draw all sprites and text         
-                allsprites.update()
+                allsprites.update(screen_size)
                 allsprites.draw(screen)
                 alldrawings.update()
 
@@ -674,28 +678,7 @@ class Pvp() :
                 elif kirin2.life == 1:
                     screen.blit(pygame.transform.scale(life_a, life_size), life_aRect)
 
-                #if kirin.life == 3:
-                #    screen.blit(life3, life3Rect)
-                #if kirin.life == 2:
-                #    screen.blit(life2, life2Rect)
-                #if kirin.life == 1:
-                #    screen.blit(life1, life1Rect)
-
-                #if kirin2.life == 3:
-                #    screen.blit(life_c, life_cRect)
-                #if kirin2.life == 2:
-                #    screen.blit(life_b, life_bRect)
-                #if kirin2.life == 1:
-                #    screen.blit(life_a, life_aRect)
-
                 pygame.display.flip()
-
-
-            # accuracy = round(score / leafFired, 4) if leafFired > 0 else 0.0
-            # isHiScore = len(hiScores) < Database.numScores or score > hiScores[-1][1]
-            # name = ''
-            # nameBuffer = []
-
 
     #########################
     #    After Game Loop    #
@@ -716,56 +699,8 @@ class Pvp() :
                         screen_size = 300
                     screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
                     ratio = (screen_size / 500)
-                    font = pygame.font.Font(None, round(36*ratio))       
-            # for event in pygame.event.get():
-            #     if (event.type == pygame.QUIT
-            #         or not isHiScore
-            #         and event.type == pygame.KEYDOWN
-            #             and event.key == pygame.K_ESCAPE):
-            #         return False
-            #     elif (event.type == pygame.KEYDOWN
-            #         and event.key == pygame.K_RETURN
-            #         and not isHiScore):
-            #         return True
-            #     elif (event.type == pygame.KEYDOWN
-            #         and event.key in Keyboard.keys.keys()
-            #         and len(nameBuffer) < 8):
-            #         nameBuffer.append(Keyboard.keys[event.key])
-            #         name = ''.join(nameBuffer)
-            #     elif (event.type == pygame.KEYDOWN
-            #         and event.key == pygame.K_BACKSPACE
-            #         and len(nameBuffer) > 0):
-            #         nameBuffer.pop()
-            #         name = ''.join(nameBuffer)
-            #     elif (event.type == pygame.KEYDOWN
-            #         and event.key == pygame.K_RETURN
-            #         and len(name) > 0):
-            #         Database().setScore(hiScores,name, score, accuracy)
-            #         return True  
-
-            # if isHiScore:
-            #     hiScoreText = font.render('SCORE', 1, RED)
-            #     hiScorePos = hiScoreText.get_rect(
-            #         midbottom=screen.get_rect().center)
-            #     scoreText = font.render(str(score), 1, BLACK)
-            #     scorePos = scoreText.get_rect(midtop=hiScorePos.midbottom)
-            #     enterNameText = font.render('ENTER YOUR NAME:', 1, RED)
-            #     enterNamePos = enterNameText.get_rect(midtop=scorePos.midbottom)
-            #     nameText = font.render(name, 1, WHITE)
-            #     namePos = nameText.get_rect(midtop=enterNamePos.midbottom)
-            #     textOverlay = zip([hiScoreText, scoreText,
-            #                     enterNameText, nameText],
-            #                     [hiScorePos, scorePos,
-            #                     enterNamePos, namePos])
-            # else:
-            #     gameOverText = font.render('GAME OVER', 1, BLACK)
-            #     gameOverPos = gameOverText.get_rect(
-            #         center=screen.get_rect().center)
-            #     scoreText = font.render('SCORE: {}'.format(score), 1, BLACK)
-            #     scorePos = scoreText.get_rect(midtop=gameOverPos.midbottom)
-            #     textOverlay = zip([gameOverText, scoreText],
-            #                     [gameOverPos, scorePos])
-
+                    font = pygame.font.Font(None, round(36*ratio))      
+            
        # moving field         
             field1Rect.y += int(2 * ratio)
             field2Rect.y += int(2 * ratio)
@@ -777,10 +712,10 @@ class Pvp() :
             field_size = (round(field1.get_width() * ratio), round(field1.get_height() * ratio))
             screen.blit(pygame.transform.scale(field1, field_size), (0,field1Rect.y))
             screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
-            pygame.draw.rect(screen, BLACK, [250,0,3,500])
+            pygame.draw.rect(screen, BLACK, [250*ratio,0,3,500*ratio])
 
         # Update and draw all sprites
-            allsprites.update()
+            allsprites.update(screen_size)
             allsprites.draw(screen)
             alldrawings.update()
 
@@ -791,22 +726,4 @@ class Pvp() :
             elif not kirin.alive and not kirin2.alive :
                 screen.blit(drawText, drawPos)
 
-            elif kirin.alive and kirin2.alive :
-                if score > score2 :
-                    screen.blit(kirin1winText, kirin1winPos)
-                elif score < score2 :
-                    screen.blit(kirin2winText, kirin2winPos)
-                elif score == score2 :
-                    screen.blit(drawText, drawPos)
-
-            # for txt, pos in textOverlay:
-            #     screen.blit(txt, pos)
             pygame.display.flip()
-
-        # code is unreachable...?
-        #return screen_size  # for delivering screen_size after game
-
-# 이거 이제 필요없음
-#if __name__ == '__main__':
-#    while(main()):
-#        pass
