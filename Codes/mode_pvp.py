@@ -380,7 +380,7 @@ class Pvp() :
 
                             if showHelp:
                                 if cnt%3==1:
-                                    menu, menuRect = load_image("help1.png") 
+                                    menu, menuRect = load_image("help3.png") 
                                     menuRect.midtop = screen.get_rect().midtop
                                     menu_size = (round(menu.get_width() * ratio), round(menu.get_height() * ratio))
                                     screen.blit(pygame.transform.scale(menu, menu_size), (0,0))
