@@ -429,7 +429,7 @@ class Panda(Bear):
         self.moveFunc = lambda: (self.loc, 0)
         self.pType = 'panda'
 
-    def update(self):
+    def update(self, screen_size):
         horiz, vert = self.moveFunc()
         horiz = (-horiz if self.initialRect.center[0] == self.area.right
                  else horiz)

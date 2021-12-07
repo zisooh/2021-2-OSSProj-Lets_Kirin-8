@@ -566,6 +566,7 @@ class Time():
                 allsprites.update(screen_size)
                 allsprites.draw(screen)
                 alldrawings.update()
+
                 for txt, pos in textOverlays:
                     screen.blit(txt, pos)
 
