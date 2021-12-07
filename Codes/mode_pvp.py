@@ -726,4 +726,4 @@ class Pvp() :
             elif not kirin.alive and not kirin2.alive :
                 screen.blit(drawText, drawPos)
 
-            pygame.display.flip(
+            pygame.display.flip()
