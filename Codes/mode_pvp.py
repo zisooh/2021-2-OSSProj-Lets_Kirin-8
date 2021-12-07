@@ -6,7 +6,7 @@ from pygame.locals import *
 from sprites import (MasterSprite, 
                      Kirin2, Kirin3, Friendkirin, Bear, Leaf, Explosion, 
                      BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup,
-                     Siney, Spikey, Fasty, Roundy, Crawly)
+                     Green, Brown, Stone, Sunglasses, Panda)
 from database import Database
 from load import load_image, load_sound, load_music
 from menu import *
@@ -91,7 +91,7 @@ class Pvp() :
         kirin2 = Kirin3(screen_size) 
         minikirin = Friendkirin(screen_size)
 
-        initialbearTypes = (Siney, Spikey)
+        initialbearTypes = (Green, Brown)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, FriendPowerup, LifePowerup)
 
         bombs = pygame.sprite.Group()
@@ -103,11 +103,11 @@ class Pvp() :
             bearsLeftThisWave -= 1
             if bear.pType == 'green':
                 score += 1
-            elif bear.pType == 'orange':
+            elif bear.pType == 'brown':
                 score += 2
-            elif bear.pType == 'red':
+            elif bear.pType == 'sunglasses':
                 score += 4
-            elif bear.pType == 'yellow':
+            elif bear.pType == 'panda':
                 score += 8
             return bearsLeftThisWave, score
 
@@ -412,7 +412,7 @@ class Pvp() :
                     for bomb in bombs:
                         if pygame.sprite.collide_circle(
                                 bomb, bear) and bear in Bear.active:
-                            if bear.pType != 'white' :
+                            if bear.pType != 'stone' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 bearsLeftThisWave, score = kill_bear(bear, bearsLeftThisWave, score)
@@ -422,7 +422,7 @@ class Pvp() :
                     for bomb in bombs2:
                         if pygame.sprite.collide_circle(
                                 bomb, bear) and bear in Bear.active:
-                            if bear.pType != 'white' :
+                            if bear.pType != 'stone' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 bearsLeftThisWave, score2 = kill_bear(bear, bearsLeftThisWave, score2)
@@ -433,7 +433,7 @@ class Pvp() :
                         if pygame.sprite.collide_rect(
                                 leaf, bear) and bear in bear.active:
                             leaf.table()
-                            if bear.pType != 'white' :
+                            if bear.pType != 'stone' :
                                 bear.table()
                                 Explosion.position(bear.rect.center)
                                 if bear.rect.center[0] < 500 :
@@ -622,11 +622,11 @@ class Pvp() :
                             bearsThisWave *= 2
                             bearsLeftThisWave = Bear.numOffScreen = bearsThisWave
                         if wave == 1:
-                            Bear.pool.add([Fasty(screen_size) for _ in range(5)])
+                            Bear.pool.add([Stone(screen_size) for _ in range(5)])
                         if wave == 2:
-                            Bear.pool.add([Roundy(screen_size) for _ in range(5)])
+                            Bear.pool.add([Sunglasses(screen_size) for _ in range(5)])
                         if wave == 3:
-                            Bear.pool.add([Crawly(screen_size) for _ in range(5)])
+                            Bear.pool.add([Panda(screen_size) for _ in range(5)])
                         wave += 1
                         betweenWaveCount = betweenWaveTime
 
