@@ -388,7 +388,6 @@ class Pvp() :
                             selectText = font.render('*', 1, BLACK)
                             selectPos = selectText.get_rect(topright=pauseMenuDict[selection].topleft)
 
-<<<<<<< HEAD
                             if showHelp:
                                 if cnt%3==1:
                                     screen.blit(background, (0, 0))
@@ -415,8 +414,6 @@ class Pvp() :
                                                     musicOnPos if music else musicOffPos])
 
 
-=======
->>>>>>> a477c22b17740316964c35f18b579bcc1806cc74
                             for txt, pos in textOverlays:
                                 screen.blit(txt, pos)
 
