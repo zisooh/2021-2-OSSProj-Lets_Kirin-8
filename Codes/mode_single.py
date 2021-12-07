@@ -27,7 +27,7 @@ direction = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
              pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 class Single():
-    def playGame(screen_size):     # 창크기조절: 메인에서 기준size argument 받아오기
+    def playGame(screen_size):
     # Initialize everything
         pygame.mixer.pre_init(11025, -16, 2, 512)
         pygame.init()
@@ -35,19 +35,6 @@ class Single():
         screen = pygame.display.set_mode((screen_size, screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
-
-    # Score Function
-        def kill_bear(bear, bearsLeftThisWave, score) :
-            bearsLeftThisWave -= 1
-            if bear.pType == 'green':
-                score += 1
-            elif bear.pType == 'orange':
-                score += 2
-            elif bear.pType == 'red':
-                score += 4
-            elif bear.pType == 'yellow':
-                score += 8
-            return bearsLeftThisWave, score
 
     # Prepare background image
         # Game field
@@ -65,7 +52,7 @@ class Single():
         pauseRect.midtop = screen.get_rect().midtop
         pauseMenu = False 
 
-    # Prepare game objects
+    # Prepare game contents
         # life
         life1, life1Rect = load_image('heart1.png')
         life2, life2Rect = load_image('heart2.png')
@@ -77,6 +64,10 @@ class Single():
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
         load_music('menu_music_loop.ogg')
+        soundFX = Database().getSound()
+        music = Database().getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
 
         # font
         font = pygame.font.Font(None, round(36*ratio))
@@ -99,14 +90,22 @@ class Single():
         
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
-        
+
+        # Score Function
+        def kill_bear(bear, bearsLeftThisWave, score) :
+            bearsLeftThisWave -= 1
+            if bear.pType == 'green':
+                score += 1
+            elif bear.pType == 'orange':
+                score += 2
+            elif bear.pType == 'red':
+                score += 4
+            elif bear.pType == 'yellow':
+                score += 8
+            return bearsLeftThisWave, score
 
     # High Score
-        hiScores=Database().getScores() #getSingleScores로 함수명 바꾸고 시퍼효
-        soundFX = Database().getSound()
-        music = Database().getSound(music=True)
-        if music and pygame.mixer: 
-            pygame.mixer.music.play(loops=-1)
+        hiScores=Database().getScores()
         highScoreTexts = [font.render("NAME", 1, RED),
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]

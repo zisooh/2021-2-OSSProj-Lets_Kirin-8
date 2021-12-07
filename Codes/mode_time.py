@@ -36,18 +36,6 @@ class Time():
         pygame.display.set_caption("Let's Kirin!")
         pygame.mouse.set_visible(0)
 
-    # Score Function
-        def kill_bear(bear, score):
-            if bear.pType == 'green':
-                score += 1
-            elif bear.pType == 'orange':
-                score += 2
-            elif bear.pType == 'red':
-                score += 4
-            elif bear.pType == 'yellow':
-                score += 8
-            return score
-
     # Prepare background image
         # Game field
         field1, field1Rect = load_image("field.png")
@@ -76,6 +64,10 @@ class Time():
         bear_explode_sound = load_sound('bear_explode.ogg')
         kirin_explode_sound = load_sound('kirin_explode.ogg')
         load_music('menu_music_loop.ogg')
+        soundFX = Database.getSound()
+        music = Database.getSound(music=True)
+        if music and pygame.mixer: 
+            pygame.mixer.music.play(loops=-1)
 
         # font
         font = pygame.font.Font(None, 36)
@@ -99,12 +91,20 @@ class Time():
         bombs = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
+        # Score Function
+        def kill_bear(bear, score):
+            if bear.pType == 'green':
+                score += 1
+            elif bear.pType == 'orange':
+                score += 2
+            elif bear.pType == 'red':
+                score += 4
+            elif bear.pType == 'yellow':
+                score += 8
+            return score
+
     # High Score
         hiScores=Database().getTimeScores()
-        soundFX = Database.getSound()
-        music = Database.getSound(music=True)
-        if music and pygame.mixer: 
-            pygame.mixer.music.play(loops=-1)
         highScoreTexts = [font.render("NAME", 1, RED),
                         font.render("SCORE", 1, RED),
                         font.render("ACCURACY", 1, RED)]
