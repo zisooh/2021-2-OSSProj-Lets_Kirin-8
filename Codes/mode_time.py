@@ -101,7 +101,7 @@ class Time():
         
         # object
         kirin = Kirin(screen_size)
-        minikirin = Friendkirin()
+        minikirin = Friendkirin(screen_size)
         initialBearTypes = (Siney, Spikey, Fasty, Roundy, Crawly)
         powerupTypes = (BombPowerup, ShieldPowerup, DoubleleafPowerup, 
                         FriendPowerup, LifePowerup)
@@ -172,11 +172,11 @@ class Time():
             allsprites = pygame.sprite.RenderPlain((kirin,))
             MasterSprite.allsprites = allsprites
             Bear.pool = pygame.sprite.Group(
-                [bear() for bear in initialBearTypes for _ in range(5)])
+                [bear(screen_size) for bear in initialBearTypes for _ in range(5)])
             Bear.active = pygame.sprite.Group()
-            Leaf.pool = pygame.sprite.Group([Leaf() for _ in range(10)]) 
+            Leaf.pool = pygame.sprite.Group([Leaf(screen_size) for _ in range(10)]) 
             Leaf.active = pygame.sprite.Group()
-            Explosion.pool = pygame.sprite.Group([Explosion() for _ in range(10)])
+            Explosion.pool = pygame.sprite.Group([Explosion(screen_size) for _ in range(10)])
             Explosion.active = pygame.sprite.Group()
 
             # Reset game contents
@@ -224,7 +224,7 @@ class Time():
                 powerupTimeLeft -= 1
                 if powerupTimeLeft <= 0:
                     powerupTimeLeft = powerupTime
-                    random.choice(powerupTypes)().add(powerups, allsprites)
+                    random.choice(powerupTypes)(screen_size).add(powerups, allsprites)
                 
             # Event Handling
                 for event in pygame.event.get():
@@ -480,7 +480,7 @@ class Time():
                         elif powerup.pType == 'friendkirin' :
                             friendkirin = True
                             MasterSprite.allsprites.add(minikirin) 
-                            allsprites.update()
+                            allsprites.update(screen_size)
                             allsprites.draw(screen)
                         powerup.kill()
                     elif powerup.rect.top > powerup.area.bottom:
@@ -580,7 +580,7 @@ class Time():
                     screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
             # Update and draw all sprites and text                    
-                allsprites.update()
+                allsprites.update(screen_size)
                 allsprites.draw(screen)
                 alldrawings.update()
                 for txt, pos in textOverlays:
@@ -691,7 +691,7 @@ class Time():
             screen.blit(pygame.transform.scale(field2, field_size), (0,field2Rect.y))
 
         # Update and draw all sprites
-            allsprites.update()
+            allsprites.update(screen_size)
             allsprites.draw(screen)
             alldrawings.update()
             for txt, pos in textOverlay:

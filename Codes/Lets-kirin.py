@@ -2,7 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from database import Database
-from load import load_image #load_sound, load_music
+from load import load_image #load_sound, load_music    
 from menu import *
 from mode_single import *
 from mode_time import  *

@@ -14,9 +14,12 @@ class Explosion(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
-    def __init__(self):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('explosion.png', -1)
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.linger = MasterSprite.speed * 3
 
     @classmethod
@@ -28,7 +31,8 @@ class Explosion(MasterSprite):
             explosion.rect.center = loc
             explosion.linger = 12
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         self.linger -= 1
         if self.linger <= 0:
             self.remove(self.allsprites, self.active)
@@ -39,11 +43,13 @@ class Leaf(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
-    def __init__(self):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('leaf.png', -1)
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+        self.area = self.screen.get_rect()
 
     @classmethod
     def position(cls, loc):
@@ -57,7 +63,8 @@ class Leaf(MasterSprite):
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         newpos = self.rect.move(0, -4 * MasterSprite.speed)
         self.rect = newpos
         if self.rect.top < self.area.top:
@@ -88,19 +95,22 @@ class Bomb(pygame.sprite.Sprite):
 
 
 class Powerup(MasterSprite):
-    def __init__(self, kindof):
+    def __init__(self, kindof, screen_size):
         super().__init__()
         self.image, self.rect = load_image(kindof + '_powerup.png', -1)
         self.original = self.image
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+        self.area = self.screen.get_rect()
         self.rect.midtop = (random.randint(
                             self.area.left + self.rect.width // 2,
                             self.area.right - self.rect.width // 2),
                             self.area.top)
         self.angle = 0
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         center = self.rect.center
         self.angle = (self.angle + 2) % 360
         rotate = pygame.transform.rotate
@@ -113,29 +123,29 @@ class Powerup(MasterSprite):
 
 
 class BombPowerup(Powerup):
-    def __init__(self):
-        super().__init__('bomb')
+    def __init__(self, screen_size):
+        super().__init__('bomb', screen_size)
         self.pType = 'bomb'
 
 
 class ShieldPowerup(Powerup):
-    def __init__(self):
-        super().__init__('shield')
+    def __init__(self, screen_size):
+        super().__init__('shield', screen_size)
         self.pType = 'shield'
 
 class DoubleleafPowerup(Powerup):
-    def __init__(self):
-        super().__init__('doubleleaf')
+    def __init__(self, screen_size):
+        super().__init__('doubleleaf', screen_size)
         self.pType = 'doubleleaf'
 
 class FriendPowerup(Powerup):
-    def __init__(self):
-        super().__init__('friendkirin')
+    def __init__(self, screen_size):
+        super().__init__('friendkirin', screen_size)
         self.pType = 'friendkirin'
 
 class LifePowerup(Powerup):
-    def __init__(self):
-        super().__init__('life')
+    def __init__(self, screen_size):
+        super().__init__('life', screen_size)
         self.pType = 'life'
 
 class Kirin(MasterSprite):
@@ -144,18 +154,16 @@ class Kirin(MasterSprite):
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
-        # 수정 쉴드랑 조금 다른 방법이 필요함
-        # self.bomb, self.rect = load_image('kirin_bomb.png', -1)
+
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
+
         self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
-        # 수정
-        # self.bombUp = False
         self.vert = 0
         self.horiz = 0
         self.life = 3  
@@ -173,8 +181,8 @@ class Kirin(MasterSprite):
         if keyState[pygame.K_d]:
             self.horiz += 2 * MasterSprite.speed
 
-    def update(self): # argument - screen_size
-        #self.screen_size = screen_size
+    def update(self, screen_size): # argument - screen_size
+        self.screen_size = screen_size
         newpos = self.rect.move((self.horiz, self.vert))
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
@@ -196,23 +204,18 @@ class Kirin(MasterSprite):
 
         if not self.shieldUp and self.image != self.original:
             self.image = self.original
-        
-        # 수정
-        # if self.bombUp and self.image != self.bomb:
-        #     self.image = self.bomb
-
-        # if not self.bombUp and self.image != self.original:
-        #     self.image = self.original
 
     def bomb(self):
         return Bomb(self)
 
 class Friendkirin(MasterSprite):
-    def __init__(self):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('friendkirin.png', -1)
         self.original = self.image
-        self.screen = pygame.display.get_surface()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
    
@@ -220,15 +223,16 @@ class Friendkirin(MasterSprite):
         pygame.sprite.Sprite.kill(self)
 
 class Kirin2(MasterSprite):
-    def __init__(self):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
-        self.screen = pygame.display.get_surface()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() * (1/4) , self.area.bottom)
-        # self.rect.midbottom = (500 * 1/3, 500)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
@@ -241,7 +245,8 @@ class Kirin2(MasterSprite):
         self.vert = 0
         self.horiz = 0
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         newpos = self.rect.move((self.horiz, self.vert))
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
@@ -268,28 +273,30 @@ class Kirin2(MasterSprite):
         return Bomb(self)
 
 class Kirin3(MasterSprite):
-    def __init__(self):
+    def __init__(self, screen_size):
         super().__init__()
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
-        self.screen = pygame.display.get_surface()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
         self.area = self.screen.get_rect()
         self.rect.midbottom = (self.screen.get_width() * (3/4), self.area.bottom)
-        # self.rect.midbottom = (500 * 0.5, 500)
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
         self.vert = 0
         self.horiz = 0
-        self.life = 3   # 초기 생명 3개
+        self.life = 3 
 
     def initializeKeys(self):
         keyState = pygame.key.get_pressed()
         self.vert = 0
         self.horiz = 0
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         newpos = self.rect.move((self.horiz, self.vert))
         newhoriz = self.rect.move((self.horiz, 0))
         newvert = self.rect.move((0, self.vert))
@@ -319,13 +326,15 @@ class Bear(MasterSprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
-    def __init__(self, color):
+    def __init__(self, color, screen_size):
         super().__init__()
         self.image, self.rect = load_image(
             'bear_' + color + '.png', -1)
         self.initialRect = self.rect
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
+        self.screen_size = screen_size
+        self.ratio = (self.screen_size / 500)
+        self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
+        self.area = self.screen.get_rect()
         self.loc = 0
         self.radius = min(self.rect.width // 2, self.rect.height // 2)
 
@@ -352,7 +361,8 @@ class Bear(MasterSprite):
             bear.remove(cls.pool)
             Bear.numOffScreen -= 1
 
-    def update(self):
+    def update(self, screen_size):
+        self.screen_size = screen_size
         horiz, vert = self.moveFunc()
         if horiz + self.initialRect.x > 500:
             horiz -= 500 + self.rect.width
@@ -370,8 +380,8 @@ class Bear(MasterSprite):
 
 
 class Siney(Bear):
-    def __init__(self):
-        super().__init__('green')
+    def __init__(self, screen_size):
+        super().__init__('green',screen_size)
         self.amp = random.randint(self.rect.width, 3 * self.rect.width)
         self.freq = (1 / 20)
         self.moveFunc = lambda: (self.amp * math.sin(self.loc * self.freq), 0)
@@ -379,8 +389,8 @@ class Siney(Bear):
 
 
 class Roundy(Bear):
-    def __init__(self):
-        super().__init__('red')
+    def __init__(self, screen_size):
+        super().__init__('red',screen_size)
         self.amp = random.randint(self.rect.width, 2 * self.rect.width)
         self.freq = 1 / (20)
         self.moveFunc = lambda: (
@@ -396,8 +406,8 @@ class Roundy(Bear):
 
 
 class Spikey(Bear):
-    def __init__(self):
-        super().__init__('blue')
+    def __init__(self, screen_size):
+        super().__init__('blue',screen_size)
         self.slope = random.choice(list(x for x in range(-3, 3) if x != 0))
         self.period = random.choice(list(4 * x for x in range(10, 41)))
         self.moveFunc = lambda: (self.slope * (self.loc % self.period)
@@ -409,15 +419,15 @@ class Spikey(Bear):
 
 
 class Fasty(Bear):
-    def __init__(self):
-        super().__init__('white')
+    def __init__(self, screen_size):
+        super().__init__('white',screen_size)
         self.moveFunc = lambda: (0, 1.5 * self.loc)
         self.pType = 'white'
 
 
 class Crawly(Bear):
-    def __init__(self):
-        super().__init__('yellow')
+    def __init__(self, screen_size):
+        super().__init__('yellow',screen_size)
         self.moveFunc = lambda: (self.loc, 0)
         self.pType = 'yellow'
 
