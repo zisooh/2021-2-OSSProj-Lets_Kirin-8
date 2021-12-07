@@ -97,7 +97,6 @@ class Database(object):
             self.curs.close()
             return 
         else:
-            print(hiScores)
             if len(hiScores) >= self.numScores:
                 lowScoreName = hiScores[-1][0]
                 lowScore = hiScores[-1][1]
@@ -125,7 +124,6 @@ class Database(object):
             self.curs.close()
             return 
         else:
-            print(hiScores)
             if len(hiScores) >= self.numScores:
                 lowScoreName = hiScores[-1][0]
                 lowScore = hiScores[-1][1]
