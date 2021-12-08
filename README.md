@@ -60,10 +60,10 @@ python3 Lets-kirin.py
 <!--Table-->
 |장애물| 점수 |
 |--|--|
-|![bear_panda](https://user-images.githubusercontent.com/84272893/144909059-1cc9036e-752a-4f41-8c74-f2afad46e88b.png)| 0점|
-|![bear_sunglasses](https://user-images.githubusercontent.com/84272893/144909062-cc1c9a83-9d2a-45e8-91a5-002081dc7a05.png)| 0점 |
-|![bear_brown](https://user-images.githubusercontent.com/84272893/144909067-450251ed-997a-4cb9-9b9c-0c87e7756eea.png)| 0점 |
-|![bear_green](https://user-images.githubusercontent.com/84272893/144909069-06a01513-7402-4166-8f30-9cb8d99eb020.png)|0점|
+|![bear_brown](https://user-images.githubusercontent.com/84272893/144909067-450251ed-997a-4cb9-9b9c-0c87e7756eea.png)| 1점 |
+|![bear_green](https://user-images.githubusercontent.com/84272893/144909069-06a01513-7402-4166-8f30-9cb8d99eb020.png)|2점|
+|![bear_sunglasses](https://user-images.githubusercontent.com/84272893/144909062-cc1c9a83-9d2a-45e8-91a5-002081dc7a05.png)| 4점 |
+|![bear_panda](https://user-images.githubusercontent.com/84272893/144909059-1cc9036e-752a-4f41-8c74-f2afad46e88b.png)| 8점|
 |![stone](https://user-images.githubusercontent.com/84272893/144910959-3f796225-4cf6-4eaa-9d8c-5b871fbcb244.png)|0점|
 
 ### 아이템
@@ -82,7 +82,7 @@ python3 Lets-kirin.py
 
 
 ### 2. Time Mode
-  - 제한시간 30초 동안 획득한 점수로 순위를 매기는 타임리미티드 모드입니다.  
+  - 제한시간 60초 동안 획득한 점수로 순위를 매기는 타임리미티드 모드입니다.  
   - 기존 싱글모드에 비해 난이도를 상향 조정하여 시작하도록 설정하였습니다.   
   - 기존 싱글모드에 비해 아이템 출현 횟수를 높게 설정하였습니다.   
   - 제한시간내에 죽으면 점수 기록은 되지않습니다.   
