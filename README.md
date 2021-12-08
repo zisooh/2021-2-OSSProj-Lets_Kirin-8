@@ -79,8 +79,6 @@ python3 Lets-kirin.py
 
 ### 1. Single Mode  
   - 렛츠기린 게임의 베이스가 되는 게임입니다.   
-  - ***이미지 추가예정***
-
 
 
 ### 2. Time Mode
