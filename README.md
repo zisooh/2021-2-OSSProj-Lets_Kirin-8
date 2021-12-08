@@ -71,10 +71,10 @@ python3 Lets-kirin.py
 |아이템| 설명 |
 |--|--|
 |![item_helper](https://user-images.githubusercontent.com/84272893/144909245-ced402bb-fa72-45cc-8aa8-e8d2e48fe7d9.png)![kirin_helper](https://user-images.githubusercontent.com/84272893/144909249-bdd11a9a-9bed-4978-914b-b1707473f0c0.png)| 헬퍼 아이템|
-|![item_peep](https://user-images.githubusercontent.com/84272893/144909425-462c8002-57e9-4a07-bc9a-b66b3c7e4761.png)| 0점 |
-|![item_shield](https://user-images.githubusercontent.com/84272893/144909479-7a96dd59-a88b-40f1-bf29-a02e1ef91850.png)![kirin_shield](https://user-images.githubusercontent.com/84272893/144911529-896cdd21-87d3-428f-beff-49cadd359df2.png)| 0점 |
-|![item_heart](https://user-images.githubusercontent.com/84272893/144909529-e6c02a64-b773-4a0d-9d16-d2b783772a7c.png)|0점|
-|![item_double](https://user-images.githubusercontent.com/84272893/144909701-9b24ab60-27bb-4b80-aad2-f8718a2f4465.png)|0점|
+|![item_peep](https://user-images.githubusercontent.com/84272893/144909425-462c8002-57e9-4a07-bc9a-b66b3c7e4761.png)| 폭탄 아이템 |
+|![item_shield](https://user-images.githubusercontent.com/84272893/144909479-7a96dd59-a88b-40f1-bf29-a02e1ef91850.png)![kirin_shield](https://user-images.githubusercontent.com/84272893/144911529-896cdd21-87d3-428f-beff-49cadd359df2.png)| 실드 아이템 |
+|![item_heart](https://user-images.githubusercontent.com/84272893/144909529-e6c02a64-b773-4a0d-9d16-d2b783772a7c.png)|목숨 아이템|
+|![item_double](https://user-images.githubusercontent.com/84272893/144909701-9b24ab60-27bb-4b80-aad2-f8718a2f4465.png)|더블슈팅 아이템|
 
 
 ### 1. Single Mode  
