@@ -162,6 +162,7 @@ class Kirin(MasterSprite):
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
+        self.bombNow = False
         self.vert = 0
         self.horiz = 0
         self.life = 3  
