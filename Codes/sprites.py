@@ -154,6 +154,7 @@ class Kirin(MasterSprite):
         self.image, self.rect = load_image('kirin.png', -1)
         self.original = self.image
         self.shield, self.rect = load_image('kirin_shield.png', -1)
+        self.fart, self.rect = load_image('kirin_bomb.png', -1)
         self.screen_size = screen_size
         self.ratio = (self.screen_size / 500)
         self.screen = pygame.display.set_mode((self.screen_size, self.screen_size), HWSURFACE|DOUBLEBUF|RESIZABLE)
@@ -162,7 +163,7 @@ class Kirin(MasterSprite):
         self.radius = max(self.rect.width, self.rect.height)
         self.alive = True
         self.shieldUp = False
-        self.bombNow = False
+        self.fartNow = False
         self.vert = 0
         self.horiz = 0
         self.life = 3  
@@ -201,8 +202,12 @@ class Kirin(MasterSprite):
         if self.shieldUp and self.image != self.shield:
             self.image = self.shield
 
-        if not self.shieldUp and self.image != self.original:
+        if self.fartNow and self.image == self.original:
+            self.image = self.fart
+
+        if (not self.shieldUp or not self.fartNow) and self.image != self.original:
             self.image = self.original
+
 
     def bomb(self):
         return Bomb(self)
